@@ -1,19 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <!-- 这个项目直接使用工程模板进行创建 命令： mvn archetype:generate -->
 	<!-- 下面这三个东东是用来确定maven唯一性的 -->
     <groupId>cn.rejiejay</groupId>
-    <artifactId>RejiejayWebRestfulApi</artifactId>
+    <artifactId>rejiejaywebapi</artifactId>
     <version>1.0</version>
-    <packaging>jar</packaging>
 
-    <name>RejiejayWebRestfulApi</name>
-    <url>http://maven.apache.org</url>
+    <name>rejiejaywebapi</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+
+    <!-- maven spring boot 有关 -->
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>1.5.9.RELEASE</version>
+    </parent>
 
     <!-- maven 开发倚赖 -->
     <dependencies>
