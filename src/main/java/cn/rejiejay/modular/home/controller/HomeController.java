@@ -1,14 +1,14 @@
 package cn.rejiejay.modular.home.controller;
 
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * 主页测试
  * @author rejeijay
  * @Date 2019年6月10日10:26:14
  */
-@Controller
+@RestController
 @RequestMapping("/")
 public class HomeController {
 
