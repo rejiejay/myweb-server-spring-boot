@@ -5,11 +5,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import com.alibaba.fastjson.JSONObject;
+
 import cn.rejiejay.modular.login.controller.User;
 
 /**
  * 登录
- * @author rejeijay
+ * @author _Rejeijay
  * @Date 2019年6月10日22:07:04
  */
 @RestController
@@ -28,9 +30,9 @@ public class LoginController {
      * [这个比较少用到] params： 指定request中必须包含某些参数值是，才让该方法处理。 @RequestMapping(value = "/pets/{petId}", method = RequestMethod.GET, params="myParam=myValue")
      * headers： 指定request中必须包含某些指定的header值，才能让该方法处理请求。 @RequestMapping(value = "/pets", method = RequestMethod.GET, headers="Referer=http://www.ifeng.com/")
 	 */
-	@RequestMapping(value = "", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
-	public User login(@RequestBody Req req) {
-		System.out.printf("111");
+	@RequestMapping(value = "", method = RequestMethod.POST, consumes = "application/json", produces = "application/json;charset=UTF-8")
+	public User login(@RequestBody JSONObject jsonParam) {
+		System.out.printf(jsonParam.toJSONString());
 		
         User user = new User();
         user.setId(1);

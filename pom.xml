@@ -39,6 +39,14 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		
+		<!-- 阿里巴巴 JAVA的 JOSN 转换 https://github.com/alibaba/fastjson -->
+		<!-- 教程: http://kimmking.github.io/2017/06/06/json-best-practice/ -->
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>fastjson</artifactId>
+			<version>1.2.58</version><!-- 版本号看这里： https://mvnrepository.com/artifact/com.alibaba/fastjson -->
+		</dependency>
 
 		<!-- 热加载项 -->
 		<dependency>
