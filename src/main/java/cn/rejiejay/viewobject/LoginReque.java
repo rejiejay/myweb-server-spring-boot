@@ -14,7 +14,11 @@ public class LoginReque {
 	@Size(min = 2, max = 14)
     private String password;
 
-    public LoginReque(String password) {
+    public String getPassword() {
+        return password;
+    } 
+
+    public void setPassword(String password) {
         this.password = password;
     }
 }

@@ -14,18 +14,18 @@ import javax.validation.Valid;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 
-import com.alibaba.fastjson.JSONObject;
-
+import com.alibaba.fastjson.JSON;
 
 /**
  * 登录
+ * 
  * @author _Rejeijay
  * @Date 2019年6月10日22:07:04
  */
 @RestController
 @RequestMapping("/login")
-public class LoginController { 
-	
+public class LoginController {
+
 	/**
 	 * 登录页Post请求登录
 	 * consumes： 指定处理请求的提交内容类型（Content-Type），例如application/json, text/html;
@@ -34,21 +34,23 @@ public class LoginController {
      * headers： 指定request中必须包含某些指定的header值，才能让该方法处理请求。 @RequestMapping(value = "/pets", method = RequestMethod.GET, headers="Referer=http://www.ifeng.com/")
 	 */
 	@RequestMapping(value = "", method = RequestMethod.POST, consumes = "application/json", produces = "application/json;charset=UTF-8")
-	 public LoginReply login(@RequestBody @Valid LoginReque req, BindingResult result) {
-	 	System.out.println("--------------------------------------------------------");
-//	 	if(result.hasErrors()){
-//	 		for (ObjectError error : result.getAllErrors()) {
-//	 			System.out.println(error.getDefaultMessage());
-//	 		}
-//	 	}
+	public LoginReply login(@RequestBody @Valid LoginReque req, BindingResult result) {
+
+		System.out.printf("/login: " + JSON.toJSONString(req)); // 显示 请求参数
 		
-//      System.out.printf(req.toJSONString());
-		
-        LoginReply user = new LoginReply();
-        user.setId(1);
-        user.setUsername("zhanghaoliang");
-        user.setPassword("1231");
-        
-        return user;
+		if (result.hasErrors()) {
+			for (ObjectError error : result.getAllErrors()) {
+				System.out.println(error.getDefaultMessage());
+			}
+		}
+
+//	 	Object reqJons = JSON.toJSON(req); // 将JavaBean转换为JSONObject或者JSONArray
+
+		LoginReply user = new LoginReply();
+		user.setId(1);
+		user.setUsername("zhanghaoliang");
+		user.setPassword("1231");
+
+		return user;
 	}
 }
