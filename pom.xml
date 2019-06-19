@@ -2,32 +2,32 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <!-- 这个项目直接使用工程模板进行创建 命令： mvn archetype:generate -->
+	<!-- 这个项目直接使用工程模板进行创建 命令： mvn archetype:generate -->
 	<!-- 下面这三个东东是用来确定maven唯一性的 -->
-    <groupId>cn.rejiejay</groupId>
-    <artifactId>rejiejaywebapi</artifactId>
-    <version>1.0</version>
+	<groupId>cn.rejiejay</groupId>
+	<artifactId>rejiejaywebapi</artifactId>
+	<version>1.0</version>
 
-    <name>rejiejaywebapi</name>
+	<name>rejiejaywebapi</name>
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
 
-    <!-- maven spring boot 有关 -->
-    <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>1.5.9.RELEASE</version>
-    </parent>
+	<!-- maven spring boot 有关 -->
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>1.5.9.RELEASE</version>
+	</parent>
 
-    <!-- maven 开发倚赖 -->
-    <dependencies>
+	<!-- maven 开发倚赖 -->
+	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter</artifactId>
 		</dependency>
-		
+
 		<!-- REST 服务开发 -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -39,7 +39,7 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-		
+
 		<!-- 阿里巴巴 JAVA的 JOSN 转换 https://github.com/alibaba/fastjson -->
 		<!-- 教程: http://kimmking.github.io/2017/06/06/json-best-practice/ -->
 		<dependency>
@@ -54,7 +54,7 @@
 			<artifactId>spring-boot-devtools</artifactId>
 			<optional>true</optional>
 		</dependency>
-    </dependencies>
+	</dependencies>
 
 	<!-- maven 打包配置 -->
 	<build>

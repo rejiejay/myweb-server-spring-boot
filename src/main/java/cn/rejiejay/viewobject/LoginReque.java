@@ -1,32 +1,20 @@
 package cn.rejiejay.viewobject;
 
-public class LoginReque {
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
-    private int id;
-    private String username;
+/**
+ * login请求实体类
+ * @author rejeijay
+ * @Date 2019年6月19日11:01:01
+ */
+public class LoginReque {
+	@NotNull(message = "password cannot be null!")
+	@Size(min = 2, max = 14)
     private String password;
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
+    public LoginReque(String password) {
         this.password = password;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 }

@@ -1,5 +1,10 @@
 package cn.rejiejay.viewobject;
 
+/**
+ * login响应实体类
+ * @author rejeijay
+ * @Date 2019年6月19日11:01:01
+ */
 public class LoginReply {
 
     private int id;
@@ -8,7 +13,7 @@ public class LoginReply {
 
     public String getPassword() {
         return password;
-    }
+    } 
 
     public void setPassword(String password) {
         this.password = password;

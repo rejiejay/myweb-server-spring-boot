@@ -1,13 +1,21 @@
 package cn.rejiejay.controller;
 
+import cn.rejiejay.viewobject.LoginReque;
+import cn.rejiejay.viewobject.LoginReply;
+
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestBody;
 
+// java和javax都是Java的API(Application Programming Interface)包，java是核心包，javax的x是extension的意思，也就是扩展包。
+import javax.validation.Valid;
+
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
+
 import com.alibaba.fastjson.JSONObject;
 
-import cn.rejiejay.viewobject.LoginReply;
 
 /**
  * 登录
@@ -16,7 +24,7 @@ import cn.rejiejay.viewobject.LoginReply;
  */
 @RestController
 @RequestMapping("/login")
-public class LoginController {
+public class LoginController { 
 	
 	/**
 	 * 登录页Post请求登录
@@ -26,8 +34,15 @@ public class LoginController {
      * headers： 指定request中必须包含某些指定的header值，才能让该方法处理请求。 @RequestMapping(value = "/pets", method = RequestMethod.GET, headers="Referer=http://www.ifeng.com/")
 	 */
 	@RequestMapping(value = "", method = RequestMethod.POST, consumes = "application/json", produces = "application/json;charset=UTF-8")
-	public LoginReply login(@RequestBody JSONObject jsonParam) {
-		System.out.printf(jsonParam.toJSONString());
+	 public LoginReply login(@RequestBody @Valid LoginReque req, BindingResult result) {
+	 	System.out.println("--------------------------------------------------------");
+//	 	if(result.hasErrors()){
+//	 		for (ObjectError error : result.getAllErrors()) {
+//	 			System.out.println(error.getDefaultMessage());
+//	 		}
+//	 	}
+		
+//      System.out.printf(req.toJSONString());
 		
         LoginReply user = new LoginReply();
         user.setId(1);
