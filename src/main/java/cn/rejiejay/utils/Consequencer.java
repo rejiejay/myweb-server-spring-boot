@@ -1,78 +1,78 @@
 package cn.rejiejay.utils;
 
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.JSON;
 
 /**
- * JAVA组件通讯结果类
+ * JAVA组件通讯结果类 (默认成功
  * 
- * @author rejeijay
+ * @param {string} message 返回失败的信息封装
+ * @param {int}    result 返回失败的数据封装
+ * @param {object} data 返回失败的数据封装
+ * @author _rejeijay
  * @Date 2019年6月19日22:09:17
  */
 public class Consequencer {
 	/**
-	 * 基础的通讯结果类 （默认是成功
-	 * 
-	 * @return {JSONObject} result message
+	 * 返回的结果, 用于判断。 成功: 1, 失败: !1 默认成功
 	 */
-	static JSONObject baseJSONobj() {
-		JSONObject baseObj = new JSONObject();
-		baseObj.put("result", 1);
-		baseObj.put("message", "successful");
+	private int result = 1;
 
-		return baseObj;
+	public int getResult() {
+		return result;
 	}
-	
+
+	public void setResult(int result) {
+		this.result = result;
+	}
+
 	/**
-	 * 响应的成功格式 (JSON格式)
-	 * 
-	 * @param {JSONObject} data 返回的数据
-	 * @param {string}     message 返回的错误信息, 用于前端进行提示。
+	 * 返回的错误信息, 用于提示信息。 默认是成功
 	 */
-	static JSONObject success(JSONObject data) {
-		JSONObject succeedJson = baseJSONobj();
-		succeedJson.put("data", data);
+	private String message = "successful";
 
-		return succeedJson;
+	public String getMessage() {
+		return message;
 	}
 
-	static JSONObject success(JSONObject data, String message) {
-		JSONObject succeedJson = baseJSONobj();
-		succeedJson.put("data", data);
-		succeedJson.put("message", message);
-
-		return succeedJson;
+	public void setMessage(String message) {
+		this.message = message;
 	}
-	
+
 	/**
-	 * 响应的失败格式 (JSON格式)
-	 * 
-	 * @param {JSONObject} data 返回的数据
-	 * @param {string}     message 返回的错误信息, 用于前端进行提示。
+	 * 返回的对象， 用于存储额外信息。 默认是 空对象
 	 */
-	static JSONObject error(int result, String message) {
-		// 因为响应的是错误信息, 所以不能传入的值为1
-		if (result == 1) {
-			result = 0;
-		}
+	private JSONObject data = new JSONObject();
 
-		JSONObject errorJson = baseJSONobj();
-		errorJson.put("result", result);
-		errorJson.put("message", message);
-
-		return errorJson;
+	public JSONObject getData() {
+		return data;
 	}
 
-	static JSONObject error(int result) {
-		JSONObject errorJson = baseJSONobj();
-		errorJson.put("message", "failure");
+	public void setData(JSONObject data) {
+		this.data = data;
+	}
 
-		// 因为响应的是错误信息, 所以不能传入的值为1
-		if (result == 1) {
-			result = 0;
-		}
+	/**
+	 * 返回JSON信息
+	 */
+	public JSONObject getJsonObjMessage() {
+		JSONObject sonObjMessage = new JSONObject();
+		sonObjMessage.put("result", result);
+		sonObjMessage.put("message", message);
+		sonObjMessage.put("data", data);
 
-		errorJson.put("result", result);
+		return sonObjMessage;
+	}
 
-		return errorJson;
+	/**
+	 * 返回字符串信息
+	 */
+	public String getJsonStringMessage() {
+		JSONObject sonObjMessage = new JSONObject();
+		sonObjMessage.put("result", result);
+		sonObjMessage.put("message", message);
+		sonObjMessage.put("data", data);
+
+		return JSON.toJSONString(sonObjMessage);
 	}
 }

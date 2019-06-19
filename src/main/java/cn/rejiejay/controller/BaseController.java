@@ -1,11 +1,12 @@
 package cn.rejiejay.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import cn.rejiejay.utils.Consequencer;;
 
 /**
  * 基础类
  * 
- * @author rejeijay
+ * @author _rejeijay
  * @Date 2019年6月10日10:26:14
  */
 public class BaseController {
@@ -22,25 +23,26 @@ public class BaseController {
 			result = 0;
 		}
 
-		JSONObject errorJson = new JSONObject();
-		errorJson.put("result", result);
-		errorJson.put("message", message);
+		Consequencer consequence = new Consequencer();
+		consequence.setResult(result);
+		consequence.setMessage(message);
 
-		return errorJson;
+		return consequence.getJsonObjMessage();
 	}
 
 	protected JSONObject errorJsonReply(int result) {
-		JSONObject errorJson = new JSONObject();
-		errorJson.put("message", "error");
+		Consequencer consequence = new Consequencer();
+
+		consequence.setMessage("error");
 
 		// 因为响应的是错误信息, 所以不能传入的值为1
 		if (result == 1) {
 			result = 0;
 		}
 
-		errorJson.put("result", result);
+		consequence.setResult(result);
 
-		return errorJson;
+		return consequence.getJsonObjMessage();
 	}
 
 	/**
@@ -50,20 +52,17 @@ public class BaseController {
 	 * @param {string}     message 返回的错误信息, 用于前端进行提示。
 	 */
 	protected JSONObject succeedJsonReply(JSONObject data, String message) {
-		JSONObject succeedJson = new JSONObject();
-		succeedJson.put("result", 1);
-		succeedJson.put("result", data);
-		succeedJson.put("message", message);
+		Consequencer consequence = new Consequencer();
+		consequence.setData(data);
+		consequence.setMessage(message);
 
-		return succeedJson;
+		return consequence.getJsonObjMessage();
 	}
 
 	protected JSONObject succeedJsonReply(JSONObject data) {
-		JSONObject succeedJson = new JSONObject();
-		succeedJson.put("result", 1);
-		succeedJson.put("result", data);
-		succeedJson.put("message", "successful");
+		Consequencer consequence = new Consequencer();
+		consequence.setData(data);
 
-		return succeedJson;
+		return consequence.getJsonObjMessage();
 	}
 }

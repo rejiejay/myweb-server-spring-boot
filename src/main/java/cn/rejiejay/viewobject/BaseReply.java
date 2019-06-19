@@ -11,7 +11,7 @@ import com.alibaba.fastjson.JSONObject;
  * @param {string} message 返回失败的信息封装
  * @param {int}    result 返回失败的数据封装
  * @param {object} data 返回失败的数据封装
- * @author rejeijay
+ * @author _rejeijay
  * @Date 2019年6月19日11:01:01
  */
 public class BaseReply extends JSONObject {

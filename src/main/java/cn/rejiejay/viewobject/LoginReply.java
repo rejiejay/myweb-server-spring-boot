@@ -3,7 +3,7 @@ package cn.rejiejay.viewobject;
 /**
  * login响应实体类
  * 
- * @author rejeijay
+ * @author _rejeijay
  * @Date 2019年6月19日11:01:01
  */
 public class LoginReply {
