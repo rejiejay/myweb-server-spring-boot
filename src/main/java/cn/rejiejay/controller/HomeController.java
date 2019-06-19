@@ -6,8 +6,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.alibaba.fastjson.JSONObject;
-
 /**
  * 主页测试
  * 
@@ -41,20 +39,5 @@ public class HomeController {
 	@RequestMapping(value = "", method = RequestMethod.POST)
 	public String testpost() {
 		return homeTest + "：Welcome to Rejiejay server side and your place in '/'.";
-	}
-
-	/**
-	 * 首页Get请求
-	 */
-	@RequestMapping(value = "/test", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
-	public JSONObject test() {
-		JSONObject main = new JSONObject();
-		main.put("Command", "CreateNewUser");
-		JSONObject user = new JSONObject();
-		user.put("FirstName", "John");
-		user.put("LastName", "Reese");
-		main.put("User", user);
-		
-		return main;
 	}
 }

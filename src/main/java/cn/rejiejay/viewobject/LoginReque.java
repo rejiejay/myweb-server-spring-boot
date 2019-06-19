@@ -11,7 +11,7 @@ import javax.validation.constraints.Size;
  */
 public class LoginReque {
 	@NotNull(message = "password cannot be null!")
-	@Size(min = 2, max = 14)
+	@Size(min = 6, max = 16, message = "password is wrong!")
     private String password;
 
     public String getPassword() {

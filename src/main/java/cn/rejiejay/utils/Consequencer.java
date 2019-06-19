@@ -56,23 +56,23 @@ public class Consequencer {
 	 * 返回JSON信息
 	 */
 	public JSONObject getJsonObjMessage() {
-		JSONObject sonObjMessage = new JSONObject();
-		sonObjMessage.put("result", result);
-		sonObjMessage.put("message", message);
-		sonObjMessage.put("data", data);
+		JSONObject jsonObjMessage = new JSONObject();
+		jsonObjMessage.put("result", result);
+		jsonObjMessage.put("message", message);
+		jsonObjMessage.put("data", data);
 
-		return sonObjMessage;
+		return jsonObjMessage;
 	}
 
 	/**
 	 * 返回字符串信息
 	 */
 	public String getJsonStringMessage() {
-		JSONObject sonObjMessage = new JSONObject();
-		sonObjMessage.put("result", result);
-		sonObjMessage.put("message", message);
-		sonObjMessage.put("data", data);
+		JSONObject jsonObjMessage = new JSONObject();
+		jsonObjMessage.put("result", result);
+		jsonObjMessage.put("message", message);
+		jsonObjMessage.put("data", data);
 
-		return JSON.toJSONString(sonObjMessage);
+		return JSON.toJSONString(jsonObjMessage);
 	}
 }

@@ -1,5 +1,7 @@
 package cn.rejiejay.viewobject;
 
+import com.alibaba.fastjson.JSONObject;
+
 /**
  * login响应实体类
  * 
@@ -7,32 +9,19 @@ package cn.rejiejay.viewobject;
  * @Date 2019年6月19日11:01:01
  */
 public class LoginReply {
-
-	private int id;
-	private String username;
-	private String password;
-
-	public String getPassword() {
-		return password;
+	private String userToken = "not initiative in databases";
+	
+	public LoginReply() {
 	}
 
-	public void setPassword(String password) {
-		this.password = password;
+	public LoginReply(String userToken) {
+		this.userToken = userToken;
 	}
 
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
+	public JSONObject toJSON() {
+		JSONObject obj = new JSONObject();
+		obj.put("token", userToken);
+		
+		return obj;
 	}
 }

@@ -47,12 +47,11 @@ public class LoginController extends BaseController {
 				return errorJsonReply(1, errorMsg);
 			}
 		}
+		
+		// 明天写数据库查询
 
-		LoginReply user = new LoginReply();
-		user.setId(1);
-		user.setUsername("zhanghaoliang");
-		user.setPassword("1231");
+		LoginReply userToken = new LoginReply("123");
 
-		return succeedJsonReply(new JSONObject());
+		return succeedJsonReply(userToken.toJSON());
 	}
 }
