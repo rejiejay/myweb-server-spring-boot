@@ -28,7 +28,7 @@ public class HomeController {
 	 * @return string
 	 */
 	@RequestMapping("")
-	String home() {
+	public String home() {
 		return homeTest + "：Welcome to Rejiejay server side and your place in '/'.";
 	}
 
@@ -45,12 +45,16 @@ public class HomeController {
 
 	/**
 	 * 首页Get请求
-	 * RequestMapping是一个用来处理请求地址映射的注解，可用于类或方法上。用于类上，表示类中的所有响应请求的方法都是以该地址作为父路径。
-	 * 
-	 * @return string
 	 */
-	@RequestMapping("/test")
-	String test() {
-		return "aaaa";
+	@RequestMapping(value = "/test", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
+	public JSONObject test() {
+		JSONObject main = new JSONObject();
+		main.put("Command", "CreateNewUser");
+		JSONObject user = new JSONObject();
+		user.put("FirstName", "John");
+		user.put("LastName", "Reese");
+		main.put("User", user);
+		
+		return main;
 	}
 }

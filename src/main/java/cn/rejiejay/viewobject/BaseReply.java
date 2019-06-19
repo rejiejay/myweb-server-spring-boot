@@ -14,7 +14,7 @@ import com.alibaba.fastjson.JSONObject;
  * @author rejeijay
  * @Date 2019年6月19日11:01:01
  */
-public class BaseReply {
+public class BaseReply extends JSONObject {
 	/**
 	 * 返回的结果, 用于前端进行判断。 成功: 1, 失败: !1
 	 */
