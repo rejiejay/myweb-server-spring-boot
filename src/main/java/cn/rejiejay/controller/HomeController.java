@@ -1,4 +1,4 @@
-package cn.rejiejay.modular.home.controller;
+package cn.rejiejay.controller;
 
 import org.springframework.beans.factory.annotation.Value;
 

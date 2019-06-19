@@ -1,4 +1,4 @@
-package cn.rejiejay.modular.login.controller;
+package cn.rejiejay.controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import com.alibaba.fastjson.JSONObject;
 
-import cn.rejiejay.modular.login.controller.User;
+import cn.rejiejay.viewobject.LoginReply;
 
 /**
  * 登录
@@ -17,11 +17,6 @@ import cn.rejiejay.modular.login.controller.User;
 @RestController
 @RequestMapping("/login")
 public class LoginController {
-
-    public static class Req {
-        private String key;
-        private Integer size;
-    }
 	
 	/**
 	 * 登录页Post请求登录
@@ -31,10 +26,10 @@ public class LoginController {
      * headers： 指定request中必须包含某些指定的header值，才能让该方法处理请求。 @RequestMapping(value = "/pets", method = RequestMethod.GET, headers="Referer=http://www.ifeng.com/")
 	 */
 	@RequestMapping(value = "", method = RequestMethod.POST, consumes = "application/json", produces = "application/json;charset=UTF-8")
-	public User login(@RequestBody JSONObject jsonParam) {
+	public LoginReply login(@RequestBody JSONObject jsonParam) {
 		System.out.printf(jsonParam.toJSONString());
 		
-        User user = new User();
+        LoginReply user = new LoginReply();
         user.setId(1);
         user.setUsername("zhanghaoliang");
         user.setPassword("1231");

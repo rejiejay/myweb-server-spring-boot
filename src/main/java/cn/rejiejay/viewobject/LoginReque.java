@@ -1,6 +1,6 @@
-package cn.rejiejay.modular.login.controller;
+package cn.rejiejay.viewobject;
 
-public class User {
+public class LoginReque {
 
     private int id;
     private String username;
