@@ -44,14 +44,17 @@ public class LoginController extends BaseController {
 			for (ObjectError error : result.getAllErrors()) {
 				String errorMsg = error.getDefaultMessage();
 				System.out.println(errorMsg);
-				return errorJsonReply(1, errorMsg);
+				return errorJsonReply(2, errorMsg);
 			}
 		}
 		
 		// 明天写数据库查询
+		// 决定了！ 使用 Spring Data JPA
 
 		LoginReply userToken = new LoginReply("123");
+		JSONObject replyJson = userToken.toJSON();
 
-		return succeedJsonReply(userToken.toJSON());
+		System.out.printf("/login: " + JSON.toJSONString(replyJson)); // 打印 响应参数
+		return succeedJsonReply(replyJson);
 	}
 }
