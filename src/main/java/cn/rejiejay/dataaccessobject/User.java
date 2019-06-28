@@ -6,8 +6,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 /**
- * 用户模块
+ * 用户模块 实体类
  * 因为只有一个用户 所以此模块使用key value 模式
+ * 会存很多东西，但是基本都是与用户相关，现阶段有：
+ * password
+ * token
  * 
  * @author _rejeijay
  * @Date 2019年6月27日06:37:20

@@ -14,9 +14,9 @@ import com.alibaba.fastjson.JSON;
  */
 public class Consequencer {
 	/**
-	 * 返回的结果, 用于判断。 成功: 1, 失败: !1 默认成功
+	 * 返回的结果, 用于判断。 成功: 1, 失败: !1 默认失败
 	 */
-	private int result = 1;
+	private int result = 0;
 
 	public int getResult() {
 		return result;
@@ -27,9 +27,9 @@ public class Consequencer {
 	}
 
 	/**
-	 * 返回的错误信息, 用于提示信息。 默认是成功
+	 * 返回的错误信息, 用于提示信息。 默认是失败
 	 */
-	private String message = "successful";
+	private String message = "failure";
 
 	public String getMessage() {
 		return message;

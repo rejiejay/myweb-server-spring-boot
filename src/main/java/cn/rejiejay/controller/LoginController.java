@@ -46,24 +46,24 @@ public class LoginController extends BaseController {
 	@RequestMapping(value = "", method = RequestMethod.POST, consumes = "application/json", produces = "application/json;charset=UTF-8")
 	public JSONObject login(@RequestBody @Valid LoginReque req, BindingResult result) {
 
-		System.out.printf("/login: " + JSON.toJSONString(req)); // 打印 请求参数
+		System.out.printf("\u001b[31m /login[req]: " + JSON.toJSONString(req) + "\n"); // 打印 请求参数
 
-		if (result.hasErrors()) {
+		if (result.hasErrors()) { // 判断参数是否合法
 			for (ObjectError error : result.getAllErrors()) {
 				String errorMsg = error.getDefaultMessage();
-				System.out.println(errorMsg);
+				System.out.println("\u001b[31m /login[error]: " + errorMsg + "\n");
 				return errorJsonReply(2, errorMsg);
 			}
 		}
-		
-		// 获取密码
-		List<User> password = userRepository.findByKeyname("password");
-		System.out.printf("/List<User> password: " + JSONArray.toJSONString(password)); // 打印 响应参数
+
+		// 操作ORM获取数据库数据
+		List<User> password = userRepository.findByKeyname(req.getPassword());
+		System.out.printf("\u001b[31m /login[orm]: " + JSONArray.toJSONString(password) + "\n"); // 打印 数据库获取的数据
 
 		LoginReply userToken = new LoginReply("123");
 		JSONObject replyJson = userToken.toJSON();
 
-		System.out.printf("/login: " + JSON.toJSONString(replyJson)); // 打印 响应参数
+		System.out.printf("\u001b[31m /login[rep]: " + JSON.toJSONString(replyJson) + "\n"); // 打印 响应参数
 		return succeedJsonReply(replyJson);
 	}
 }
