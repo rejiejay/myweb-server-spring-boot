@@ -63,6 +63,7 @@ public class BaseController {
 	protected JSONObject succeedJsonReply(JSONObject data) {
 		Consequencer consequence = new Consequencer();
 		consequence.setResult(1);
+		consequence.setMessage("succeed");
 		consequence.setData(data);
 
 		return consequence.getJsonObjMessage();

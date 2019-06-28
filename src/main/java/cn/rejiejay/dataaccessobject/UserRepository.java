@@ -2,6 +2,7 @@ package cn.rejiejay.dataaccessobject;
 
 import java.util.List;
 
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
@@ -19,7 +20,13 @@ public interface UserRepository extends CrudRepository<User, Long> {
 	@Query(value = "select * from user where keyname=?1 limit 1", nativeQuery = true)
 	List<User> findByKeyname(String keyname);
 
-	// 创建 Token
-	@Query(value = "insert into user (keyname, value) values (\"Token\", ?1)", nativeQuery = true)
+	/**
+	 * 创建 Token （这个方法暂时还没用上 放在这里作为参考一下
+	 * 
+	 * @param token
+	 * @return
+	 */
+	@Modifying
+	@Query(value = "insert into user (keyname, value) values (\"token\", ?1)", nativeQuery = true)
 	int saveToken(String token);
 }

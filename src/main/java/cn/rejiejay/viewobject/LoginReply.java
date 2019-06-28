@@ -20,7 +20,7 @@ public class LoginReply {
 
 	public JSONObject toJSON() {
 		JSONObject obj = new JSONObject();
-		obj.put("token", userToken);
+		obj.put("token", this.userToken);
 		
 		return obj;
 	}

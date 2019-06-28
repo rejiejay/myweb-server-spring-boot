@@ -49,7 +49,7 @@ public class LoginServerImpl implements LoginServer {
 			consequencer.setMessage("密码错误(或者账号错误)");
 			return consequencer.getJsonObjMessage();
 		}
-		
+
 		// 根据key值 获取 凭证Token
 		List<User> tokenResult = userRepository.findByKeyname("token");
 
@@ -57,25 +57,22 @@ public class LoginServerImpl implements LoginServer {
 		if (tokenResult.size() > 0) {
 			realToken = tokenResult.get(0).getValue();
 
-		} else {
-			// 没有数据创建一个 Token
-			userToken.setKeyname("token");
+		} else { // 未查询到值就新建一个token
 			realToken = StringConver.createRandomStr(42); // token 长度42
+
+			userToken.setKeyname("token");
 			userToken.setValue(realToken);
 
-			System.out.printf("userToken.toString()" + userToken.toString() + "\n");
-			
-			
 			try {
 				userRepository.save(userToken);
-				
+
 			} catch (Exception e) {
 				
 				consequencer.setMessage("数据库创建token失败！" + e.toString());
 				return consequencer.getJsonObjMessage();
 			}
 		}
-		
+
 		consequencer.setResult(1); // 设置为成功
 		JSONObject data = new JSONObject();
 		data.put("token", realToken);

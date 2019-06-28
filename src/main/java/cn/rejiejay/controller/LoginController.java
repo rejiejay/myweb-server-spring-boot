@@ -63,11 +63,12 @@ public class LoginController extends BaseController {
 		
 		// 判断结果是否正确
 		if (verifyResult.getInteger("result") != 1) { // 不正确的情况下，直接返回错误结果
+			System.out.printf("\u001b[31m /login[123]: " + verifyResult.getInteger("result") + "\n"); // 打印 数据库获取的数据
 			return verifyResult;
 		}
 		
 		// 返回响应参数
-		LoginReply userToken = new LoginReply(verifyResult.getString("token"));
+		LoginReply userToken = new LoginReply(verifyResult.getJSONObject("data").getString("token"));
 		JSONObject replyJson = userToken.toJSON();
 
 		System.out.printf("\u001b[31m /login[rep]: " + JSON.toJSONString(replyJson) + "\n"); // 打印 响应参数
