@@ -14,8 +14,8 @@ import cn.rejiejay.dataaccessobject.User;
  * @Date 2019年6月27日06:37:20
  */
 public interface UserRepository extends CrudRepository<User, Long> {
-	
+
 	// 通过key名称获取值
-    @Query(value = "select * from user where keyname=?1 limit 1", nativeQuery = true)
-    List<User> findByKeyname(String keyname);
+	@Query(value = "select * from user where keyname=?1 limit 1", nativeQuery = true)
+	List<User> findByKeyname(String keyname);
 }

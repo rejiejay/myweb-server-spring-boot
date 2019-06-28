@@ -23,7 +23,7 @@ public class User {
     private String keyname;
     private String value;
 
-    protected User() {}
+    public User() {}
 
 	public String getKeyname() {
 		return keyname;
