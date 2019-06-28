@@ -5,6 +5,7 @@ import cn.rejiejay.dataaccessobject.User;
 import cn.rejiejay.dataaccessobject.UserRepository;
 import cn.rejiejay.viewobject.LoginReque;
 import cn.rejiejay.viewobject.LoginReply;
+import cn.rejiejay.service.LoginServer;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -33,9 +34,6 @@ import com.alibaba.fastjson.JSONObject;
 @RestController
 @RequestMapping("/login")
 public class LoginController extends BaseController {
-	@Autowired
-	private UserRepository userRepository;
-	
 	/**
 	 * 登录页Post请求登录
 	 * consumes: 指定处理请求的提交内容类型（Content-Type），例如application/json, text/html;
@@ -57,13 +55,10 @@ public class LoginController extends BaseController {
 		}
 
 		// 操作ORM获取数据库数据
-		List<User> password = userRepository.findByKeyname(req.getPassword());
-		System.out.printf("\u001b[31m /login[orm]: " + JSONArray.toJSONString(password) + "\n"); // 打印 数据库获取的数据
+		LoginServer loginServer = new LoginServer();
+		JSONObject verifyResult = loginServer.verifyPassword(req.getPassword());
 
-		LoginReply userToken = new LoginReply("123");
-		JSONObject replyJson = userToken.toJSON();
-
-		System.out.printf("\u001b[31m /login[rep]: " + JSON.toJSONString(replyJson) + "\n"); // 打印 响应参数
-		return succeedJsonReply(replyJson);
+		System.out.printf("\u001b[31m /login[rep]: " + JSON.toJSONString(verifyResult) + "\n"); // 打印 响应参数
+		return succeedJsonReply(verifyResult);
 	}
 }

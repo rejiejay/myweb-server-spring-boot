@@ -3,13 +3,13 @@ package cn.rejiejay.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import cn.rejiejay.dataaccessobject.User;
 import cn.rejiejay.dataaccessobject.UserRepository;
 import cn.rejiejay.utils.Consequencer;
 import cn.rejiejay.utils.StringConver;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
 /**
@@ -18,9 +18,10 @@ import com.alibaba.fastjson.JSONObject;
  * @author _rejeijay
  * @Date 2019年6月10日22:07:04
  */
+@Service
 public class LoginServer {
 	@Autowired
-	private UserRepository userRepository;
+	public UserRepository userRepository;
 
 	/**
 	 * 获取密码，并且判断是否正确
@@ -33,12 +34,12 @@ public class LoginServer {
 		User userToken = new User();
 
 		// 根据key值获取密码
-		List<User> result = userRepository.findByKeyname("password");
-		System.out.printf("\u001b[31m /login[orm]: " + JSONArray.toJSONString(result) + "\n"); // 打印 数据库获取的数据
-
+		List<User> passwordResult = userRepository.findByKeyname("password");
+		System.out.printf("\u001b[31m /login[orm]: " + passwordResult.toString() + "\n"); // 打印 数据库获取的数据
+		
 		// 判断是否查询到数据
-		if (result.size() > 0) {
-			realPassword = result.get(0).getValue();
+		if (passwordResult.size() > 0) {
+			realPassword = passwordResult.get(0).getValue();
 
 		} else {
 			consequencer.setMessage("数据库查询为空");
