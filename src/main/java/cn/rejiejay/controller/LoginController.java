@@ -34,6 +34,9 @@ import com.alibaba.fastjson.JSONObject;
 @RestController
 @RequestMapping("/login")
 public class LoginController extends BaseController {
+	@Autowired
+	public LoginServer loginServer;
+	
 	/**
 	 * 登录页Post请求登录
 	 * consumes: 指定处理请求的提交内容类型（Content-Type），例如application/json, text/html;
@@ -55,7 +58,6 @@ public class LoginController extends BaseController {
 		}
 
 		// 操作ORM获取数据库数据
-		LoginServer loginServer = new LoginServer();
 		JSONObject verifyResult = loginServer.verifyPassword(req.getPassword());
 
 		System.out.printf("\u001b[31m /login[rep]: " + JSON.toJSONString(verifyResult) + "\n"); // 打印 响应参数
