@@ -18,4 +18,8 @@ public interface UserRepository extends CrudRepository<User, Long> {
 	// 通过key名称获取值
 	@Query(value = "select * from user where keyname=?1 limit 1", nativeQuery = true)
 	List<User> findByKeyname(String keyname);
+
+	// 创建 Token
+	@Query(value = "insert into user (keyname, value) values (\"Token\", ?1)", nativeQuery = true)
+	int saveToken(String token);
 }

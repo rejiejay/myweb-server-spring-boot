@@ -1,17 +1,5 @@
 package cn.rejiejay.controller;
 
-import cn.rejiejay.controller.BaseController;
-import cn.rejiejay.dataaccessobject.User;
-import cn.rejiejay.dataaccessobject.UserRepository;
-import cn.rejiejay.viewobject.LoginReque;
-import cn.rejiejay.viewobject.LoginReply;
-import cn.rejiejay.service.LoginServer;
-
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestBody;
-
 import java.util.List;
 
 // java和 _javax都是Java的API(Application Programming Interface)包，java是核心包，_javax的x是extension的意思，也就是扩展包。
@@ -20,10 +8,18 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+
+import cn.rejiejay.service.LoginServer;
+import cn.rejiejay.viewobject.LoginReply;
+import cn.rejiejay.viewobject.LoginReque;
 
 /**
  * 登录
@@ -34,9 +30,13 @@ import com.alibaba.fastjson.JSONObject;
 @RestController
 @RequestMapping("/login")
 public class LoginController extends BaseController {
+	/**
+	 * 虽然注入dao层也可以直接调用到数据库层。但是按照规范一般不这么做。 一般注入的是service接口，然后通过service.xxx()方法。
+	 * 这么做的原因： 1. 因为安全，因为别人无法通过反编译获取到你的具体实现代码。 2. 让代码更具有可读性。
+	 */
 	@Autowired
-	public LoginServer loginServer;
-	
+	private LoginServer loginServer;
+
 	/**
 	 * 登录页Post请求登录
 	 * consumes: 指定处理请求的提交内容类型（Content-Type），例如application/json, text/html;
@@ -59,8 +59,18 @@ public class LoginController extends BaseController {
 
 		// 操作ORM获取数据库数据
 		JSONObject verifyResult = loginServer.verifyPassword(req.getPassword());
+		System.out.printf("\u001b[31m /login[orm]: " + JSONArray.toJSONString(verifyResult) + "\n"); // 打印 数据库获取的数据
+		
+		// 判断结果是否正确
+		if (verifyResult.getInteger("result") != 1) { // 不正确的情况下，直接返回错误结果
+			return verifyResult;
+		}
+		
+		// 返回响应参数
+		LoginReply userToken = new LoginReply(verifyResult.getString("token"));
+		JSONObject replyJson = userToken.toJSON();
 
-		System.out.printf("\u001b[31m /login[rep]: " + JSON.toJSONString(verifyResult) + "\n"); // 打印 响应参数
-		return succeedJsonReply(verifyResult);
+		System.out.printf("\u001b[31m /login[rep]: " + JSON.toJSONString(replyJson) + "\n"); // 打印 响应参数
+		return succeedJsonReply(replyJson);
 	}
 }
