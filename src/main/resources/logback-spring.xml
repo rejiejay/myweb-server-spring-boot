@@ -10,7 +10,7 @@ FATAL 指出每个严重的错误事件将会导致应用程序的退出。这�
 <configuration>
 
     <!-- 文件输出格式 -->
-    <property name="PATTERN" value="%-12(%d{yyyy-MM-dd HH:mm:ss.SSS}) |-%-5level [%thread] %c [%L] -| %msg%n" />
+    <property name="PATTERN" value="%c [%-5level]： %msg  | [%thread] [%L] | %-12(%d{yyyy-MM-dd HH:mm:ss.SSS}) %n" />
 
     <!-- test文件路径 当磁盘下生成 也可以指定完整路径 如果不指定就是在当前项目结构中生成  -->
     <property name="TEST_FILE_PATH" value="/rejiejay/springboot/log" />
