@@ -38,7 +38,7 @@ public class LoginServerImpl implements LoginServer {
 
 		// 根据key值获取密码
 		List<User> result = userRepository.findByKeyname("password");
-		logger.info("/login[sql]findByKeyname(password): " + JSONArray.toJSONString(result)); // 打印 数据库获取的数据
+		logger.info("UserRepository.findByKeyname(password): " + JSONArray.toJSONString(result)); // 打印 数据库获取的数据
 
 		// 判断是否查询到数据
 		if (result.size() > 0) {
@@ -57,7 +57,7 @@ public class LoginServerImpl implements LoginServer {
 
 		// 根据key值 获取 凭证Token
 		List<User> tokenResult = userRepository.findByKeyname("token");
-		logger.info("/login[sql]findByKeyname(token): " + tokenResult.toString()); // 打印 数据库获取的数据
+		logger.info("UserRepository.findByKeyname(token): " + tokenResult.toString()); // 打印 数据库获取的数据
 
 		// 判断是否查询到数据
 		if (tokenResult.size() > 0) {
@@ -74,7 +74,7 @@ public class LoginServerImpl implements LoginServer {
 
 			} catch (Exception e) {
 				
-				logger.error("/login[sql]UserRepository.save(" + realToken + "): " + e.toString());
+				logger.error("UserRepository.save(" + realToken + "): " + e.toString());
 				
 				return consequencer.getJsonObjMessage();
 			}
