@@ -21,6 +21,9 @@ import cn.rejiejay.service.LoginServer;
 import cn.rejiejay.viewobject.LoginReply;
 import cn.rejiejay.viewobject.LoginReque;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * 登录
  * 
@@ -30,6 +33,8 @@ import cn.rejiejay.viewobject.LoginReque;
 @RestController
 @RequestMapping("/login")
 public class LoginController extends BaseController {
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
+	
 	/**
 	 * 虽然注入dao层也可以直接调用到数据库层。但是按照规范一般不这么做。 一般注入的是service接口，然后通过service.xxx()方法。
 	 * 这么做的原因： 1. 因为安全，因为别人无法通过反编译获取到你的具体实现代码。 2. 让代码更具有可读性。
@@ -46,24 +51,22 @@ public class LoginController extends BaseController {
 	 */
 	@RequestMapping(value = "", method = RequestMethod.POST, consumes = "application/json", produces = "application/json;charset=UTF-8")
 	public JSONObject login(@RequestBody @Valid LoginReque req, BindingResult result) {
-
-		System.out.printf("\u001b[31m /login[req]: " + JSON.toJSONString(req) + "\n"); // 打印 请求参数
+		logger.debug("/login[req]: " + JSON.toJSONString(req)); // 打印 请求参数
 
 		if (result.hasErrors()) { // 判断参数是否合法
 			for (ObjectError error : result.getAllErrors()) {
 				String errorMsg = error.getDefaultMessage();
-				System.out.println("\u001b[31m /login[error]: " + errorMsg + "\n");
+				logger.warn("/login[req]: " + errorMsg);
 				return errorJsonReply(2, errorMsg);
 			}
 		}
 
 		// 操作ORM获取数据库数据
 		JSONObject verifyResult = loginServer.verifyPassword(req.getPassword());
-		System.out.printf("\u001b[31m /login[orm]: " + JSONArray.toJSONString(verifyResult) + "\n"); // 打印 数据库获取的数据
+		logger.debug("/login[orm]: " + JSONArray.toJSONString(verifyResult)); // 打印 数据库获取的数据
 		
 		// 判断结果是否正确
 		if (verifyResult.getInteger("result") != 1) { // 不正确的情况下，直接返回错误结果
-			System.out.printf("\u001b[31m /login[123]: " + verifyResult.getInteger("result") + "\n"); // 打印 数据库获取的数据
 			return verifyResult;
 		}
 		
@@ -71,7 +74,6 @@ public class LoginController extends BaseController {
 		LoginReply userToken = new LoginReply(verifyResult.getJSONObject("data").getString("token"));
 		JSONObject replyJson = userToken.toJSON();
 
-		System.out.printf("\u001b[31m /login[rep]: " + JSON.toJSONString(replyJson) + "\n"); // 打印 响应参数
 		return succeedJsonReply(replyJson);
 	}
 }

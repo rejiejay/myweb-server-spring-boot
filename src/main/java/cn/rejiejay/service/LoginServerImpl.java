@@ -13,6 +13,9 @@ import cn.rejiejay.dataaccessobject.UserRepository;
 import cn.rejiejay.utils.Consequencer;
 import cn.rejiejay.utils.StringConver;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * 登录逻辑模块 实现类
  * 
@@ -21,6 +24,8 @@ import cn.rejiejay.utils.StringConver;
  */
 @Service
 public class LoginServerImpl implements LoginServer {
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
+	
 	@Autowired
 	private UserRepository userRepository;
 
@@ -33,7 +38,7 @@ public class LoginServerImpl implements LoginServer {
 
 		// 根据key值获取密码
 		List<User> result = userRepository.findByKeyname("password");
-		System.out.printf("\u001b[31m /login[orm]: " + JSONArray.toJSONString(result) + "\n"); // 打印 数据库获取的数据
+		logger.info("/login[sql]findByKeyname(password): " + JSONArray.toJSONString(result)); // 打印 数据库获取的数据
 
 		// 判断是否查询到数据
 		if (result.size() > 0) {
@@ -52,6 +57,7 @@ public class LoginServerImpl implements LoginServer {
 
 		// 根据key值 获取 凭证Token
 		List<User> tokenResult = userRepository.findByKeyname("token");
+		logger.info("/login[sql]findByKeyname(token): " + tokenResult.toString()); // 打印 数据库获取的数据
 
 		// 判断是否查询到数据
 		if (tokenResult.size() > 0) {
@@ -68,7 +74,8 @@ public class LoginServerImpl implements LoginServer {
 
 			} catch (Exception e) {
 				
-				consequencer.setMessage("数据库创建token失败！" + e.toString());
+				logger.error("/login[sql]UserRepository.save(" + realToken + "): " + e.toString());
+				
 				return consequencer.getJsonObjMessage();
 			}
 		}
