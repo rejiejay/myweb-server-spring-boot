@@ -17,17 +17,45 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * 登录逻辑模块 实现类
+ * 用户逻辑模块 实现类
  * 
  * @author _rejeijay
  * @Date 2019年6月10日22:07:04
  */
 @Service
-public class LoginServerImpl implements LoginServer {
+public class UserServerImpl implements UserServer {
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 	
 	@Autowired
 	private UserRepository userRepository;
+
+	@Override
+	public JSONObject getUser(String username) {
+		Consequencer consequencer = new Consequencer();
+		User userResult = new User();
+
+		List<User> result = userRepository.findByUsername(username);
+		// 判断是否查询到数据
+		if (result.size() > 0) {
+			userResult = result.get(0);
+			JSONObject data = new JSONObject();
+
+			data.put("username", userResult.getUsername());
+			data.put("password", userResult.getPassword());
+			data.put("token", userResult.getToken());
+			data.put("tokenexpired", userResult.getTokenexpired());
+
+			consequencer.setResult(1); // 设置成功
+			consequencer.setData(data);
+			consequencer.setMessage("successful");
+
+			return consequencer.getJsonObjMessage();
+		} else {
+			consequencer.setMessage("数据库查询为空");
+
+			return consequencer.getJsonObjMessage();
+		}
+	}
 
 	@Override
 	public JSONObject verifyPassword(String password) {
@@ -37,12 +65,14 @@ public class LoginServerImpl implements LoginServer {
 		User userToken = new User();
 
 		// 根据key值获取密码
-		List<User> result = userRepository.findByKeyname("password");
+		List<User> result = userRepository.findByUsername("rejiejay");
 		logger.info("UserRepository.findByKeyname(password): " + JSONArray.toJSONString(result)); // 打印 数据库获取的数据
 
 		// 判断是否查询到数据
 		if (result.size() > 0) {
-			realPassword = result.get(0).getValue();
+			userToken = result.get(0);
+			realPassword = userToken.getPassword();
+			realToken = userToken.getToken();
 
 		} else {
 			consequencer.setMessage("数据库查询为空");
@@ -55,19 +85,12 @@ public class LoginServerImpl implements LoginServer {
 			return consequencer.getJsonObjMessage();
 		}
 
-		// 根据key值 获取 凭证Token
-		List<User> tokenResult = userRepository.findByKeyname("token");
-		logger.info("UserRepository.findByKeyname(token): " + tokenResult.toString()); // 打印 数据库获取的数据
-
-		// 判断是否查询到数据
-		if (tokenResult.size() > 0) {
-			realToken = tokenResult.get(0).getValue();
-
-		} else { // 未查询到值就新建一个token
+		// 判断是否存在token并且判断是否过期
+		if (realToken.length() == 0) {
+			// 未查询到值就新建一个token
 			realToken = StringConver.createRandomStr(42); // token 长度42
 
-			userToken.setKeyname("token");
-			userToken.setValue(realToken);
+			userToken.setToken(realToken);
 
 			try {
 				userRepository.save(userToken);

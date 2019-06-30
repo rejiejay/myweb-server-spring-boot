@@ -1,7 +1,5 @@
 package cn.rejiejay.controller;
 
-import java.util.List;
-
 // java和 _javax都是Java的API(Application Programming Interface)包，java是核心包，_javax的x是extension的意思，也就是扩展包。
 import javax.validation.Valid;
 
@@ -17,9 +15,9 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
-import cn.rejiejay.service.LoginServer;
-import cn.rejiejay.viewobject.LoginReply;
-import cn.rejiejay.viewobject.LoginReque;
+import cn.rejiejay.service.UserServer;
+import cn.rejiejay.viewobject.UserReply;
+import cn.rejiejay.viewobject.UserReque;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,8 +29,8 @@ import org.slf4j.LoggerFactory;
  * @Date 2019年6月10日22:07:04
  */
 @RestController
-@RequestMapping("/login")
-public class LoginController extends BaseController {
+@RequestMapping("/user")
+public class UserController extends BaseController {
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 	
 	/**
@@ -40,7 +38,7 @@ public class LoginController extends BaseController {
 	 * 这么做的原因： 1. 因为安全，因为别人无法通过反编译获取到你的具体实现代码。 2. 让代码更具有可读性。
 	 */
 	@Autowired
-	private LoginServer loginServer;
+	private UserServer userServer;
 
 	/**
 	 * 登录页Post请求登录
@@ -49,8 +47,8 @@ public class LoginController extends BaseController {
      * _params: [这个比较少用到] 指定request中必须包含某些参数值是，才让该方法处理。 @RequestMapping(value = "/pets/{petId}", method = RequestMethod.GET, params="myParam=myValue")
      * headers: 指定request中必须包含某些指定的header值，才能让该方法处理请求。 @RequestMapping(value = "/pets", method = RequestMethod.GET, headers="Referer=http://www.ifeng.com/")
 	 */
-	@RequestMapping(value = "", method = RequestMethod.POST, consumes = "application/json", produces = "application/json;charset=UTF-8")
-	public JSONObject login(@RequestBody @Valid LoginReque req, BindingResult result) {
+	@RequestMapping(value = "/login", method = RequestMethod.POST, consumes = "application/json", produces = "application/json;charset=UTF-8")
+	public JSONObject login(@RequestBody @Valid UserReque req, BindingResult result) {
 		logger.debug("/login[req]: " + JSON.toJSONString(req)); // 打印 请求参数
 
 		if (result.hasErrors()) { // 判断参数是否合法
@@ -62,7 +60,7 @@ public class LoginController extends BaseController {
 		}
 
 		// 操作ORM获取数据库数据
-		JSONObject verifyResult = loginServer.verifyPassword(req.getPassword());
+		JSONObject verifyResult = userServer.verifyPassword(req.getPassword());
 		logger.debug("/login[orm]: " + JSONArray.toJSONString(verifyResult)); // 打印 数据库获取的数据
 		
 		// 判断结果是否正确
@@ -71,7 +69,7 @@ public class LoginController extends BaseController {
 		}
 		
 		// 返回响应参数
-		LoginReply userToken = new LoginReply(verifyResult.getJSONObject("data").getString("token"));
+		UserReply userToken = new UserReply(verifyResult.getJSONObject("data").getString("token"));
 		JSONObject replyJson = userToken.toJSON();
 
 		return succeedJsonReply(replyJson);
