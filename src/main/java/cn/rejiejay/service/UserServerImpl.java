@@ -75,13 +75,13 @@ public class UserServerImpl implements UserServer {
 			realToken = userToken.getToken();
 
 		} else {
-			consequencer.setMessage("数据库查询为空");
+			consequencer.setMessage("Authorization failed, database query has no user who name is rejiejay");
 			return consequencer.getJsonObjMessage();
 		}
 
 		// 校验密码
 		if (!password.equals(realPassword)) {
-			consequencer.setMessage("密码错误(或者账号错误)");
+			consequencer.setMessage("Rejiejay Account password is wrong");
 			return consequencer.getJsonObjMessage();
 		}
 
@@ -107,6 +107,34 @@ public class UserServerImpl implements UserServer {
 		JSONObject data = new JSONObject();
 		data.put("token", realToken);
 		consequencer.setData(data); // 返回 token 凭证
+
+		return consequencer.getJsonObjMessage();
+	}
+
+	public JSONObject authentication(String username, String password) {
+		Consequencer consequencer = new Consequencer();
+		String realPassword = "";
+		String realToken = "";
+		String tokenExpired = "";
+		User userToken = new User();
+		
+		// 根据用户名获取数据
+		List<User> result = userRepository.findByUsername(username);
+		logger.info("UserRepository.findByKeyname(" + username + "): " + JSONArray.toJSONString(result)); // 打印 数据库获取的数据
+
+		// 判断是否查询到数据
+		if (result.size() > 0) {
+			userToken = result.get(0);
+			realPassword = userToken.getPassword();
+			realToken = userToken.getToken();
+			tokenExpired = userToken.getTokenexpired();
+
+		} else {
+			consequencer.setMessage("Authorization failed, database query has no such user who name is " + username);
+			return consequencer.getJsonObjMessage();
+		}
+		
+		// 
 
 		return consequencer.getJsonObjMessage();
 	}

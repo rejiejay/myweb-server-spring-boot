@@ -24,6 +24,11 @@ public interface UserServer {
 	 * 如果正确返回 token
 	 */
 	public JSONObject verifyPassword(String password);
+	
+	/**
+	 * 通过账号和密码授权用户凭证 token
+	 */
+	public JSONObject authentication(String username, String password);
 
 	/**
 	 * 获取用户信息

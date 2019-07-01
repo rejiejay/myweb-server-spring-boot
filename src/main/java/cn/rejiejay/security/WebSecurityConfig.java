@@ -41,6 +41,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .authorizeRequests().anyRequest().permitAll()
             .and()
             // 添加过滤器 （添加属于我们自己的过滤器，注意因为我们没有开启formLogin()，所以UsernamePasswordAuthenticationFilter根本不会被调用
+            // addFilterAt(javax.servlet.Filter filter, java.lang.Class<? extends javax.servlet.Filter> atFilter)
             .addFilterAt(new JWTAuthenticationFilter(jwtAuthenticationManager), UsernamePasswordAuthenticationFilter.class)
             // 前后端分离本身就是无状态的，所以我们不需要cookie和session这类东西。所有的信息都保存在一个token之中。
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
