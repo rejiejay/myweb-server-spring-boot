@@ -10,7 +10,11 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
+import java.io.Writer;
+
+import cn.rejiejay.utils.Consequencer;
 
 /**
  * 这个就是拦截的过滤器
@@ -61,7 +65,16 @@ public class JWTAuthenticationFilter extends BasicAuthenticationFilter {
         } catch (AuthenticationException failed) {
             SecurityContextHolder.clearContext();
             // 返回鉴权失败
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, failed.getMessage());
+            // response.sendError(HttpServletResponse.SC_UNAUTHORIZED, failed.getMessage());
+            
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            Writer out = response.getWriter();
+            Consequencer consequencer = new Consequencer();
+            consequencer.setResult(48001); // 表示该用户未授权
+            consequencer.setMessage("api unauthorized hint: " + failed.getMessage());
+            out.write(consequencer.toString());
+            out.flush();
             return;
         }
         chain.doFilter(request, response);
