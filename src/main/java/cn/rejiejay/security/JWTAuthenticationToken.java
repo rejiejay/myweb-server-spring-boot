@@ -7,7 +7,7 @@ import org.springframework.security.core.SpringSecurityCoreVersion;
 import java.util.Collection;
 
 /**
- * 应该是 规范 （重写 AuthenticationManager 父类的方法 需要返回的值 Authentication 
+ * 应该是 规范 要返回的东西 的一个方法 （重写 AuthenticationManager 父类的方法 需要返回的值 Authentication 
  * 继承了 AbstractAuthenticationToken 的抽象类 
  * 鉴定成功后调用的方法，返回的JWTAuthenticationToken供Controller里面调用。
  * 有两个地方用到 JWTAuthenticationFilter 和 JWTAuthenticationManager
