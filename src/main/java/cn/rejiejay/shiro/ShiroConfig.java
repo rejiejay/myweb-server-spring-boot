@@ -58,7 +58,7 @@ public class ShiroConfig {
          */
         filterRuleMap.put("/unauthorized/**", "anon");
         filterRuleMap.put("/401", "anon");
-        filterRuleMap.put("/404", "anon")
+        filterRuleMap.put("/404", "anon");
         factoryBean.setFilterChainDefinitionMap(filterRuleMap); // 使设置生效
         return factoryBean;
     }
@@ -71,8 +71,8 @@ public class ShiroConfig {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
         // 设置自定义 realm. 使用自己的realm
         securityManager.setRealm(customRealm);
-        //注入缓存管理器
-        securityManager.setCacheManager(ehCacheManager());
+        // 注入缓存管理器
+        // securityManager.setCacheManager(ehCacheManager());
 
         /*
          * 关闭shiro自带的session，详情见文档
@@ -118,10 +118,10 @@ public class ShiroConfig {
      *
      * @return
      */
-    @Bean
-    public EhCacheManager ehCacheManager() {
-        EhCacheManager cacheManager = new EhCacheManager();
-        cacheManager.setCacheManagerConfigFile("classpath:ehcache.xml");
-        return cacheManager;
-    }
+//    @Bean
+//    public EhCacheManager ehCacheManager() {
+//        EhCacheManager cacheManager = new EhCacheManager();
+//        cacheManager.setCacheManagerConfigFile("classpath:ehcache.xml");
+//        return cacheManager;
+//    }
 }

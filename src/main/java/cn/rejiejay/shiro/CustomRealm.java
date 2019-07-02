@@ -11,7 +11,11 @@ import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import cn.rejiejay.dataaccessobject.Role;
+import cn.rejiejay.dataaccessobject.RoleRepository;
+
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -25,16 +29,8 @@ import java.util.Set;
  */
 @Component
 public class CustomRealm extends AuthorizingRealm {
-    /**
-     * 需要 sername	password role permission
-     * 这个肯定是需要进行改进的
-     */
-    private final UserMapper userMapper;
-
-    @Autowired
-    public CustomRealm(UserMapper userMapper) {
-        this.userMapper = userMapper;
-    }
+	@Autowired
+	private RoleRepository roleRepository;
 
     /**
      * 必须重写此方法，不然会报错
@@ -61,21 +57,30 @@ public class CustomRealm extends AuthorizingRealm {
          */ 
         String username = JWTUtil.getUsername(token);
         if (username == null || !JWTUtil.verify(token, username)) {
-            throw new AuthenticationException("token认证失败！");
+            throw new AuthenticationException("token认证失败(不是有效的token！");
         }
 
         /**
          * 通过username从数据库中查找 密码
          * 实际项目中，这里可以根据实际情况做缓存，如果不做，Shiro自己也是有时间间隔机制，2分钟内不会重复执行该方法
          */
-        String password = userMapper.getPassword(username);
-        if (password == null) {
+        // String password = userMapper.getPassword(username);
+        // if (password == null) {
+        //     throw new AuthenticationException("该用户不存在！");
+        // }
+        // int ban = userMapper.checkUserBanStatus(username);
+        // if (ban == 1) {
+        //     throw new AuthenticationException("该用户已被封号！");
+        // }
+        /**
+         * 通过username从数据库中查找 用户信息
+         */
+        List<Role> result = roleRepository.findByUsername(username);
+		// 判断是否查询到数据
+		if (result.size() <= 0) {
             throw new AuthenticationException("该用户不存在！");
-        }
-        int ban = userMapper.checkUserBanStatus(username);
-        if (ban == 1) {
-            throw new AuthenticationException("该用户已被封号！");
-        }
+		}
+        
         return new SimpleAuthenticationInfo(token, token, "MyRealm");
     }
 
@@ -102,19 +107,23 @@ public class CustomRealm extends AuthorizingRealm {
         System.out.println("————权限认证————");
         String username = JWTUtil.getUsername(principals.toString());
         SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
-        
+
+        /**
+         * 通过username从数据库中查找 用户信息
+         */
+        List<Role> result = roleRepository.findByUsername(username);
         // 下面的可以使用缓存提升速度 获得该用户角色
-        String role = userMapper.getRole(username);
+        String role = result.get(0).getRole(); //        String role = userMapper.getRole(username);
         // 每个角色拥有默认的权限
-        String rolePermission = userMapper.getRolePermission(username);
+        String rolePermission = result.get(0).getPermission(); //        String rolePermission = userMapper.getRolePermission(username);
         // 每个用户可以设置新的权限
-        String permission = userMapper.getPermission(username);
+        // String permission = userMapper.getPermission(username);
         Set<String> roleSet = new HashSet<>();
         Set<String> permissionSet = new HashSet<>();
         // 设置相应角色的权限信息 需要将 role, permission 封装到 Set 作为 info.setRoles(), info.setStringPermissions() 的参数
         roleSet.add(role); // 设置角色
         permissionSet.add(rolePermission); // 设置权限
-        permissionSet.add(permission);
+        // permissionSet.add(permission);
         //设置该用户拥有的角色和权限
         info.setRoles(roleSet);
         info.setStringPermissions(permissionSet);
