@@ -65,9 +65,20 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
+
+		<!-- shiro + springBoot 整合 JWT.md https://juejin.im/post/5ac78b31f265da237411387e -->
+		<dependency>
+			<groupId>org.apache.shiro</groupId>
+			<artifactId>shiro-spring</artifactId>
+			<version>1.3.2</version>
+		</dependency>
+		<dependency>
+			<groupId>com.auth0</groupId>
+			<artifactId>java-jwt</artifactId>
+			<version>3.2.0</version>
+		</dependency>
 	</dependencies>
 
-	<!-- _maven 打包配置 -->
 	<build>
 		<plugins>
 			<plugin>
