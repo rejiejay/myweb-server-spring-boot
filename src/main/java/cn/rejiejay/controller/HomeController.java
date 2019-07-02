@@ -1,7 +1,5 @@
 package cn.rejiejay.controller;
 
-import org.apache.shiro.authz.annotation.Logical;
-import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Value;
 
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,7 +26,6 @@ public class HomeController {
 	 * @return string
 	 */
 	@RequestMapping("")
-	@RequiresRoles(logical = Logical.OR, value = { "user", "admin" })
 	public String home() {
 		return homeTest + "：Welcome to Rejiejay server side and your place in '/'.";
 	}
