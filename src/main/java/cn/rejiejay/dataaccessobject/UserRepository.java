@@ -15,9 +15,10 @@ import cn.rejiejay.dataaccessobject.User;
  * @Date 2019年6月27日06:37:20
  */
 public interface UserRepository extends CrudRepository<User, Long> {
-	// 通过名称获取用户信息
-	@Query(value = "select * from user where username=?1 limit 1", nativeQuery = true)
-	List<User> findByUsername(String username);
+
+	// 通过key名称获取值
+	@Query(value = "select * from user where keyname=?1 limit 1", nativeQuery = true)
+	List<User> findByKeyname(String keyname);
 
 	/**
 	 * 创建 Token （这个方法暂时还没用上 放在这里作为参考一下

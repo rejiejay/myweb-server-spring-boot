@@ -1,7 +1,5 @@
 package cn.rejiejay.controller;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-
 import org.junit.Test;
 
 import org.springframework.test.web.servlet.MvcResult;
@@ -22,21 +20,12 @@ public class LoginControllerTest extends BaseControllerTests {
 		String reqStr = "{\"password\": \"password\"}"; // 密码
 		
 		MvcResult result = mockMvc.perform(
-				MockMvcRequestBuilders.post("/user/login")
+				MockMvcRequestBuilders.post("/login")
 					.contentType(MediaType.APPLICATION_JSON_UTF8)
 					.accept(MediaType.APPLICATION_JSON_UTF8)
 					.content(reqStr.getBytes())
 			)
 			.andReturn(); // 返回执行请求的结果
-		
-		System.out.println(result.getResponse().getContentAsString());
-	}
-
-	// 测试 everyone 的授权认证
-	@Test
-	public void testEveryone() throws Exception {
-		MvcResult result = mockMvc.perform(get("/user/everyone"))  // 简单的get 请求
-				.andReturn(); // 返回执行请求的结果
 		
 		System.out.println(result.getResponse().getContentAsString());
 	}

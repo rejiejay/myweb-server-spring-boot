@@ -8,13 +8,13 @@ import com.alibaba.fastjson.JSONObject;
  * @author _rejeijay
  * @Date 2019年6月19日11:01:01
  */
-public class UserReply {
+public class LoginReply {
 	private String userToken = "not initiative in databases";
 	
-	public UserReply() {
+	public LoginReply() {
 	}
 
-	public UserReply(String userToken) {
+	public LoginReply(String userToken) {
 		this.userToken = userToken;
 	}
 
