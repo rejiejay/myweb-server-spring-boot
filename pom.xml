@@ -75,6 +75,13 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
+
+		<!-- 前后端分离 SpringBoot + SpringSecurity + JWT + RBAC 实现用户无状态请求验证： https://blog.csdn.net/larger5/article/details/81063438 -->
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt</artifactId>
+			<version>0.9.0</version>
+		</dependency>
 	</dependencies>
 
 	<!-- _maven 打包配置 -->
