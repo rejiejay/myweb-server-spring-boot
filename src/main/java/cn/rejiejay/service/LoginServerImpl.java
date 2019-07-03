@@ -29,61 +29,64 @@ public class LoginServerImpl implements LoginServer {
 	@Autowired
 	private UserRepository userRepository;
 
+	/**
+	 * 因为用户端有改动，所以暂且注释
+	 */
 	@Override
 	public JSONObject verifyPassword(String password) {
 		Consequencer consequencer = new Consequencer();
-		String realPassword = "";
-		String realToken = "";
-		User userToken = new User();
-
-		// 根据key值获取密码
-		List<User> result = userRepository.findByKeyname("password");
-		logger.info("UserRepository.findByKeyname(password): " + JSONArray.toJSONString(result)); // 打印 数据库获取的数据
-
-		// 判断是否查询到数据
-		if (result.size() > 0) {
-			realPassword = result.get(0).getValue();
-
-		} else {
-			consequencer.setMessage("数据库查询为空");
-			return consequencer.getJsonObjMessage();
-		}
-
-		// 校验密码
-		if (!password.equals(realPassword)) {
-			consequencer.setMessage("密码错误(或者账号错误)");
-			return consequencer.getJsonObjMessage();
-		}
-
-		// 根据key值 获取 凭证Token
-		List<User> tokenResult = userRepository.findByKeyname("token");
-		logger.info("UserRepository.findByKeyname(token): " + tokenResult.toString()); // 打印 数据库获取的数据
-
-		// 判断是否查询到数据
-		if (tokenResult.size() > 0) {
-			realToken = tokenResult.get(0).getValue();
-
-		} else { // 未查询到值就新建一个token
-			realToken = StringConver.createRandomStr(42); // token 长度42
-
-			userToken.setKeyname("token");
-			userToken.setValue(realToken);
-
-			try {
-				userRepository.save(userToken);
-
-			} catch (Exception e) {
-				
-				logger.error("UserRepository.save(" + realToken + "): " + e.toString());
-				
-				return consequencer.getJsonObjMessage();
-			}
-		}
-
-		consequencer.setResult(1); // 设置为成功
-		JSONObject data = new JSONObject();
-		data.put("token", realToken);
-		consequencer.setData(data); // 返回 token 凭证
+//		String realPassword = "";
+//		String realToken = "";
+//		User userToken = new User();
+//
+//		// 根据key值获取密码
+//		List<User> result = userRepository.findByKeyname("password");
+//		logger.info("UserRepository.findByKeyname(password): " + JSONArray.toJSONString(result)); // 打印 数据库获取的数据
+//
+//		// 判断是否查询到数据
+//		if (result.size() > 0) {
+//			realPassword = result.get(0).getValue();
+//
+//		} else {
+//			consequencer.setMessage("数据库查询为空");
+//			return consequencer.getJsonObjMessage();
+//		}
+//
+//		// 校验密码
+//		if (!password.equals(realPassword)) {
+//			consequencer.setMessage("密码错误(或者账号错误)");
+//			return consequencer.getJsonObjMessage();
+//		}
+//
+//		// 根据key值 获取 凭证Token
+//		List<User> tokenResult = userRepository.findByKeyname("token");
+//		logger.info("UserRepository.findByKeyname(token): " + tokenResult.toString()); // 打印 数据库获取的数据
+//
+//		// 判断是否查询到数据
+//		if (tokenResult.size() > 0) {
+//			realToken = tokenResult.get(0).getValue();
+//
+//		} else { // 未查询到值就新建一个token
+//			realToken = StringConver.createRandomStr(42); // token 长度42
+//
+//			userToken.setKeyname("token");
+//			userToken.setValue(realToken);
+//
+//			try {
+//				userRepository.save(userToken);
+//
+//			} catch (Exception e) {
+//				
+//				logger.error("UserRepository.save(" + realToken + "): " + e.toString());
+//				
+//				return consequencer.getJsonObjMessage();
+//			}
+//		}
+//
+//		consequencer.setResult(1); // 设置为成功
+//		JSONObject data = new JSONObject();
+//		data.put("token", realToken);
+//		consequencer.setData(data); // 返回 token 凭证
 
 		return consequencer.getJsonObjMessage();
 	}

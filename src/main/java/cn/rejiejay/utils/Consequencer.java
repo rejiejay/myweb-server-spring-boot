@@ -4,11 +4,11 @@ import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.JSON;
 
 /**
- * JAVA组件通讯结果类 (默认成功
+ * JAVA组件通讯结果类 (默认失败
  * 
- * @param {string} message 返回失败的信息封装
- * @param {int}    result 返回失败的数据封装
- * @param {object} data 返回失败的数据封装
+ * @param {string} message 返回失败的信息封装 （默认 "failure"
+ * @param {int}    result 返回失败的数据封装 （默认失败 0
+ * @param {object} data 返回失败的数据封装 （默认空对象
  * @author _rejeijay
  * @Date 2019年6月19日22:09:17
  */
@@ -22,8 +22,9 @@ public class Consequencer {
 		return result;
 	}
 
-	public void setResult(int result) {
+	public Consequencer setResult(int result) {
 		this.result = result;
+        return this;
 	}
 
 	/**
@@ -35,8 +36,9 @@ public class Consequencer {
 		return message;
 	}
 
-	public void setMessage(String message) {
+	public Consequencer setMessage(String message) {
 		this.message = message;
+        return this;
 	}
 
 	/**
@@ -48,8 +50,24 @@ public class Consequencer {
 		return data;
 	}
 
-	public void setData(JSONObject data) {
+	public Consequencer setData(JSONObject data) {
 		this.data = data;
+        return this;
+	}
+
+	/**
+	 * 设置为成功
+	 */
+    public Consequencer setSuccess() {
+		this.result = 1;
+		this.message = "successful";
+        return this;
+	}
+    public Consequencer setSuccess(JSONObject data) {
+		this.result = 1;
+		this.data = data;
+		this.message = "successful";
+        return this;
 	}
 
 	/**
