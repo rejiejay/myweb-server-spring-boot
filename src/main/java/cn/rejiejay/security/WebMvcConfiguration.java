@@ -39,7 +39,7 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
 		// "/**"和"/*"是有区别的
-		registry.addInterceptor(securityAnnotaterInterceptor).addPathPatterns("/**");
+		registry.addInterceptor(securityAnnotaterInterceptor).addPathPatterns("/**"); // 这里表示 securityAnnotaterInterceptor 这个过滤器
 	}
 
 	@Override
