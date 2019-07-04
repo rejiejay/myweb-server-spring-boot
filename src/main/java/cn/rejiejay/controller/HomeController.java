@@ -1,10 +1,15 @@
 package cn.rejiejay.controller;
 
 import org.springframework.beans.factory.annotation.Value;
-
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.alibaba.fastjson.JSONObject;
+
+import cn.rejiejay.security.SecurityAnnotater;
 
 /**
  * 主页测试
@@ -39,5 +44,17 @@ public class HomeController {
 	@RequestMapping(value = "", method = RequestMethod.POST)
 	public String testpost() {
 		return homeTest + "：Welcome to Rejiejay server side and your place in '/'.";
+	}
+
+	@SecurityAnnotater(role = "admin")
+	@RequestMapping("/security")
+	public String getsecurity() {
+		return "securityGet";
+	}
+
+	@SecurityAnnotater(role = "admin")
+	@RequestMapping(value = "/security", method = RequestMethod.POST, consumes = "application/json", produces = "application/json;charset=UTF-8")
+	public String postsecurity(@RequestBody JSONObject req, BindingResult result) {
+		return "securityPost";
 	}
 }

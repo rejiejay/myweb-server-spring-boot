@@ -64,8 +64,11 @@ public class User {
 	@Column(name = "secret")
     private String secret;
 	
-	@Column(name = "expired")
-    private String expired;
+	@Column(name = "tokenexpired")
+    private int tokenexpired;
+	
+	@Column(name = "signexpired")
+    private int signexpired;
 	
     public User() {}
 	
@@ -125,13 +128,22 @@ public class User {
 		this.secret = secret;
 	}
 
-	public String getExpired() {
-		return expired;
+	public int getTokenexpired() {
+		return tokenexpired;
 	}
 
-	public void setExpired(String expired) {
-		this.expired = expired;
+	public void setTokenexpired(int tokenexpired) {
+		this.tokenexpired = tokenexpired;
 	}
+
+	public int getSignexpired() {
+		return signexpired;
+	}
+
+	public void setSignexpired(int signexpired) {
+		this.signexpired = signexpired;
+	}
+
 }
 
 

@@ -11,12 +11,12 @@ import javax.crypto.spec.SecretKeySpec;
 import com.alibaba.fastjson.JSONObject;
 
 /**
- * JAVA Token 加密解密的方法
+ * JAVA 数字签名 加密解密的方法
  * 
  * @author _rejeijay
  * @Date 2019年7月3日22:02:01
  */
-public class digitalSignature {
+public class DigitalSignature {
 	/**
 	 * 通过请求参数生成 密钥
 	 * md5 加密的前16位 就是 AES-128-CBC密匙
@@ -37,18 +37,16 @@ public class digitalSignature {
 	 * 前端同等实现 java那边使用AES 128位填充模式：AES/CBC/PKCS5Padding加密方法，在nodejs中采用对应的aes-128-cbc加密方法就能对应上，因为有使用向量（iv），所以nodejs中要用createCipheriv方法，而不是createCipher。https://blog.csdn.net/sbt0198/article/details/53791612
 	 * 加密使用 AES-128-CBC对称加密算法(128位AES/ECB/PKCS7Padding加密/解密) + BASE64
 	 * @param reqParam 请求参数 不管是get请求还是post请求，一律转为_utf-8字符串
-	 * @param timestamp 过期时间
 	 * @param username 用户姓名
 	 * @param token 凭证
 	 * @return BASE64和AES-128-CBC对称加密算法 数字加密签名
 	 * @throws Exception
 	 */
-	public static String EncryptSignature(String reqParam, String timestamp, String username, String token) throws Exception {
+	public static String EncryptSignature(String reqParam, String username, String token) throws Exception {
 		/**
 		 * 生成需要加密的内容(最后解密出来的也是此内容
 		 */ 
-		JSONObject jsonObjContent = new JSONObject();
-		jsonObjContent.put("timestamp", timestamp); // 解密应该不需要注意顺序，但是前端加密的时候保险起见还是用这种顺序吧
+		JSONObject jsonObjContent = new JSONObject(); // 解密应该不需要注意顺序，但是前端加密的时候保险起见还是用这种顺序吧
 		jsonObjContent.put("username", username);
 		jsonObjContent.put("token", token);
 		String content = jsonObjContent.toString();
