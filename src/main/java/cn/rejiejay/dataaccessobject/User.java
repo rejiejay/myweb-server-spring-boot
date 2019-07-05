@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.validation.constraints.NotNull;
 
 /**
  * 用户模块 实体类
@@ -17,24 +18,27 @@ public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "user_id")
+	@NotNull
 	private Long userid;
 
 	/**
 	 * 现阶段只有一个是 _rejiejay
 	 */
 	@Column(name = "username")
+	@NotNull
     private String username;
 	
 	/**
 	 * 密码是一周刷新一次
 	 */
 	@Column(name = "password")
-    private String value;
+	@NotNull
+    private String password;
 	
 	/**
 	 * 现阶段只有 _admin 和 anonymous 也就是游客
 	 */
-	@Column(name = "role")
+	@Column(name = "role", nullable = true)
     private String role;
 	
 	/**
@@ -65,10 +69,10 @@ public class User {
     private String secret;
 	
 	@Column(name = "tokenexpired")
-    private int tokenexpired;
+    private long tokenexpired;
 	
 	@Column(name = "signexpired")
-    private int signexpired;
+    private long signexpired;
 	
     public User() {}
 	
@@ -86,14 +90,6 @@ public class User {
 
 	public void setUsername(String username) {
 		this.username = username;
-	}
-
-	public String getValue() {
-		return value;
-	}
-
-	public void setValue(String value) {
-		this.value = value;
 	}
 
 	public String getRole() {
@@ -128,20 +124,28 @@ public class User {
 		this.secret = secret;
 	}
 
-	public int getTokenexpired() {
+	public long getTokenexpired() {
 		return tokenexpired;
 	}
 
-	public void setTokenexpired(int tokenexpired) {
+	public void setTokenexpired(long tokenexpired) {
 		this.tokenexpired = tokenexpired;
 	}
 
-	public int getSignexpired() {
+	public long getSignexpired() {
 		return signexpired;
 	}
 
-	public void setSignexpired(int signexpired) {
+	public void setSignexpired(long signexpired) {
 		this.signexpired = signexpired;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 }

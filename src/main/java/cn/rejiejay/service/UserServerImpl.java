@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
@@ -26,29 +27,80 @@ import org.slf4j.LoggerFactory;
 @Service
 public class UserServerImpl implements UserServer {
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
-	
+
 	@Autowired
 	private UserRepository userRepository;
+
+	/**
+	 * 通过 用户姓名查找用户信息
+	 */
+	public User getUserInfo(String username) {
+		User dbUserResult = new User();
+
+		List<User> dbUserResultList = userRepository.findByUsername(username);
+		logger.info("UserRepository.findByUsername(" + username + "): " + JSONArray.toJSONString(dbUserResultList)); // 打印数据库获取的数据
+
+		// 判断是否查询到数据
+		if (dbUserResultList.size() > 0) {
+			dbUserResult = dbUserResultList.get(0);
+
+			return dbUserResult;
+		} else {
+
+			return null;
+		}
+	}
+
+	@Override
+	public JSONObject loginByRejiejay(String password) {
+		Consequencer consequencer = new Consequencer();
+		User dbUserResult = new User();
+
+		// 查询曾杰杰
+		dbUserResult = getUserInfo("rejiejay");
+
+		// 判断是否查询到数据
+		if (dbUserResult == null) {
+			// 未查询到数据表明没有此用户，说明账号错误，但是提示应该指示 账号密码错误
+			consequencer.setResult(3).setMessage("账号密码错误");
+			return consequencer.getJsonObjMessage();
+		}
+
+		// 判断密码是否正确
+		if (!dbUserResult.getPassword().equals(password)) {
+			consequencer.setResult(2).setMessage("账号密码错误");
+			return consequencer.getJsonObjMessage();
+		}
+
+		// 根据id刷新token
+		long tokenexpired = new Date().getTime() + 7200000;
+		long userid = dbUserResult.getUserid();
+		logger.info("UserRepository.refreshTokenByUserId(" + tokenexpired + "," + userid + ")"); // 打印数据库获取的数据
+		int refreshTokenResult = userRepository.refreshTokenByUserId(tokenexpired, userid);
+		logger.warn("refreshTokenResult" + refreshTokenResult);
+
+		JSONObject replyResult = new JSONObject();
+		replyResult.put("token", dbUserResult.getToken());
+		replyResult.put("tokenexpired", tokenexpired);
+		consequencer.setSuccess().setData(replyResult);
+		return consequencer.getJsonObjMessage();
+	}
 
 	@Override
 	public JSONObject securityVerifiByDigitalSign(String authorizeName, String licensedRole, String accessToken) {
 		Consequencer consequencer = new Consequencer();
 		User dbUserResult = new User();
-		
-		// 根据 需要授权的用户名 查询用户信息
-		List<User> dbUserResultList = userRepository.findByUsername(authorizeName);
-		logger.info("UserRepository.findByUsername(" + authorizeName + "): " + JSONArray.toJSONString(dbUserResultList)); // 打印 数据库获取的数据
-		
-		// 判断是否查询到数据
-		if (dbUserResultList.size() > 0) {
-			dbUserResult = dbUserResultList.get(0);
 
-		} else {
+		// 根据 需要授权的用户名 查询用户信息
+		dbUserResult = getUserInfo(authorizeName);
+
+		// 判断是否查询到数据
+		if (dbUserResult == null) {
 			// 未查询到数据表明没有此用户，说明token凭证是错误的
 			consequencer.setResult(40003).setMessage("无效的凭证类型");
 			return consequencer.getJsonObjMessage();
 		}
-		
+
 		// 优先判断 前端携带的凭证 是否正确
 		if (!licensedRole.equals(dbUserResult.getToken())) {
 			consequencer.setResult(40003).setMessage("无效的凭证类型");
@@ -66,9 +118,9 @@ public class UserServerImpl implements UserServer {
 			// 和数据库查询的角色对应失败， 表示token是有效，但是没有相应的权限
 			consequencer.setResult(40005).setMessage("您没有相应的权限");
 			return consequencer.getJsonObjMessage();
-			
+
 		}
-		
+
 		// 表示 存在此用户 并且 是经过授权（凭证正确 并且具有相应角色权限
 		consequencer.setSuccess();
 		return consequencer.getJsonObjMessage();

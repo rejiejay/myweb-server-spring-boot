@@ -30,7 +30,7 @@ public class HomeController {
 	 * 
 	 * @return string
 	 */
-	@RequestMapping("")
+	@RequestMapping("/")
 	public String home() {
 		return homeTest + "：Welcome to Rejiejay server side and your place in '/'.";
 	}

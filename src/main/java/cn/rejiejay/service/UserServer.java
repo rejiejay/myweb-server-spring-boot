@@ -20,9 +20,9 @@ import com.alibaba.fastjson.JSONObject;
  */
 public interface UserServer {
 	/**
-	 * 根据用户名获取
+	 * 曾杰杰 登录
 	 */
-	// public JSONObject getUserInfoByName(String userName);
+	 public JSONObject loginByRejiejay(String password);
 
 	/**
 	 * 通过数字签名携带的信息 验证是否符合权限

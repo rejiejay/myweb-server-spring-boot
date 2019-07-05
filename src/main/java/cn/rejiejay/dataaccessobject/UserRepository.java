@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.transaction.annotation.Transactional;
 
 import cn.rejiejay.dataaccessobject.User;
 
@@ -15,6 +16,11 @@ import cn.rejiejay.dataaccessobject.User;
  * @Date 2019年6月27日06:37:20
  */
 public interface UserRepository extends CrudRepository<User, Long> {
+	// 根据id刷新token
+	@Modifying
+	@Transactional
+	@Query(value = "update user set tokenexpired=?1 where user_id=?2", nativeQuery = true)
+	int refreshTokenByUserId(Long tokenexpired, Long Id);
 
 	// 通过key名称获取值
 	@Query(value = "select * from user where username=?1 limit 1", nativeQuery = true)

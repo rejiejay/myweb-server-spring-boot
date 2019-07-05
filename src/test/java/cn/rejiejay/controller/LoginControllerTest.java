@@ -20,7 +20,7 @@ public class LoginControllerTest extends BaseControllerTests {
 		String reqStr = "{\"password\": \"password\"}"; // 密码
 		
 		MvcResult result = mockMvc.perform(
-				MockMvcRequestBuilders.post("/login")
+				MockMvcRequestBuilders.post("/login/rejiejay")
 					.contentType(MediaType.APPLICATION_JSON_UTF8)
 					.accept(MediaType.APPLICATION_JSON_UTF8)
 					.content(reqStr.getBytes())
