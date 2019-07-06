@@ -19,8 +19,8 @@ import java.io.PrintWriter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
 
 /**
  * 对请求标记了 SecurityAnnotater 注解的方法进行拦截
@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory;
  */
 @Component
 public class SecurityAnnotaterInterceptor extends HandlerInterceptorAdapter {
-	private static final Logger logger = LoggerFactory.getLogger(SecurityAnnotaterInterceptor.class);
+//	private static final Logger logger = LoggerFactory.getLogger(SecurityAnnotaterInterceptor.class);
 	Consequencer consequencer = new Consequencer();
 
 	@Autowired
@@ -66,7 +66,7 @@ public class SecurityAnnotaterInterceptor extends HandlerInterceptorAdapter {
 				if (role != "" && role != "anonymous") {
 					// 不是空或游客 表示这里是需要权限的
 					String digitalSignatureEncodedString = request.getHeader("x-rejiejay-authorization");
-					if (!StringUtils.isEmpty(digitalSignatureEncodedString)) {
+					if (!StringUtils.isEmpty(digitalSignatureEncodedString)) { // 这个是非空的情况下
 						// 解析 数字签名
 						String digitalSignatureStr = "";
 						try {
@@ -76,8 +76,8 @@ public class SecurityAnnotaterInterceptor extends HandlerInterceptorAdapter {
 						}
 						
 						// 判断解析的JSON是否合法
-						if (JSON.isValid(digitalSignatureStr)) {
-							return setErrorResponse(response, 40002, "不合法的凭证类型"); // 都是不合法
+						if (!JSON.isValid(digitalSignatureStr)) { // 合法返回ture 不合法返回false
+							return setErrorResponse(response, 40002, "不合法的凭证类型");
 						}
 						
 						// 合法的情况下 获取解析后的数字签名里面携带的 JSON 数据

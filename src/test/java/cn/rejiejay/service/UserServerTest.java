@@ -20,9 +20,9 @@ public class UserServerTest extends BaseServiceTests {
 		Assert.assertSame("不存在此用户用户", 200, userServerImpl.getUserInfo("zhoujielun"));
 	}
 
-	// 测试曾杰杰登录
+	// 测试曾杰杰登录授权
 	@Test
 	public void testLoginRejiejay() {
-		Assert.assertSame("曾杰杰登录成功", 200, userServerImpl.loginByRejiejay("1938167"));
+		Assert.assertSame("曾杰杰登录成功", 200, userServerImpl.authorizeRejiejay("1938167"));
 	}
 }

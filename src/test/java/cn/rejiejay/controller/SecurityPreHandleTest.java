@@ -16,18 +16,18 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
  */
 public class SecurityPreHandleTest extends BaseControllerTests {
 
-	// 测试拦截器Get请求登录
+	// 测试拦截器错误的Get请求
 	@Test
-	public void SecurityGetTest() throws Exception {
+	public void SecurityErrorGetTest() throws Exception {
 		MvcResult result = mockMvc.perform(get("/security?username=rejiejay&password=DFqew1938167"))  // 简单的get 请求
 				.andReturn(); // 返回执行请求的结果
 		
 		System.out.println("返回执行请求的结果:" + result.getResponse().getContentAsString());
 	}
 
-	// 测试拦截器Post请求登录
+	// 测试拦截器错误的Post请求
 	@Test
-	public void SecurityPostTest() throws Exception {
+	public void SecurityErrorPostTest() throws Exception {
 		String reqStr = "{\"username\": \"username\", \"password\": \"DFqew1938167\"}"; 
 		
 		MvcResult result = mockMvc.perform(

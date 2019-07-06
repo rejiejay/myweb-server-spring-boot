@@ -41,8 +41,11 @@ public class digitalSignatureTest extends BaseUtilsTests {
 	public void DecodeSignatureTest() {
 		String testResults = "ready";
 		try {
-			String reqParam = "username=rejiejay&password=DFqew1938167";
-			String digitalSignatureEncodedString = "7KvKmB6K2d400lnbBnU4y24cIBzqWWZJ3x8LdHVSS8Dow2gCcdHOMt0EMGGoT3TVaElRhBGVE0eJctihZJl33O3tXCVdP3QVQ+OKQ2QdSZolzW2LvDZyxp3VagejXg/6";
+			String reqParam = "{\"password\": \"1938167\"}";
+			String digitalSignatureEncodedString = "rnVgGx8GjhlJkl7MXPZnnbJREbnO49KC0Ub2h33hkE2RgySKnK6TzNKw51cC+zNS5FRE7hVuj2zPlFk/hueA7ukOU7wRmGe4+MKdTdG3tVw=";
+
+//			String reqParam = "username=rejiejay&password=DFqew1938167";
+//			String digitalSignatureEncodedString = "7KvKmB6K2d400lnbBnU4y24cIBzqWWZJ3x8LdHVSS8Dow2gCcdHOMt0EMGGoT3TVaElRhBGVE0eJctihZJl33O3tXCVdP3QVQ+OKQ2QdSZolzW2LvDZyxp3VagejXg/6";
 			testResults = DigitalSignature.DecodeSignature(reqParam, digitalSignatureEncodedString); // {"username":"rejiejay","token":"c4ca4238a0b923820dcc509a6f75849b"}
 
 		} catch (Exception e) {

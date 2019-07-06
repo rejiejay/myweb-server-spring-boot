@@ -8,14 +8,14 @@ import com.alibaba.fastjson.JSONObject;
  * @author _rejeijay
  * @Date 2019年6月19日11:01:01
  */
-public class LoginReply {
+public class AuthorizeReply {
 	private String userToken = "not initiative in databases";
 	private Long tokenexpired;
 	
-	public LoginReply() {
+	public AuthorizeReply() {
 	}
 
-	public LoginReply(String userToken, Long tokenexpired) {
+	public AuthorizeReply(String userToken, Long tokenexpired) {
 		this.userToken = userToken;
 		this.tokenexpired = tokenexpired;
 	}
