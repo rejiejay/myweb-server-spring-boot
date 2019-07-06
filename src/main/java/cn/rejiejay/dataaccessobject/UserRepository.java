@@ -19,8 +19,8 @@ public interface UserRepository extends CrudRepository<User, Long> {
 	// 根据id刷新token
 	@Modifying
 	@Transactional
-	@Query(value = "update user set tokenexpired=?1 where user_id=?2", nativeQuery = true)
-	int refreshTokenByUserId(Long tokenexpired, Long Id);
+	@Query(value = "update user set token=?1, tokenexpired=?2  where user_id=?3", nativeQuery = true)
+	int refreshTokenByUserId(String token, Long tokenexpired, Long Id);
 
 	// 通过key名称获取值
 	@Query(value = "select * from user where username=?1 limit 1", nativeQuery = true)

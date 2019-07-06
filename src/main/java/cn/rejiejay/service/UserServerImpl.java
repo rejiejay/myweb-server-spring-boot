@@ -72,18 +72,36 @@ public class UserServerImpl implements UserServer {
 			return consequencer.getJsonObjMessage();
 		}
 
-		// 根据id刷新token
-		long tokenexpired = new Date().getTime() + 7200000;
-		long userid = dbUserResult.getUserid();
-		logger.info("UserRepository.refreshTokenByUserId(" + tokenexpired + "," + userid + ")"); // 打印数据库获取的数据
-		int refreshTokenResult = userRepository.refreshTokenByUserId(tokenexpired, userid);
-		logger.warn("refreshTokenResult" + refreshTokenResult);
+		Long dbTokenexpired = dbUserResult.getTokenexpired();
 
+		// 当前时间是否大于过期时间
 		JSONObject replyResult = new JSONObject();
-		replyResult.put("token", dbUserResult.getToken());
-		replyResult.put("tokenexpired", tokenexpired);
-		consequencer.setSuccess().setData(replyResult);
-		return consequencer.getJsonObjMessage();
+		if (new Date().getTime() > dbTokenexpired) {
+			// 如果当前大于过期时间，表示 token已经过期，刷新token
+			String newToken = StringConver.createRandomStr(42); // token 的长度为42
+			long newTokenExpired = new Date().getTime() + 7200000;
+			long userid = dbUserResult.getUserid();
+
+			logger.info("UserRepository.refreshTokenByUserId(" + newToken + "," + newTokenExpired + "," + userid + ")"); // 打印数据库执行操作
+
+			int refreshTokenResult = userRepository.refreshTokenByUserId(newToken, newTokenExpired, userid);
+
+			if (refreshTokenResult == 1) {
+				replyResult.put("token", newToken);
+				replyResult.put("tokenexpired", newTokenExpired);
+				consequencer.setSuccess().setData(replyResult);
+				return consequencer.getJsonObjMessage();
+			} else {
+				consequencer.setMessage("数据库update执行失败");
+				return consequencer.getJsonObjMessage();
+			}
+		} else {
+			// 如果当小于过期时间，表示 token 还是有效的，返回有效token即可
+			replyResult.put("token", dbUserResult.getToken());
+			replyResult.put("tokenexpired", dbUserResult.getTokenexpired());
+			consequencer.setSuccess().setData(replyResult);
+			return consequencer.getJsonObjMessage();
+		}
 	}
 
 	@Override

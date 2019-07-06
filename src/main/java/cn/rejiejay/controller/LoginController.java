@@ -17,7 +17,6 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
-import cn.rejiejay.service.LoginServer;
 import cn.rejiejay.service.UserServer;
 import cn.rejiejay.viewobject.LoginReply;
 import cn.rejiejay.viewobject.LoginReque;
@@ -73,10 +72,8 @@ public class LoginController extends BaseController {
 		}
 		
 		// 返回响应参数
-		LoginReply userToken = new LoginReply(loginResult.getJSONObject("data").getString("token"));
-		JSONObject replyJson = userToken.toJSON();
-
-		return succeedJsonReply(replyJson);
-
+		JSONObject loginResultData = loginResult.getJSONObject("data");
+		return succeedJsonReply(
+				new LoginReply(loginResultData.getString("token"), loginResultData.getLong("tokenexpired")).toJSON());
 	}
 }

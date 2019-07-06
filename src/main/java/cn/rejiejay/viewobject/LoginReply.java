@@ -10,16 +10,14 @@ import com.alibaba.fastjson.JSONObject;
  */
 public class LoginReply {
 	private String userToken = "not initiative in databases";
-	private long tokenexpired = 0;
+	private Long tokenexpired;
 	
 	public LoginReply() {
 	}
 
-	public LoginReply LoginReply(String userToken, long tokenexpired) {
+	public LoginReply(String userToken, Long tokenexpired) {
 		this.userToken = userToken;
 		this.tokenexpired = tokenexpired;
-
-		return this;
 	}
 
 	public JSONObject toJSON() {
