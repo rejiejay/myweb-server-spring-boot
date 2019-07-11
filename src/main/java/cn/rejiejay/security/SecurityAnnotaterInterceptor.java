@@ -47,6 +47,9 @@ public class SecurityAnnotaterInterceptor extends HandlerInterceptorAdapter {
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 		String reqParamString = requestToDigitalSignature(request); // 用来生成密匙的请求参数
+		
+		// 允许携带的请求头
+		response.setHeader("Access-Control-Allow-Headers", "Origin, Accept, x-rejiejay-authorization");
 
 		// 如果句柄是属于拦截器已经注册的的方法
 		if (handler instanceof HandlerMethod) {
@@ -76,7 +79,7 @@ public class SecurityAnnotaterInterceptor extends HandlerInterceptorAdapter {
 						}
 						
 						// 判断解析的JSON是否合法
-						if (!JSON.isValid(digitalSignatureStr)) { // 合法返回ture 不合法返回false
+						if (!JSON.isValid(digitalSignatureStr)) { // 合法返回 _ture 不合法返回false
 							return setErrorResponse(response, 40002, "不合法的凭证类型");
 						}
 						
@@ -132,11 +135,12 @@ public class SecurityAnnotaterInterceptor extends HandlerInterceptorAdapter {
 	public String requestToDigitalSignature(HttpServletRequest request) throws Exception {
 		String requestMethod = request.getMethod();
 
-		if (requestMethod == "GET") {
+		if (requestMethod.equals("GET")) {
+		System.out.println("request.getQueryString():" + request.getQueryString() + "\n");
 			return request.getQueryString();
 		}
 
-		if (requestMethod == "POST") {
+		if (requestMethod.equals("POST")) {
 			BufferedReader br = request.getReader();
 
 			String str, wholeStr = "";

@@ -28,11 +28,13 @@ public class digitalSignatureTest extends BaseUtilsTests {
 			String reqParam = "username=rejiejay&password=DFqew1938167";
 			String username = "rejiejay";
 			String token = "c4ca4238a0b923820dcc509a6f75849b";
-			testResults = DigitalSignature.EncryptSignature(reqParam, username, token); // 7KvKmB6K2d400lnbBnU4y24cIBzqWWZJ3x8LdHVSS8Dow2gCcdHOMt0EMGGoT3TVaElRhBGVE0eJctihZJl33O3tXCVdP3QVQ+OKQ2QdSZolzW2LvDZyxp3VagejXg/6
+			testResults = DigitalSignature.EncryptSignature(reqParam, username, token);
 
 		} catch (Exception e) {
 			testResults = "error: " + e.toString();
 		}
+		
+		// h01LkvMB9oZbBpa+XxZcVr2Fj4KlJ6lcd8KtjKMBKaH7mw6A2b6tTFe5qZyBZUi7Es4fo58aOO79jXS4MgeiCykNkDQQurj7NhYQYTJED4Y=
 		System.out.println(testResults + "\n");
 	}
 
@@ -41,12 +43,10 @@ public class digitalSignatureTest extends BaseUtilsTests {
 	public void DecodeSignatureTest() {
 		String testResults = "ready";
 		try {
-			String reqParam = "{\"password\": \"1938167\"}";
-			String digitalSignatureEncodedString = "rnVgGx8GjhlJkl7MXPZnnbJREbnO49KC0Ub2h33hkE2RgySKnK6TzNKw51cC+zNS5FRE7hVuj2zPlFk/hueA7ukOU7wRmGe4+MKdTdG3tVw=";
+			String reqParam = "username=rejiejay&password=1938167";
+			String digitalSignatureEncodedString = "LnhTHa/HcfDL2MrxDDaxfVpU+YSD1y5kUAqQ+T5XTx3Ksg8oMiOb6pOeOd4LdT3OXsa4bm27Pk0lqlOqSKeS3nyliaK8bc11snz5mB88Mek=";
 
-//			String reqParam = "username=rejiejay&password=DFqew1938167";
-//			String digitalSignatureEncodedString = "7KvKmB6K2d400lnbBnU4y24cIBzqWWZJ3x8LdHVSS8Dow2gCcdHOMt0EMGGoT3TVaElRhBGVE0eJctihZJl33O3tXCVdP3QVQ+OKQ2QdSZolzW2LvDZyxp3VagejXg/6";
-			testResults = DigitalSignature.DecodeSignature(reqParam, digitalSignatureEncodedString); // {"username":"rejiejay","token":"c4ca4238a0b923820dcc509a6f75849b"}
+			testResults = DigitalSignature.DecodeSignature(reqParam, digitalSignatureEncodedString);
 
 		} catch (Exception e) {
 			testResults = "error: " + e.toString();

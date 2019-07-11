@@ -119,7 +119,7 @@ public class UserServerImpl implements UserServer {
 		}
 
 		// 优先判断 前端携带的凭证 是否正确
-		if (!licensedRole.equals(dbUserResult.getToken())) {
+		if (!accessToken.equals(dbUserResult.getToken())) {
 			consequencer.setResult(40003).setMessage("无效的凭证类型");
 			return consequencer.getJsonObjMessage();
 		}

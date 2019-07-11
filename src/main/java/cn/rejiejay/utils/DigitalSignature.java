@@ -34,7 +34,7 @@ public class DigitalSignature {
 	
 	/**
 	 * 数字加密方法
-	 * 前端同等实现 java那边使用AES 128位填充模式：AES/CBC/PKCS5Padding加密方法，在nodejs中采用对应的aes-128-cbc加密方法就能对应上，因为有使用向量（iv），所以nodejs中要用createCipheriv方法，而不是createCipher。https://blog.csdn.net/sbt0198/article/details/53791612
+	 * 前端同等实现 java那边使用AES 128位填充模式：AES/CBC/PKCS7Padding加密方法，在nodejs中采用对应的aes-128-cbc加密方法就能对应上，因为有使用向量（iv），所以nodejs中要用createCipheriv方法，而不是createCipher。
 	 * 加密使用 AES-128-CBC对称加密算法(128位AES/ECB/PKCS7Padding加密/解密) + BASE64
 	 * @param reqParam 请求参数 不管是get请求还是post请求，一律转为_utf-8字符串
 	 * @param username 用户姓名
@@ -55,8 +55,8 @@ public class DigitalSignature {
 		 * 开始加密
 		 */
 		String reqParamMD5= ReqParamToMD5(reqParam);
-		String sKey = reqParamMD5.substring(0, 16); // 密钥key 需要为16位。
-		SecretKeySpec skeySpec = new SecretKeySpec(sKey.getBytes("utf-8"), "AES");  
+		String sKey = reqParamMD5.substring(0, 32); // 密钥key 需要为32位。
+		SecretKeySpec skeySpec = new SecretKeySpec(sKey.getBytes("utf-8"), "AES"); 
 		String ivParameter = reqParamMD5.substring(reqParamMD5.length() - 16); // 向量iv 后16位
 		IvParameterSpec ips = new IvParameterSpec(ivParameter.getBytes("utf-8"));
 		
@@ -64,6 +64,10 @@ public class DigitalSignature {
 		// 使用CBC模式，需要一个向量iv，可增加加密算法的强度  
 		cipher.init(Cipher.ENCRYPT_MODE, skeySpec, ips);
 		byte[] encrypted = cipher.doFinal(content.getBytes("utf-8"));  
+
+		System.out.println("content.getBytes(\"utf-8\"):" + content + "\n");
+		System.out.println("sKey:" + sKey + "\n");
+		System.out.println("ivParameter:" + ivParameter + "\n");
 		
         return Base64.getEncoder().encodeToString(encrypted); // 此处使用BASE64做转码。
 	}
@@ -82,7 +86,7 @@ public class DigitalSignature {
 	public static String DecodeSignature(String reqParam, String digitalSignatureEncodedString) throws Exception {
 		// 解密用到的对称密匙
 		String reqParamMD5= ReqParamToMD5(reqParam);
-		String sKey = reqParamMD5.substring(0, 16); // 密钥key 需要为16位。
+		String sKey = reqParamMD5.substring(0, 32); // 密钥key 需要为32位。
 		Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
 		String ivParameter = reqParamMD5.substring(reqParamMD5.length() - 16); // 向量iv 后16位
 		IvParameterSpec iv = new IvParameterSpec(ivParameter.getBytes("utf-8"));
