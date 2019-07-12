@@ -13,7 +13,6 @@ import cn.rejiejay.service.UserServer;
 import cn.rejiejay.utils.Consequencer;
 import cn.rejiejay.utils.DigitalSignature;
 
-import java.io.BufferedReader;
 import java.io.PrintWriter;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,7 +22,12 @@ import javax.servlet.http.HttpServletResponse;
 //import org.slf4j.LoggerFactory;
 
 /**
- * 对请求标记了 SecurityAnnotater 注解的方法进行拦截
+ * 对请求标记了 SecurityAnnotater 注解的方法进行拦截 interceptor
+ * 
+ * 的执行顺序大致为：
+ * 
+ * 1. 请求到达 DispatcherServlet。 2. DispatcherServlet 发送至 Interceptor ，执行
+ * preHandle。3. 请求达到 Controller 4. 请求结束后，postHandle 执行
  * 
  * @author _rejiejay Created on 2019年7月3日11:15:33
  */
@@ -34,7 +38,7 @@ public class SecurityAnnotaterInterceptor extends HandlerInterceptorAdapter {
 
 	@Autowired
 	private UserServer userServer;
-	
+
 	/**
 	 * 通过重写在请求到达Controller之前进行拦截并处理
 	 *
@@ -45,9 +49,10 @@ public class SecurityAnnotaterInterceptor extends HandlerInterceptorAdapter {
 	 * @throws Exception
 	 */
 	@Override
-	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-		String reqParamString = requestToDigitalSignature(new MyHttpServletRequest((HttpServletRequest) request)); // 用来生成密匙的请求参数
-		
+	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
+			throws Exception {
+		String reqParamString = requestToDigitalSignature(request); // 用来生成密匙的请求参数
+
 		// 允许携带的请求头
 		response.setHeader("Access-Control-Allow-Headers", "Origin, Accept, x-rejiejay-authorization");
 
@@ -67,11 +72,10 @@ public class SecurityAnnotaterInterceptor extends HandlerInterceptorAdapter {
 		}
 
 		/**
-		 * 判断接口是否需要权限
-		 * "" 或者 anonymous 游客
+		 * 判断接口是否需要权限 "" 或者 anonymous 游客
 		 */
 		String role = securityAnnotation.role();
-		if (role.equals("") || role.equals("anonymous") ) {
+		if (role.equals("") || role.equals("anonymous")) {
 			// 是游客 获取 匿名用户
 			return true; // 可以请求 直接通过
 		}
@@ -92,29 +96,29 @@ public class SecurityAnnotaterInterceptor extends HandlerInterceptorAdapter {
 		} catch (Exception e) {
 			return setErrorResponse(response, 40003, "不合法的凭证类型" + e.toString()); // 直接返回失败
 		}
-		
+
 		// 判断解析的JSON是否合法
 		if (!JSON.isValid(digitalSignatureStr)) { // 合法返回 _ture 不合法返回false
 			return setErrorResponse(response, 40002, "不合法的凭证类型");
 		}
-		
+
 		// 合法的情况下 获取解析后的数字签名里面携带的 JSON 数据
 		JSONObject digitalSignature = JSON.parseObject(digitalSignatureStr);
-		
+
 		// 根据通过数字签名携带的信息（用户名 拦截器允许的角色 前端携带的凭证） 验证是否符合权限
-		JSONObject securityVerifiResult = userServer.securityVerifiByDigitalSign(
-			digitalSignature.getString("username"), // 需要授权的用户名
-			role, // 拦截器允许的角色
-			digitalSignature.getString("token") // 前端携带的凭证
+		JSONObject securityVerifiResult = userServer.securityVerifiByDigitalSign(digitalSignature.getString("username"), // 需要授权的用户名
+				role, // 拦截器允许的角色
+				digitalSignature.getString("token") // 前端携带的凭证
 		);
-		
+
 		// 不符合权限情况下，直接返回错误结果
 		if (securityVerifiResult.getInteger("result") != 1) {
-			return setErrorResponse(response, securityVerifiResult.getInteger("result"), securityVerifiResult.getString("message"));
+			return setErrorResponse(response, securityVerifiResult.getInteger("result"),
+					securityVerifiResult.getString("message"));
 		}
 
 		// 符合的情况下，恭喜您权限校验通过
-		return true; 
+		return true;
 	}
 
 //	  重写请求结束后的方法，此处的目的是
@@ -127,7 +131,8 @@ public class SecurityAnnotaterInterceptor extends HandlerInterceptorAdapter {
 	/**
 	 * 处理 HttpServletRequest 因为生成或者解析数字签名需要用到这些东西
 	 */
-	public String requestToDigitalSignature(MyHttpServletRequest request) throws Exception {
+	public String requestToDigitalSignature(HttpServletRequest request) throws Exception {
+		MyHttpServletRequest req = (MyHttpServletRequest) request;
 		String requestMethod = request.getMethod();
 
 		if (requestMethod.equals("GET")) {
@@ -137,8 +142,9 @@ public class SecurityAnnotaterInterceptor extends HandlerInterceptorAdapter {
 		if (requestMethod.equals("POST")) {
 			/**
 			 * getReader() has already been called for this request
-			 * HttpServletRequest的getInputStream()和getReader() 都只能读取一次，由于RequestBody是流的形式读取，那么流读了一次就没有了，所以只能被调用一次。
-			 */ 
+			 * HttpServletRequest的getInputStream()和getReader()
+			 * 都只能读取一次，由于RequestBody是流的形式读取，那么流读了一次就没有了，所以只能被调用一次。
+			 */
 //			BufferedReader br = request.getReader();
 //
 //			String str, wholeStr = "";
@@ -147,18 +153,19 @@ public class SecurityAnnotaterInterceptor extends HandlerInterceptorAdapter {
 //			}
 //
 //			return wholeStr;
-			
-			return request.getRequestBody();
+
+			return req.getRequestBody();
 		}
 
 		return null;
 	}
-	
+
 	/**
 	 * 返回固定的失败格式
+	 * 
 	 * @param response
-	 * @param code 错误代码
-	 * @param message 错误信息
+	 * @param code     错误代码
+	 * @param message  错误信息
 	 * @return boolean
 	 * @throws Exception
 	 */
