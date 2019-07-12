@@ -115,7 +115,7 @@ public class LoginController extends BaseController {
 		// 判断解析的JSON是否合法
 
 		logger.warn("/digitalSignatureStr[req]: " + digitalSignatureStr);
-		if (!JSON.isValid(digitalSignatureStr)) { // 合法返回ture 不合法返回false
+		if (!JSON.isValid(digitalSignatureStr)) { // 合法返回 _ture 不合法返回false
 			return errorJsonReply(40003, "刷新授权失败, 原因: 不合法的凭证类型");
 		}
 

@@ -64,10 +64,6 @@ public class DigitalSignature {
 		// 使用CBC模式，需要一个向量iv，可增加加密算法的强度  
 		cipher.init(Cipher.ENCRYPT_MODE, skeySpec, ips);
 		byte[] encrypted = cipher.doFinal(content.getBytes("utf-8"));  
-
-		System.out.println("content.getBytes(\"utf-8\"):" + content + "\n");
-		System.out.println("sKey:" + sKey + "\n");
-		System.out.println("ivParameter:" + ivParameter + "\n");
 		
         return Base64.getEncoder().encodeToString(encrypted); // 此处使用BASE64做转码。
 	}

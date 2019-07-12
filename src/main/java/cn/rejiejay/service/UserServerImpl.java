@@ -50,6 +50,9 @@ public class UserServerImpl implements UserServer {
 		}
 	}
 
+	/**
+	 * 曾杰杰 授权认证
+	 */
 	@Override
 	public JSONObject authorizeRejiejay(String password) {
 		Consequencer consequencer = new Consequencer();
@@ -103,6 +106,9 @@ public class UserServerImpl implements UserServer {
 		}
 	}
 
+	/**
+	 * 拦截器使用到的校验方法
+	 */
 	@Override
 	public JSONObject securityVerifiByDigitalSign(String authorizeName, String licensedRole, String accessToken) {
 		Consequencer consequencer = new Consequencer();
