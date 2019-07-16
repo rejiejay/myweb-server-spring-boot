@@ -12,7 +12,7 @@ public class AddJavaNotesReque {
 	@NotNull(message = "title cannot be null!")
 	private String title;
 
-	private String imgUrl;
+	private String imgBase64;
 
 	@NotNull(message = "htmlContent cannot be null!")
 	private String htmlContent;
@@ -25,19 +25,19 @@ public class AddJavaNotesReque {
 		this.title = title;
 	}
 
-	public String getImgUrl() {
-		return imgUrl;
-	}
-
-	public void setImgUrl(String imgUrl) {
-		this.imgUrl = imgUrl;
-	}
-
 	public String getHtmlContent() {
 		return htmlContent;
 	}
 
 	public void setHtmlContent(String htmlContent) {
 		this.htmlContent = htmlContent;
+	}
+
+	public String getImgBase64() {
+		return imgBase64;
+	}
+
+	public void setImgBase64(String imgBase64) {
+		this.imgBase64 = imgBase64;
 	}
 }

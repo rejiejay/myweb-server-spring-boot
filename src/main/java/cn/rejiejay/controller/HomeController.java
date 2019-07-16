@@ -21,7 +21,7 @@ import cn.rejiejay.security.SecurityAnnotater;
 @RequestMapping("/")
 public class HomeController {
 
-	@Value("${cn.rejiejay.homeTest}")
+	@Value("${rejiejay.homeTest}")
 	private String homeTest;
 
 	/**

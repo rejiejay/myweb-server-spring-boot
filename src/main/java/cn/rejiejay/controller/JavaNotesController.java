@@ -1,5 +1,6 @@
 package cn.rejiejay.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -10,6 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
+import cn.rejiejay.service.JavaNotesServer;
+import cn.rejiejay.utils.Consequencer;
 import cn.rejiejay.viewobject.AddJavaNotesReque;
 
 import javax.validation.Valid;
@@ -28,6 +31,9 @@ import org.slf4j.LoggerFactory;
 public class JavaNotesController extends BaseController {
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
+	@Autowired
+	private JavaNotesServer javaNotesServer;
+	
 	/**
 	 * 新增笔记
 	 */
@@ -42,6 +48,15 @@ public class JavaNotesController extends BaseController {
 				return errorJsonReply(2, errorMsg);
 			}
 		}
+
+		/**
+		 * 处理图片
+		 */
+		String imgBase64 = req.getImgBase64();
+		if (imgBase64 != null && !imgBase64.equals("")) { // 不为空的情况下
+//			Consequencer uploadResult = javaNotesServer.uploadJavaNotesImage(imgBase64);
+		}
+		
 		
 		return null;
 	}
