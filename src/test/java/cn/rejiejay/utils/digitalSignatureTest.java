@@ -25,9 +25,9 @@ public class digitalSignatureTest extends BaseUtilsTests {
 	public void EncryptSignatureTest() {
 		String testResults = "ready";
 		try {
-			String reqParam = "username=rejiejay&password=DFqew1938167";
+			String reqParam = "{\"password\":\"1938167\"}";
 			String username = "rejiejay";
-			String token = "c4ca4238a0b923820dcc509a6f75849b";
+			String token = "096lLFmeJemGSW62x3k-z6nlagx_BgmhkcEkEdT30i";
 			testResults = DigitalSignature.EncryptSignature(reqParam, username, token);
 
 		} catch (Exception e) {
@@ -43,7 +43,7 @@ public class digitalSignatureTest extends BaseUtilsTests {
 	public void DecodeSignatureTest() {
 		String testResults = "ready";
 		try {
-			String reqParam = "username=rejiejay&password=1938167";
+			String reqParam = "{\"password\":\"1938167\"}";
 			String digitalSignatureEncodedString = "LnhTHa/HcfDL2MrxDDaxfVpU+YSD1y5kUAqQ+T5XTx3Ksg8oMiOb6pOeOd4LdT3OXsa4bm27Pk0lqlOqSKeS3nyliaK8bc11snz5mB88Mek=";
 
 			testResults = DigitalSignature.DecodeSignature(reqParam, digitalSignatureEncodedString);

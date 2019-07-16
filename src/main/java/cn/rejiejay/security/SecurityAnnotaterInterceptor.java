@@ -154,7 +154,7 @@ public class SecurityAnnotaterInterceptor extends HandlerInterceptorAdapter {
 //
 //			return wholeStr;
 
-			return req.getRequestBody();
+			return req.getRequestBody(); // 经测试是正确的
 		}
 
 		return null;

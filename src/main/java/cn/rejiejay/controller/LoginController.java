@@ -106,6 +106,7 @@ public class LoginController extends BaseController {
 			// 即使token过期也可以解析出数字签名携带的信息
 			JSONObject jsonObjReq = new JSONObject();
 			jsonObjReq.put("password", req.getPassword()); // 密码
+
 			digitalSignatureStr = DigitalSignature.DecodeSignature(jsonObjReq.toJSONString(), authorization);
 		} catch (Exception e) {
 			// 这里有报错的风险，因为这边不是获取标准的body体，是自己生成JSON，所以容易对不上
@@ -124,7 +125,7 @@ public class LoginController extends BaseController {
 
 		// 判断该用户名称即可
 		if (!digitalSignature.getString("username").equals("rejiejay")) {
-			return errorJsonReply(40003, "刷新授权失败, 原因: 不合法的凭证类型"); // 用户名不是rejiejay都是不合法
+			return errorJsonReply(40003, "刷新授权失败, 原因: 不合法的凭证类型"); // 用户名不是 _rejiejay都是不合法
 		}
 
 		/**
