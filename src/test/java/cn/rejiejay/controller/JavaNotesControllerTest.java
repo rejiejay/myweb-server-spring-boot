@@ -5,6 +5,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
 /**
@@ -29,11 +30,17 @@ public class JavaNotesControllerTest extends BaseControllerTests {
 		jsonObjReq.put("title", title);
 		jsonObjReq.put("imgBase64", imgBase64);
 		jsonObjReq.put("htmlContent", htmlContent);
+		
+        String signature = this.createSignature(JSON.toJSONString(jsonObjReq));
+        
+        if (signature == null) {
+        	System.out.println("\n 生成签名错误 \n");
+        	return;
+        }
 
-		MvcResult addJavaNoteResult = mockMvc
-				.perform(MockMvcRequestBuilders.post("/api/java/notes/add").contentType(MediaType.APPLICATION_JSON_UTF8)
-						.accept(MediaType.APPLICATION_JSON_UTF8).content(jsonObjReq.toJSONString().getBytes()))
-				.andReturn();
+		MvcResult addJavaNoteResult = mockMvc.perform(MockMvcRequestBuilders.post("/java/notes/add")
+				.contentType(MediaType.APPLICATION_JSON_UTF8).header("x-rejiejay-authorization", signature)
+				.accept(MediaType.APPLICATION_JSON_UTF8).content(jsonObjReq.toJSONString().getBytes())).andReturn();
 
 		System.out.println("\n 新增笔记： " + addJavaNoteResult.getResponse().getContentAsString() + "\n");
 	}

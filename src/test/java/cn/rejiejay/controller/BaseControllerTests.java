@@ -24,6 +24,7 @@ import com.alibaba.fastjson.JSONObject;
 
 import cn.rejiejay.security.SecurityRiskRequestWrapperFilter;
 import cn.rejiejay.service.UserServer;
+import cn.rejiejay.utils.Consequencer;
 import cn.rejiejay.utils.DigitalSignature;
 
 /**
@@ -68,29 +69,23 @@ public class BaseControllerTests {
 	/**
 	 * 生成签名的方法
 	 */
-	@Test
 	public String createSignature(String reqParam) throws Exception {
-		JSONObject jsonObjReq = new JSONObject();
-		jsonObjReq.put("password", "1938167"); // 密码
+		// 操作ORM获取数据库数据
+		Consequencer loginResult = userServer.authorizeRejiejay("1938167");
 		
-		MvcResult authorizeResult = this.mockMvc
-				.perform(MockMvcRequestBuilders.post("/login/rejiejay").contentType(MediaType.APPLICATION_JSON_UTF8)
-						.accept(MediaType.APPLICATION_JSON_UTF8).content(jsonObjReq.toJSONString().getBytes()))
-				.andReturn(); // 返回执行请求的结果
-		
-		String authorizeResultStr = authorizeResult.getResponse().getContentAsString();
-
-		System.out.println("\n rejiejay登录授权： " + authorizeResultStr + "\n");
-		
-		JSONObject authorizeResultJson = JSON.parseObject(authorizeResultStr); // 序列化得到token
-		
-		// 表示错误，返回
-		if (authorizeResultJson.getInteger("result") != 1) {
+		// 判断结果是否正确
+		if (loginResult.getResult() != 1) { // 不正确的情况下，直接返回错误结果
 			return null;
 		}
 		
-		String token = authorizeResultJson.getJSONObject("data").getString("token");
+		System.out.println("\n rejiejay登录授权： " + loginResult.getJsonStringMessage() + "\n");
 		
-		return null;
+		String token = loginResult.getData().getString("token");
+
+		String signature = DigitalSignature.EncryptSignature(reqParam, "rejiejay", token); // 生成签名
+		
+		System.out.println("\n rejiejay登录授权生成签名： " + signature + "\n");
+		
+		return signature;
 	}
 }
