@@ -1,8 +1,10 @@
 package cn.rejiejay.service;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.util.Base64;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -30,6 +32,8 @@ import cn.rejiejay.utils.TencentOSS;
 public class JavaNotesServerImpl implements JavaNotesServer {
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
+	final Base64.Decoder decoder = Base64.getDecoder();
+
 	@Autowired
 	private TencentOSS tencentOSS;
 
@@ -48,10 +52,26 @@ public class JavaNotesServerImpl implements JavaNotesServer {
 		// 对象键（Key）是对象在存储桶中的唯一标识。这里使用时间戳即可
 		String key = "myserver/javanotes/" + imgName + ".jpg";
 
+		/**
+		 * 解码
+		 * 
+		 * 特别注意： The part "data:image/_png;base64," does not belong to the real Base64
+		 * data.
+		 */
+		String decoderimg = null;
+		try {
+			decoderimg = new String(decoder.decode(imgBase64.replaceFirst("^.*,", "")), "UTF-8");
+		} catch (UnsupportedEncodingException error) {
+			transferManager.shutdownNow(); // 记得关闭 TransferManger
+			consequent.setMessage(error.toString());
+			error.printStackTrace();
+			return consequent;
+		}
+
 		// 获取指定文件的输入流
 		InputStream input;
 		try {
-			input = new ByteArrayInputStream(imgBase64.getBytes("UTF-8"));
+			input = new ByteArrayInputStream(decoderimg.getBytes("UTF-8"));
 		} catch (UnsupportedEncodingException error) {
 			transferManager.shutdownNow(); // 记得关闭 TransferManger
 			consequent.setMessage(error.toString());
@@ -62,7 +82,7 @@ public class JavaNotesServerImpl implements JavaNotesServer {
 		// 创建上传Object的Metadata
 		ObjectMetadata meta = new ObjectMetadata();
 		// 必须设置ContentLength
-		meta.setContentLength(imgBase64.length());
+		meta.setContentLength(decoderimg.length());
 
 		PutObjectRequest putObjectRequest = new PutObjectRequest(tencentOSS.bucket, key, input, meta);
 
