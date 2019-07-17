@@ -31,6 +31,9 @@ public class TencentOSS {
 	@Value("${rejiejay.tencentoss.region}")
 	public String regionconfig;
 
+	@Value("${rejiejay.tencentoss.bucket}")
+	public String bucket;
+
 	public COSClient cosClient;
 
 	/**

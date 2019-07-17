@@ -15,6 +15,8 @@ import cn.rejiejay.service.JavaNotesServer;
 import cn.rejiejay.utils.Consequencer;
 import cn.rejiejay.viewobject.AddJavaNotesReque;
 
+import java.util.Date;
+
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
@@ -54,6 +56,7 @@ public class JavaNotesController extends BaseController {
 		 */
 		String imgBase64 = req.getImgBase64();
 		if (imgBase64 != null && !imgBase64.equals("")) { // 不为空的情况下
+			String imageName = String.valueOf(new Date().getTime());
 //			Consequencer uploadResult = javaNotesServer.uploadJavaNotesImage(imgBase64);
 		}
 		

@@ -5,7 +5,7 @@ import org.junit.Test;
 /**
  * Created by _rejiejay Date 2019年7月4日08:06:09 Description:测试类
  */
-public class digitalSignatureTest extends BaseUtilsTests {
+public class DigitalSignatureTest extends BaseUtilsTests {
 	// 测试MD5加密算法
 	@Test
 	public void ReqParamToMD5Test() {

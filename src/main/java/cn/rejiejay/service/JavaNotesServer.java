@@ -12,5 +12,5 @@ public interface JavaNotesServer {
 	/**
 	 * 上传到JAVA笔记系统的图片
 	 */
-	public Consequencer uploadJavaNotesImage(String imgBase64);
+	public Consequencer uploadJavaNotesImage(String imgBase64, String imgName);
 }
