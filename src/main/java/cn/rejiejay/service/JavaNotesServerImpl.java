@@ -58,31 +58,15 @@ public class JavaNotesServerImpl implements JavaNotesServer {
 		 * 特别注意： The part "data:image/_png;base64," does not belong to the real Base64
 		 * data.
 		 */
-		String decoderimg = null;
-		try {
-			decoderimg = new String(decoder.decode(imgBase64.replaceFirst("^.*,", "")), "UTF-8");
-		} catch (UnsupportedEncodingException error) {
-			transferManager.shutdownNow(); // 记得关闭 TransferManger
-			consequent.setMessage(error.toString());
-			error.printStackTrace();
-			return consequent;
-		}
+		byte[] decoderimg = decoder.decode(imgBase64.replaceFirst("^.*,", ""));
 
 		// 获取指定文件的输入流
-		InputStream input;
-		try {
-			input = new ByteArrayInputStream(decoderimg.getBytes("UTF-8"));
-		} catch (UnsupportedEncodingException error) {
-			transferManager.shutdownNow(); // 记得关闭 TransferManger
-			consequent.setMessage(error.toString());
-			error.printStackTrace();
-			return consequent;
-		}
+		InputStream input = new ByteArrayInputStream(decoderimg);
 
 		// 创建上传Object的Metadata
 		ObjectMetadata meta = new ObjectMetadata();
 		// 必须设置ContentLength
-		meta.setContentLength(decoderimg.length());
+		meta.setContentLength(decoderimg.length);
 
 		PutObjectRequest putObjectRequest = new PutObjectRequest(tencentOSS.bucket, key, input, meta);
 
