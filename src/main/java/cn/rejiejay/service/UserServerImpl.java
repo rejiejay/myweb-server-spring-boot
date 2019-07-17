@@ -54,8 +54,8 @@ public class UserServerImpl implements UserServer {
 	 * 曾杰杰 授权认证
 	 */
 	@Override
-	public JSONObject authorizeRejiejay(String password) {
-		Consequencer consequencer = new Consequencer();
+	public Consequencer authorizeRejiejay(String password) {
+		Consequencer consequent = new Consequencer();
 		User dbUserResult = new User();
 
 		// 查询曾杰杰
@@ -64,14 +64,14 @@ public class UserServerImpl implements UserServer {
 		// 判断是否查询到数据
 		if (dbUserResult == null) {
 			// 未查询到数据表明没有此用户，说明账号错误，但是提示应该指示 账号密码错误
-			consequencer.setResult(3).setMessage("账号密码错误");
-			return consequencer.getJsonObjMessage();
+			consequent.setResult(3).setMessage("账号密码错误");
+			return consequent;
 		}
 
 		// 判断密码是否正确
 		if (!dbUserResult.getPassword().equals(password)) {
-			consequencer.setResult(2).setMessage("账号密码错误");
-			return consequencer.getJsonObjMessage();
+			consequent.setResult(2).setMessage("账号密码错误");
+			return consequent;
 		}
 
 		Long dbTokenexpired = dbUserResult.getTokenexpired();
@@ -91,18 +91,18 @@ public class UserServerImpl implements UserServer {
 			if (refreshTokenResult == 1) {
 				replyResult.put("token", newToken);
 				replyResult.put("tokenexpired", newTokenExpired);
-				consequencer.setSuccess().setData(replyResult);
-				return consequencer.getJsonObjMessage();
+				consequent.setSuccess().setData(replyResult);
+				return consequent;
 			} else {
-				consequencer.setMessage("数据库update执行失败");
-				return consequencer.getJsonObjMessage();
+				consequent.setMessage("数据库update执行失败");
+				return consequent;
 			}
 		} else {
 			// 如果当小于过期时间，表示 token 还是有效的，返回有效token即可
 			replyResult.put("token", dbUserResult.getToken());
 			replyResult.put("tokenexpired", dbUserResult.getTokenexpired());
-			consequencer.setSuccess().setData(replyResult);
-			return consequencer.getJsonObjMessage();
+			consequent.setSuccess().setData(replyResult);
+			return consequent;
 		}
 	}
 

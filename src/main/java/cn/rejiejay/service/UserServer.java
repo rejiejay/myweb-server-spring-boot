@@ -2,6 +2,8 @@ package cn.rejiejay.service;
 
 import com.alibaba.fastjson.JSONObject;
 
+import cn.rejiejay.utils.Consequencer;
+
 /**
  * 用户模块模块
  * 
@@ -22,7 +24,7 @@ public interface UserServer {
 	/**
 	 * 曾杰杰 登录授权
 	 */
-	public JSONObject authorizeRejiejay(String password);
+	public Consequencer authorizeRejiejay(String password);
 
 	/**
 	 * 通过数字签名携带的信息 验证是否符合权限

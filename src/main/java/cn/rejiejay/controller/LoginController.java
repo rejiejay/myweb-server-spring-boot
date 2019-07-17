@@ -17,6 +17,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
 import cn.rejiejay.service.UserServer;
+import cn.rejiejay.utils.Consequencer;
 import cn.rejiejay.utils.DigitalSignature;
 import cn.rejiejay.viewobject.AuthorizeReply;
 import cn.rejiejay.viewobject.AuthorizeReque;
@@ -36,7 +37,7 @@ public class LoginController extends BaseController {
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	/**
-	 * 虽然注入dao层也可以直接调用到数据库层。但是按照规范一般不这么做。 一般注入的是service接口，然后通过service.xxx()方法。
+	 * 虽然注入_dao层也可以直接调用到数据库层。但是按照规范一般不这么做。 一般注入的是service接口，然后通过service.xxx()方法。
 	 * 这么做的原因： 1. 因为安全，因为别人无法通过反编译获取到你的具体实现代码。 2. 让代码更具有可读性。
 	 */
 	@Autowired
@@ -63,17 +64,18 @@ public class LoginController extends BaseController {
 		}
 
 		// 操作ORM获取数据库数据
-		JSONObject loginResult = userServer.authorizeRejiejay(req.getPassword());
+		Consequencer loginResult = userServer.authorizeRejiejay(req.getPassword());
 
-		logger.debug("/login/rejiejay[orm]: " + loginResult.toString()); // 打印 数据库获取的数据
+		logger.debug("/login/rejiejay[orm]: " + loginResult.getJsonStringMessage()); // 打印 数据库获取的数据
 
+		
 		// 判断结果是否正确
-		if (loginResult.getInteger("result") != 1) { // 不正确的情况下，直接返回错误结果
-			return loginResult;
+		if (loginResult.getResult() != 1) { // 不正确的情况下，直接返回错误结果
+			return loginResult.getJsonObjMessage();
 		}
-
+		
 		// 返回响应参数
-		JSONObject loginResultData = loginResult.getJSONObject("data");
+		JSONObject loginResultData = loginResult.getData();
 		return succeedJsonReply(
 				new AuthorizeReply(loginResultData.getString("token"), loginResultData.getLong("tokenexpired"))
 						.toJSON());
@@ -131,17 +133,17 @@ public class LoginController extends BaseController {
 		/**
 		 * 操作ORM刷新新的token。这里的逻辑和登录授权是一模一样的
 		 */
-		JSONObject refreshResult = userServer.authorizeRejiejay(req.getPassword());
+		Consequencer refreshResult = userServer.authorizeRejiejay(req.getPassword());
 
-		logger.debug("/login/refresh/rejiejay[orm]: " + refreshResult.toString()); // 打印 数据库获取的数据
+		logger.debug("/login/refresh/rejiejay[orm]: " + refreshResult.getJsonStringMessage()); // 打印 数据库获取的数据
 
 		// 判断结果是否正确
-		if (refreshResult.getInteger("result") != 1) { // 不正确的情况下，直接返回错误结果
-			return refreshResult;
+		if (refreshResult.getResult() != 1) { // 不正确的情况下，直接返回错误结果
+			return refreshResult.getJsonObjMessage();
 		}
 
 		// 返回响应参数
-		JSONObject refreshResultData = refreshResult.getJSONObject("data");
+		JSONObject refreshResultData = refreshResult.getData();
 		return succeedJsonReply(
 				new AuthorizeReply(refreshResultData.getString("token"), refreshResultData.getLong("tokenexpired"))
 						.toJSON());
