@@ -1,16 +1,25 @@
 package cn.rejiejay.controller;
 
+import java.io.UnsupportedEncodingException;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-// import org.springframework.mock.web.MockHttpSession;
+import org.springframework.http.MediaType;
 import org.springframework.web.context.WebApplicationContext;
+
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+
+import cn.rejiejay.utils.DigitalSignature;
 
 /**
  * 主页测试
@@ -26,16 +35,16 @@ public class BaseControllerTests {
 
 	public MockMvc mockMvc; // 模拟MVC对象，通过MockMvcBuilders.webAppContextSetup(this.wac).build()初始化。
 
-	//  @Autowired  
-	//  private MockHttpSession session;// 注入模拟的_http session  
+	// @Autowired
+	// private MockHttpSession session;// 注入模拟的_http session
 
-	//  @Autowired  
-	//  private MockHttpServletRequest request;// 注入模拟的_http request\ 
+	// @Autowired
+	// private MockHttpServletRequest request;// 注入模拟的_http request\
 
 	@Before // 在测试开始前初始化工作
 	public void setup() {
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
-		
+
 		System.out.println("\u001B[31m -----------------开始测试----------------- \n");
 	}
 
@@ -43,4 +52,5 @@ public class BaseControllerTests {
 	public void after() {
 		System.out.println("\u001B[31m -----------------测试结束----------------- \n \u001B[0m");
 	}
+
 }

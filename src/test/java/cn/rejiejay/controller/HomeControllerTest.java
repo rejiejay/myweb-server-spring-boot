@@ -16,7 +16,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 public class HomeControllerTest extends BaseControllerTests {
 	@Test
 	public void testHomeGet() throws Exception {
-		MvcResult result = mockMvc.perform(get("/"))  // 简单的get 请求
+		MvcResult result = mockMvc.perform(get("/api/"))  // 简单的get 请求
 				.andReturn(); // 返回执行请求的结果
 		
 		System.out.println(result.getResponse().getContentAsString());

@@ -4,8 +4,12 @@ import java.util.Date;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.alibaba.fastjson.JSONObject;
+
+import cn.rejiejay.dataaccessobject.JavaNotesRepository;
 import cn.rejiejay.utils.Consequencer;
 
 /**
@@ -17,9 +21,12 @@ import cn.rejiejay.utils.Consequencer;
 @Service
 public class JavaNotesServerImpl implements JavaNotesServer {
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
+	
+	@Autowired
+	private JavaNotesRepository javaNotesRepository;
 
 	/**
-	 * 上传到JAVA笔记系统的图片
+	 * 创建一个笔记
 	 */
 	public Consequencer uploadJavaNotes(String title, String imgName, String htmlContent) {
 		Consequencer consequent = new Consequencer();
@@ -28,6 +35,21 @@ public class JavaNotesServerImpl implements JavaNotesServer {
 
 		logger.debug("执行SQL" + "title:" + title + ";htmlContent:" + htmlContent
 				+ ";imgName:" + imgName + ";timestamp:" + timestamp);
+		
+		int insertNoteResult = javaNotesRepository.insertNote(title, htmlContent, imgName, timestamp);
+		
+
+		if (insertNoteResult == 1) {
+			JSONObject data = new JSONObject();
+			data.put("title", title);
+			data.put("htmlContent", htmlContent);
+			data.put("imgName", imgName);
+			data.put("timestamp", timestamp);
+			
+			consequent.setSuccess().setData(data);
+		} else {
+			consequent.setMessage("创建一个笔记SQL执行失败");
+		}
 
 		return consequent;
 	}
