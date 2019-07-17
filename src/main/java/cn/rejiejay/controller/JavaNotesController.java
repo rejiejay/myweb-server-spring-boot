@@ -12,6 +12,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
 import cn.rejiejay.service.JavaNotesServer;
+import cn.rejiejay.service.OssServerImpl;
 import cn.rejiejay.utils.Consequencer;
 import cn.rejiejay.viewobject.AddJavaNotesReque;
 
@@ -35,7 +36,10 @@ public class JavaNotesController extends BaseController {
 
 	@Autowired
 	private JavaNotesServer javaNotesServer;
-	
+
+	@Autowired
+	private OssServerImpl ossService;
+
 	/**
 	 * 新增笔记
 	 */
@@ -55,12 +59,25 @@ public class JavaNotesController extends BaseController {
 		 * 处理图片
 		 */
 		String imgBase64 = req.getImgBase64();
+		String imageName = ""; // 没有图片的情况下就是空
 		if (imgBase64 != null && !imgBase64.equals("")) { // 不为空的情况下
-			String imageName = String.valueOf(new Date().getTime());
-//			Consequencer uploadResult = javaNotesServer.uploadJavaNotesImage(imgBase64);
+			imageName = String.valueOf(new Date().getTime());
+			Consequencer uploadResult = ossService.uploadJavaNotesImage(imgBase64, imageName);
+
+			// 处理失败
+			if (uploadResult.getResult() != 1) {
+				return uploadResult.getJsonObjMessage();
+			}
 		}
 		
+		/**
+		 * 保存到数据库
+		 */
+		String title = req.getTitle();
+		String htmlContent = req.getHtmlContent();
 		
-		return null;
+		Consequencer consequent = javaNotesServer.uploadJavaNotes(title, imageName, htmlContent);
+		
+		return consequent.getJsonObjMessage();
 	}
 }

@@ -10,7 +10,7 @@ import cn.rejiejay.utils.Consequencer;
  */
 public interface JavaNotesServer {
 	/**
-	 * 上传到JAVA笔记系统的图片
+	 * 存储一条JAVA Notes
 	 */
-	public Consequencer uploadJavaNotesImage(String imgBase64, String imgName);
+	public Consequencer uploadJavaNotes(String title, String imgName, String htmlContent);
 }
