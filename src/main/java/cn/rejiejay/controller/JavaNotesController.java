@@ -58,11 +58,9 @@ public class JavaNotesController extends BaseController {
 		/**
 		 * 处理图片
 		 */
-		String imgBase64 = req.getImgBase64();
-		String imageName = ""; // 没有图片的情况下就是空
-		if (imgBase64 != null && !imgBase64.equals("")) { // 不为空的情况下
-			imageName = String.valueOf(new Date().getTime());
-			Consequencer uploadResult = ossService.uploadJavaNotesImage(imgBase64, imageName);
+		String imageId = req.getImageId();
+		if (imageId != null && !imageId.equals("")) { // 不为空的情况下
+			Consequencer uploadResult = ossService.uploadJavaNotesImage(imageId);
 
 			// 处理失败
 			if (uploadResult.getResult() != 1) {
@@ -76,7 +74,7 @@ public class JavaNotesController extends BaseController {
 		String title = req.getTitle();
 		String htmlContent = req.getHtmlContent();
 		
-		Consequencer consequent = javaNotesServer.uploadJavaNotes(title, imageName, htmlContent);
+		Consequencer consequent = javaNotesServer.uploadJavaNotes(title, imageId, htmlContent);
 		
 		return consequent.getJsonObjMessage();
 	}

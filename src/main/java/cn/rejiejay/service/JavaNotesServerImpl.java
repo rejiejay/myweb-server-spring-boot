@@ -5,6 +5,7 @@ import java.util.Date;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSONObject;
@@ -25,25 +26,30 @@ public class JavaNotesServerImpl implements JavaNotesServer {
 	@Autowired
 	private JavaNotesRepository javaNotesRepository;
 
+	@Value("${rejiejay.tencentoss.origin}")
+	private String tencentOssOrigin;
+
 	/**
 	 * 创建一个笔记
 	 */
-	public Consequencer uploadJavaNotes(String title, String imgName, String htmlContent) {
+	public Consequencer uploadJavaNotes(String title, String imageId, String htmlContent) {
 		Consequencer consequent = new Consequencer();
 
 		long timestamp = new Date().getTime();
 
 		logger.debug("执行SQL" + "title:" + title + ";htmlContent:" + htmlContent
-				+ ";imgName:" + imgName + ";timestamp:" + timestamp);
+				+ ";imageId:" + imageId + ";timestamp:" + timestamp);
 		
-		int insertNoteResult = javaNotesRepository.insertNote(title, htmlContent, imgName, timestamp);
+		int insertNoteResult = javaNotesRepository.insertNote(title, htmlContent, imageId, timestamp);
 		
 
 		if (insertNoteResult == 1) {
 			JSONObject data = new JSONObject();
 			data.put("title", title);
 			data.put("htmlContent", htmlContent);
-			data.put("imgName", imgName);
+			data.put("imageId", imageId);
+			String imageUrl = tencentOssOrigin + "javanotes/" + imageId + ".jpg";
+			data.put("imageUrl", imageUrl);
 			data.put("timestamp", timestamp);
 			
 			consequent.setSuccess().setData(data);

@@ -12,5 +12,5 @@ public interface JavaNotesServer {
 	/**
 	 * 存储一条JAVA Notes
 	 */
-	public Consequencer uploadJavaNotes(String title, String imgName, String htmlContent);
+	public Consequencer uploadJavaNotes(String title, String imageId, String htmlContent);
 }

@@ -12,5 +12,5 @@ public interface OssServer {
 	/**
 	 * 上传到JAVA笔记系统的图片
 	 */
-	public Consequencer uploadJavaNotesImage(String imgBase64, String imgName);
+	public Consequencer uploadJavaNotesImage(String imageId);
 }
