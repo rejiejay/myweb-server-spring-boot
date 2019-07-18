@@ -17,9 +17,10 @@ public class UploadControllerTests extends BaseControllerTests {
 		String reqStr = "1938167"; // 密码
 
 		// 返回执行请求的结果
-		MvcResult result = mockMvc
-				.perform(MockMvcRequestBuilders.post("/upload/").contentType(MediaType.valueOf("text/plain;charset=UTF-8"))
-						.accept(MediaType.APPLICATION_JSON_UTF8).content(reqStr.getBytes()))
+		MvcResult result = mockMvc.perform(
+				MockMvcRequestBuilders.post("/upload/").contentType(MediaType.valueOf("text/plain;charset=UTF-8"))
+						.header("x-rejiejay-authorization", "1938167").accept(MediaType.APPLICATION_JSON_UTF8)
+						.content(reqStr.getBytes()))
 				.andReturn();
 
 		System.out.println(result.getResponse().getContentAsString());
