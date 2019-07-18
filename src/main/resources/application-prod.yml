@@ -1,2 +1,5 @@
 server:
-  port: 3333
+   port: 1938
+rejiejay:
+   file:
+      upload-dir: / # 此处待定需要进行测试

@@ -51,8 +51,6 @@ public class SecurityAnnotaterInterceptor extends HandlerInterceptorAdapter {
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
-		String reqParamString = requestToDigitalSignature(request); // 用来生成密匙的请求参数
-
 		// 允许携带的请求头
 		response.setHeader("Access-Control-Allow-Headers", "Origin, Accept, x-rejiejay-authorization");
 
@@ -90,6 +88,7 @@ public class SecurityAnnotaterInterceptor extends HandlerInterceptorAdapter {
 		}
 
 		// 解析 数字签名
+		String reqParamString = requestToDigitalSignature(request); // 用来生成密匙的请求参数
 		String digitalSignatureStr = "";
 		try {
 			digitalSignatureStr = DigitalSignature.DecodeSignature(reqParamString, digitalSignatureEncodedString);
