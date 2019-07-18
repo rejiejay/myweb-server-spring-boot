@@ -48,8 +48,16 @@ public class JavaNotesServerImpl implements JavaNotesServer {
 			data.put("title", title);
 			data.put("htmlContent", htmlContent);
 			data.put("imageId", imageId);
-			String imageUrl = tencentOssOrigin + "javanotes/" + imageId + ".jpg";
+
+			/**
+			 * 返回 上传OSS的地址
+			 */
+			String imageUrl = null;
+			if (imageId != null && !imageId.equals("") && !imageId.equals("null")) { // 不为空的情况下
+				imageUrl = tencentOssOrigin + "javanotes/" + imageId + ".jpg";
+			}
 			data.put("imageUrl", imageUrl);
+			
 			data.put("timestamp", timestamp);
 			
 			consequent.setSuccess().setData(data);

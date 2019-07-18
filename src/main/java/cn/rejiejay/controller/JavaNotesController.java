@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
+import cn.rejiejay.security.SecurityAnnotater;
 import cn.rejiejay.service.JavaNotesServer;
 import cn.rejiejay.service.OssServerImpl;
 import cn.rejiejay.utils.Consequencer;
@@ -43,6 +44,7 @@ public class JavaNotesController extends BaseController {
 	/**
 	 * 新增笔记
 	 */
+	@SecurityAnnotater(role = "admin")
 	@RequestMapping(value = "/add", method = RequestMethod.POST, consumes = "application/json", produces = "application/json;charset=UTF-8")
 	public JSONObject loginRejiejay(@RequestBody @Valid AddJavaNotesReque req, BindingResult result) {
 		logger.debug("/java/notes/add[req]: " + JSON.toJSONString(req)); // 打印 请求参数
@@ -59,7 +61,7 @@ public class JavaNotesController extends BaseController {
 		 * 处理图片
 		 */
 		String imageId = req.getImageId();
-		if (imageId != null && !imageId.equals("")) { // 不为空的情况下
+		if (imageId != null && !imageId.equals("") && !imageId.equals("null")) { // 不为空的情况下
 			Consequencer uploadResult = ossService.uploadJavaNotesImage(imageId);
 
 			// 处理失败
