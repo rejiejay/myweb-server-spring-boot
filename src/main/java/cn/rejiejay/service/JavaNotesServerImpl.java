@@ -67,4 +67,18 @@ public class JavaNotesServerImpl implements JavaNotesServer {
 
 		return consequent;
 	}
+
+	/**
+	 * 获取所有 JAVA Notes 的统计
+	 */
+	public Consequencer getAllNotesCount() {
+		Consequencer consequent = new Consequencer();
+		
+		long allNotesCount = javaNotesRepository.count();
+		
+		JSONObject data = new JSONObject();
+		data.put("allNotesCount", allNotesCount);
+		
+		return consequent.setSuccess(data);
+	}
 }

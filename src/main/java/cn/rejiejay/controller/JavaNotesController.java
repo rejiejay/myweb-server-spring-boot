@@ -6,6 +6,7 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSON;
@@ -46,7 +47,7 @@ public class JavaNotesController extends BaseController {
 	 */
 	@SecurityAnnotater(role = "admin")
 	@RequestMapping(value = "/add", method = RequestMethod.POST, consumes = "application/json", produces = "application/json;charset=UTF-8")
-	public JSONObject loginRejiejay(@RequestBody @Valid AddJavaNotesReque req, BindingResult result) {
+	public JSONObject addNotes(@RequestBody @Valid AddJavaNotesReque req, BindingResult result) {
 		logger.debug("/java/notes/add[req]: " + JSON.toJSONString(req)); // 打印 请求参数
 
 		if (result.hasErrors()) { // 判断参数是否合法
@@ -79,5 +80,24 @@ public class JavaNotesController extends BaseController {
 		Consequencer consequent = javaNotesServer.uploadJavaNotes(title, imageId, htmlContent);
 		
 		return consequent.getJsonObjMessage();
+	}
+	
+	/**
+	 * 获取笔记列表，
+	 * 
+	 * @param {sort} 排序方式  time random
+	 */
+	@RequestMapping(value = "/list", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
+	public JSONObject listNotes(@RequestParam(value = "sort", required = false) String sort) {
+		/**
+		 * 不管如何排序都需要返回总记录notesTotal
+		 */
+		
+		
+		/**
+		 * 默认时间排序，返回10条数据
+		 */
+		
+		return null;
 	}
 }

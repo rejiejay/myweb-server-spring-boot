@@ -19,4 +19,6 @@ public interface JavaNotesRepository extends CrudRepository<JavaNotes, Long> {
 	@Transactional
 	@Query(value = "insert into java_notes (title, content, imagekey, timestamp) values (?1, ?2, ?3, ?4)", nativeQuery = true)
 	int insertNote(String title, String content, String imagekey, long timestamp);
+	
+	
 }

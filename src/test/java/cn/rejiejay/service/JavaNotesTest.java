@@ -28,4 +28,12 @@ public class JavaNotesTest extends BaseServiceTests {
 				"javaNotesServer.uploadJavaNotes:" + consequent.getJsonStringMessage());
 	}
 
+	// 测试获取所有记录
+	@Test
+	public void testGetAllJavaNotesCount() {
+		Consequencer consequent = javaNotesServer.getAllNotesCount();
+		System.out.println(
+				"\n javaNotesServer.getAllNotesCount:" + consequent.getJsonStringMessage() + "\n");
+		
+	}
 }
