@@ -70,34 +70,44 @@ public class JavaNotesController extends BaseController {
 				return uploadResult.getJsonObjMessage();
 			}
 		}
-		
+
 		/**
 		 * 保存到数据库
 		 */
 		String title = req.getTitle();
 		String htmlContent = req.getHtmlContent();
-		
+
 		Consequencer consequent = javaNotesServer.uploadJavaNotes(title, imageId, htmlContent);
-		
+
 		return consequent.getJsonObjMessage();
 	}
-	
+
 	/**
 	 * 获取笔记列表，
 	 * 
-	 * @param {sort} 排序方式  time random
+	 * @param {pageNo} 分页
+	 * @param {sort}   排序方式 time random
 	 */
 	@RequestMapping(value = "/list", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
-	public JSONObject listNotes(@RequestParam(value = "sort", required = false) String sort) {
+	public JSONObject listNotes(@RequestParam(value = "pageNo", required = false) int pageNo,
+			@RequestParam(value = "sort", required = false) String sort) {
+		Consequencer consequent = new Consequencer();
+		
+		int page = 1;
 		/**
-		 * 不管如何排序都需要返回总记录notesTotal
+		 * 总记录notesTotal 是 必须
 		 */
-		
-		
+		long allNotesCount = javaNotesServer.getAllNotesCount(); // 不存在失败的说法
+
 		/**
-		 * 默认时间排序，返回10条数据
+		 * 默认时间排序，
 		 */
-		
+		if (sort == null || sort.equals("time")) {
+			if (pageNo > 0) {
+				page = pageNo;
+			}
+		}
+
 		return null;
 	}
 }

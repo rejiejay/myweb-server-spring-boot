@@ -1,15 +1,24 @@
 package cn.rejiejay.service;
 
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
+import cn.rejiejay.dataaccessobject.JavaNotes;
 import cn.rejiejay.dataaccessobject.JavaNotesRepository;
 import cn.rejiejay.utils.Consequencer;
 
@@ -71,13 +80,35 @@ public class JavaNotesServerImpl implements JavaNotesServer {
 	/**
 	 * 获取所有 JAVA Notes 的统计
 	 */
-	public Consequencer getAllNotesCount() {
+	public long getAllNotesCount() {
+		return javaNotesRepository.count();
+	}
+
+	/**
+	 * 根据 页码分页 获取10条 JAVA Notes 
+	 */
+	public Consequencer getNotesByTime(int pageNo) {
 		Consequencer consequent = new Consequencer();
 		
-		long allNotesCount = javaNotesRepository.count();
+		/**
+		 * 因为是从零开始的
+		 */
+		if (pageNo >= 1) {
+			pageNo = pageNo - 1;
+		}
+		
+		List<JavaNotes> javaNotesResult = javaNotesRepository.findJavaNotesByPageNo(pageNo);
+		
+		logger.info("javaNotesRepository.findJavaNotesByPageNo(): " + JSON.toJSONString(javaNotesResult)); // 打印数据库获取的数据
+
+		// 判断是否查询到数据
+		if (javaNotesResult.size() <= 0) {
+			return consequent.setMessage("查询数据为空！");
+		}
 		
 		JSONObject data = new JSONObject();
-		data.put("allNotesCount", allNotesCount);
+		JSONArray javaNotesArray = JSONArray.parseArray(JSON.toJSONString(javaNotesResult));
+		data.put("javaNotes", javaNotesArray);
 		
 		return consequent.setSuccess(data);
 	}

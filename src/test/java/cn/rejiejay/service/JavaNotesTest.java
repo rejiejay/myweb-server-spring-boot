@@ -21,19 +21,23 @@ public class JavaNotesTest extends BaseServiceTests {
 		String imageName = String.valueOf(new Date().getTime());
 		String title = "上传测试title";
 		String htmlContent = "上传测试htmlContent";
-		
+
 		Consequencer consequent = javaNotesServer.uploadJavaNotes(title, imageName, htmlContent);
 
-		System.out.println(
-				"javaNotesServer.uploadJavaNotes:" + consequent.getJsonStringMessage());
+		System.out.println("javaNotesServer.uploadJavaNotes:" + consequent.getJsonStringMessage());
 	}
 
 	// 测试获取所有记录
 	@Test
 	public void testGetAllJavaNotesCount() {
-		Consequencer consequent = javaNotesServer.getAllNotesCount();
-		System.out.println(
-				"\n javaNotesServer.getAllNotesCount:" + consequent.getJsonStringMessage() + "\n");
-		
+		System.out.println("\n javaNotesServer.getAllNotesCount:" + javaNotesServer.getAllNotesCount() + "\n");
+	}
+
+	// 测试获取10条 第一页JAVA Notes 
+	@Test
+	public void testGetOnePageNotes() {
+		Consequencer consequent = javaNotesServer.getNotesByTime(1);
+
+		System.out.println("\n javaNotesServer.getNotesByTime(1):" + consequent.getJsonStringMessage() + "\n");
 	}
 }

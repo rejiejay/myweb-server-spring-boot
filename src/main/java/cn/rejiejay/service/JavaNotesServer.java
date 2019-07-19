@@ -14,9 +14,13 @@ public interface JavaNotesServer {
 	 */
 	public Consequencer uploadJavaNotes(String title, String imageId, String htmlContent);
 	
-
 	/**
 	 * 获取所有 JAVA Notes 的统计
 	 */
-	public Consequencer getAllNotesCount();
+	public long getAllNotesCount();
+
+	/**
+	 * 根据 页码分页 获取10条 JAVA Notes 
+	 */
+	public Consequencer getNotesByTime(int pageNo);
 }
