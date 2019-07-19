@@ -5,6 +5,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
@@ -43,5 +45,16 @@ public class JavaNotesControllerTest extends BaseControllerTests {
 				.accept(MediaType.APPLICATION_JSON_UTF8).content(jsonObjReq.toJSONString().getBytes())).andReturn();
 
 		System.out.println("\n 新增笔记： " + addJavaNoteResult.getResponse().getContentAsString() + "\n");
+	}
+
+	/**
+	 * 测试 获取第一页 时间排序的笔记
+	 */
+	@Test
+	public void testGetOnePageNotes() throws Exception {
+		MvcResult result = mockMvc.perform(get("/java/notes/list/"))  // 简单的get 请求
+				.andReturn(); // 返回执行请求的结果
+		
+		System.out.println(result.getResponse().getContentAsString() + "\n");
 	}
 }

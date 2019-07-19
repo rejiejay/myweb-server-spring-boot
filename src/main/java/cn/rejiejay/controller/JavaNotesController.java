@@ -89,7 +89,7 @@ public class JavaNotesController extends BaseController {
 	 * @param {sort}   排序方式 time random
 	 */
 	@RequestMapping(value = "/list", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
-	public JSONObject listNotes(@RequestParam(value = "pageNo", required = false) int pageNo,
+	public JSONObject listNotes(@RequestParam(value = "pageNo", required = false) Integer pageNo,
 			@RequestParam(value = "sort", required = false) String sort) {
 		Consequencer consequent = new Consequencer();
 		
@@ -103,9 +103,24 @@ public class JavaNotesController extends BaseController {
 		 * 默认时间排序，
 		 */
 		if (sort == null || sort.equals("time")) {
-			if (pageNo > 0) {
-				page = pageNo;
+			if (pageNo != null && pageNo > 0) {
+				page = pageNo.intValue();
 			}
+			
+			Consequencer getNoteResult = javaNotesServer.getNotesByTime(page);
+
+			// 执行失败的情况下直接返回失败即可
+			if (getNoteResult.getResult() != 1) {
+				return getNoteResult.getJsonObjMessage();
+			}
+
+			// 成功的情况下 返回 {javaNotes: [], total: ?}
+			JSONObject data = new JSONObject();
+			data.put("javaNotes", getNoteResult.getData().getJSONArray("javaNotes"));
+			data.put("total", allNotesCount);
+			
+			// 封装一下
+			return consequent.setSuccess(data).getJsonObjMessage();
 		}
 
 		return null;
