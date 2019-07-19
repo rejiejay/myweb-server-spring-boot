@@ -99,17 +99,21 @@ public class JavaNotesServerImpl implements JavaNotesServer {
 		
 		List<JavaNotes> javaNotesResult = javaNotesRepository.findJavaNotesByPageNo(pageNo);
 		
-		logger.info("javaNotesRepository.findJavaNotesByPageNo(): " + JSON.toJSONString(javaNotesResult)); // 打印数据库获取的数据
-
 		// 判断是否查询到数据
 		if (javaNotesResult.size() <= 0) {
 			return consequent.setMessage("查询数据为空！");
 		}
 		
-		JSONObject data = new JSONObject();
-		JSONArray javaNotesArray = JSONArray.parseArray(JSON.toJSONString(javaNotesResult));
-		data.put("javaNotes", javaNotesArray);
+		// 将 JavaBean 转为 标准JSON
+		JSONArray javaNotesArray = new JSONArray();
 		
+		javaNotesResult.forEach(javaNote -> javaNotesArray.add(javaNote.toFastJson()));
+		
+		logger.info("UserRepository.findJavaNotesByPageNo(" + pageNo + "): " + JSONArray.toJSONString(javaNotesArray)); // 打印数据库获取的数据
+
+		// 返回结果
+		JSONObject data = new JSONObject();
+		data.put("javaNotes", javaNotesArray);
 		return consequent.setSuccess(data);
 	}
 }

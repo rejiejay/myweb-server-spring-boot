@@ -7,6 +7,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+
 /**
  * JAVA笔记 实体类
  * 
@@ -58,4 +61,15 @@ public class JavaNotes {
 	@Column(name = "tag")
 	private String tag;
 
+	public JSONObject toFastJson() {
+		JSONObject data = new JSONObject();
+		data.put("id", this.noteid);
+		data.put("title", this.title);
+		data.put("imagekey", this.imagekey);
+		data.put("content", this.content);
+		data.put("timestamp", this.timestamp);
+		data.put("tag", this.tag);
+		
+		return data;
+	}
 }
