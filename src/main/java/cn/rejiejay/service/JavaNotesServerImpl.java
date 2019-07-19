@@ -106,8 +106,19 @@ public class JavaNotesServerImpl implements JavaNotesServer {
 		
 		// 将 JavaBean 转为 标准JSON
 		JSONArray javaNotesArray = new JSONArray();
-		
-		javaNotesResult.forEach(javaNote -> javaNotesArray.add(javaNote.toFastJson()));
+		javaNotesResult.forEach(javaNote -> {
+			JSONObject javaNoteJson = javaNote.toFastJson();
+			String imagekey = javaNoteJson.getString("javaNoteJson");
+			
+			// 这里动个手脚, 封装个imageUrl进去; 主要是为了方便前端。
+			String imageUrl = "";
+			if (imagekey != null && !imagekey.equals("")) {
+				imageUrl = tencentOssOrigin + "javanotes/" + imagekey + ".jpg";
+			}
+			
+			javaNoteJson.put("imageUrl", imageUrl);
+			javaNotesArray.add(javaNoteJson);
+		});
 		
 		logger.info("UserRepository.findJavaNotesByPageNo(" + pageNo + "): " + JSONArray.toJSONString(javaNotesArray)); // 打印数据库获取的数据
 
