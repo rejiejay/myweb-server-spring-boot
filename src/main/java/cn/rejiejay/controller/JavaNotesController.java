@@ -92,7 +92,7 @@ public class JavaNotesController extends BaseController {
 	public JSONObject listNotes(@RequestParam(value = "pageNo", required = false) Integer pageNo,
 			@RequestParam(value = "sort", required = false) String sort) {
 		Consequencer consequent = new Consequencer();
-		
+
 		int page = 1;
 		/**
 		 * 总记录notesTotal 是 必须
@@ -100,15 +100,11 @@ public class JavaNotesController extends BaseController {
 		long allNotesCount = javaNotesServer.getAllNotesCount(); // 不存在失败的说法
 
 		/**
-		 * 默认时间排序，
+		 * 默随机排序
 		 */
-		if (sort == null || sort.equals("time")) {
-			if (pageNo != null && pageNo > 0) {
-				page = pageNo.intValue();
-			}
+		if (sort != null && sort.equals("random")) {
+			Consequencer getNoteResult = javaNotesServer.getNotesByRandom(10);
 			
-			Consequencer getNoteResult = javaNotesServer.getNotesByTime(page);
-
 			// 执行失败的情况下直接返回失败即可
 			if (getNoteResult.getResult() != 1) {
 				return getNoteResult.getJsonObjMessage();
@@ -118,11 +114,32 @@ public class JavaNotesController extends BaseController {
 			JSONObject data = new JSONObject();
 			data.put("javaNotes", getNoteResult.getData().getJSONArray("javaNotes"));
 			data.put("total", allNotesCount);
-			
+
 			// 封装一下
 			return consequent.setSuccess(data).getJsonObjMessage();
 		}
 
-		return null;
+		/**
+		 * 默认时间排序，(只要不是随机排序就是时间排序
+		 */
+		// if (sort == null || sort.equals("time")) {}
+		if (pageNo != null && pageNo > 0) {
+			page = pageNo.intValue();
+		}
+
+		Consequencer getNoteResult = javaNotesServer.getNotesByTime(page);
+
+		// 执行失败的情况下直接返回失败即可
+		if (getNoteResult.getResult() != 1) {
+			return getNoteResult.getJsonObjMessage();
+		}
+
+		// 成功的情况下 返回 {javaNotes: [], total: ?}
+		JSONObject data = new JSONObject();
+		data.put("javaNotes", getNoteResult.getData().getJSONArray("javaNotes"));
+		data.put("total", allNotesCount);
+
+		// 封装一下
+		return consequent.setSuccess(data).getJsonObjMessage();
 	}
 }

@@ -1,6 +1,5 @@
 package cn.rejiejay.service;
 
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -8,10 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
@@ -97,7 +92,13 @@ public class JavaNotesServerImpl implements JavaNotesServer {
 			pageNo = pageNo - 1;
 		}
 		
-		List<JavaNotes> javaNotesResult = javaNotesRepository.findJavaNotesByPageNo(pageNo);
+		int startNum = pageNo * 10;
+		
+		List<JavaNotes> javaNotesResult = javaNotesRepository.findJavaNotesByPageNo(startNum);
+
+		// 这样转换出来的数据是为 [{},{},{}] 空的 是因为 JavaBean出现问题
+		// JSONArray array= JSONArray.parseArray(JSON.toJSONString(javaNotesResult));
+		// System.out.println("List<JavaNotes> javaNotesResult:" + array.toJSONString());
 		
 		// 判断是否查询到数据
 		if (javaNotesResult.size() <= 0) {
@@ -108,7 +109,7 @@ public class JavaNotesServerImpl implements JavaNotesServer {
 		JSONArray javaNotesArray = new JSONArray();
 		javaNotesResult.forEach(javaNote -> {
 			JSONObject javaNoteJson = javaNote.toFastJson();
-			String imagekey = javaNoteJson.getString("javaNoteJson");
+			String imagekey = javaNoteJson.getString("imagekey");
 			
 			// 这里动个手脚, 封装个imageUrl进去; 主要是为了方便前端。
 			String imageUrl = "";
@@ -121,6 +122,43 @@ public class JavaNotesServerImpl implements JavaNotesServer {
 		});
 		
 		logger.info("UserRepository.findJavaNotesByPageNo(" + pageNo + "): " + JSONArray.toJSONString(javaNotesArray)); // 打印数据库获取的数据
+
+		// 返回结果
+		JSONObject data = new JSONObject();
+		data.put("javaNotes", javaNotesArray);
+		return consequent.setSuccess(data);
+	}
+	
+	/**
+	 * 随机获取N条 JAVA Notes 
+	 */
+	public Consequencer getNotesByRandom(int total) {
+		Consequencer consequent = new Consequencer();
+		
+		List<JavaNotes> javaNotesResult = javaNotesRepository.findJavaNotesByRandom(total);
+
+		logger.info("javaNotesRepository.findJavaNotesByRandom(" + total + ");" + javaNotesResult);
+		
+		// 判断是否查询到数据
+		if (javaNotesResult.size() <= 0) {
+			return consequent.setMessage("查询数据为空！");
+		}
+		
+		// 将 JavaBean 转为 标准JSON
+		JSONArray javaNotesArray = new JSONArray();
+		javaNotesResult.forEach(javaNote -> {
+			JSONObject javaNoteJson = javaNote.toFastJson();
+			String imagekey = javaNoteJson.getString("imagekey");
+			
+			// 这里动个手脚, 封装个imageUrl进去; 主要是为了方便前端。
+			String imageUrl = "";
+			if (imagekey != null && !imagekey.equals("")) {
+				imageUrl = tencentOssOrigin + "javanotes/" + imagekey + ".jpg";
+			}
+			
+			javaNoteJson.put("imageUrl", imageUrl);
+			javaNotesArray.add(javaNoteJson);
+		});
 
 		// 返回结果
 		JSONObject data = new JSONObject();

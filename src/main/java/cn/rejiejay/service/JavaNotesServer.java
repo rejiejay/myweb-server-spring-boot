@@ -23,4 +23,9 @@ public interface JavaNotesServer {
 	 * 根据 页码分页 获取10条 JAVA Notes 
 	 */
 	public Consequencer getNotesByTime(int pageNo);
+
+	/**
+	 * 随机获取10条 JAVA Notes 
+	 */
+	public Consequencer getNotesByRandom(int total);
 }

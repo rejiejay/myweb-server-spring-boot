@@ -72,4 +72,57 @@ public class JavaNotes {
 		
 		return data;
 	}
+	public Long getNoteid() {
+		return noteid;
+	}
+
+	public void setNoteid(Long noteid) {
+		this.noteid = noteid;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public String getImagekey() {
+		return imagekey;
+	}
+
+	public void setImagekey(String imagekey) {
+		this.imagekey = imagekey;
+	}
+
+	public String getContent() {
+		return content;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
+	}
+
+	public long getTimestamp() {
+		return timestamp;
+	}
+
+	public void setTimestamp(long timestamp) {
+		this.timestamp = timestamp;
+	}
+
+	public String getTag() {
+		return tag;
+	}
+
+	public void setTag(String tag) {
+		this.tag = tag;
+	}
+	
+	@Override
+	public String toString() {
+		return "JavaNotes [noteid=" + noteid + ", title=" + title + ", imagekey=" + imagekey + ", content=" + content
+				+ ", timestamp=" + timestamp + ", tag=" + tag + "]";
+	}
 }

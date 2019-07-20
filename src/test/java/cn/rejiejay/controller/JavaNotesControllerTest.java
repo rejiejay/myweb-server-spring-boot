@@ -57,4 +57,15 @@ public class JavaNotesControllerTest extends BaseControllerTests {
 		
 		System.out.println(result.getResponse().getContentAsString() + "\n");
 	}
+	
+	/**
+	 * 测试 获取10条随机排序的笔记
+	 */
+	@Test
+	public void testGetRandomPageNotes() throws Exception {
+		MvcResult result = mockMvc.perform(get("/java/notes/list/?sort=random"))  // 简单的get 请求
+				.andReturn(); // 返回执行请求的结果
+		
+		System.out.println(result.getResponse().getContentAsString() + "\n");
+	}
 }
