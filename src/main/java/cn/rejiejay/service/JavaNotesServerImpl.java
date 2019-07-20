@@ -27,7 +27,7 @@ import cn.rejiejay.utils.Consequencer;
 @Service
 public class JavaNotesServerImpl implements JavaNotesServer {
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
-	
+
 	@Autowired
 	private JavaNotesRepository javaNotesRepository;
 
@@ -42,11 +42,10 @@ public class JavaNotesServerImpl implements JavaNotesServer {
 
 		long timestamp = new Date().getTime();
 
-		logger.debug("执行SQL" + "title:" + title + ";htmlContent:" + htmlContent
-				+ ";imageId:" + imageId + ";timestamp:" + timestamp);
-		
+		logger.debug("执行SQL" + "title:" + title + ";htmlContent:" + htmlContent + ";imageId:" + imageId + ";timestamp:"
+				+ timestamp);
+
 		int insertNoteResult = javaNotesRepository.insertNote(title, htmlContent, imageId, timestamp);
-		
 
 		if (insertNoteResult == 1) {
 			JSONObject data = new JSONObject();
@@ -62,9 +61,9 @@ public class JavaNotesServerImpl implements JavaNotesServer {
 				imageUrl = tencentOssOrigin + "javanotes/" + imageId + ".jpg";
 			}
 			data.put("imageUrl", imageUrl);
-			
+
 			data.put("timestamp", timestamp);
-			
+
 			consequent.setSuccess().setData(data);
 		} else {
 			consequent.setMessage("创建一个笔记SQL执行失败");
@@ -81,47 +80,48 @@ public class JavaNotesServerImpl implements JavaNotesServer {
 	}
 
 	/**
-	 * 根据 页码分页 获取10条 JAVA Notes 
+	 * 根据 页码分页 获取10条 JAVA Notes
 	 */
 	public Consequencer getNotesByTime(int pageNo) {
 		Consequencer consequent = new Consequencer();
-		
+
 		/**
 		 * 因为是从零开始的
 		 */
 		if (pageNo >= 1) {
 			pageNo = pageNo - 1;
 		}
-		
+
 		int startNum = pageNo * 10;
-		
+
 		List<JavaNotes> javaNotesResult = javaNotesRepository.findJavaNotesByPageNo(startNum);
 
 		// 这样转换出来的数据是为 [{},{},{}] 空的 是因为 JavaBean出现问题
 		// JSONArray array= JSONArray.parseArray(JSON.toJSONString(javaNotesResult));
-		// System.out.println("List<JavaNotes> javaNotesResult:" + array.toJSONString());
-		
+		// System.out.println("List<JavaNotes> javaNotesResult:" +
+		// array.toJSONString());
+
 		// 判断是否查询到数据
 		if (javaNotesResult.size() <= 0) {
 			return consequent.setMessage("查询数据为空！");
 		}
-		
+
 		// 将 JavaBean 转为 标准JSON
 		JSONArray javaNotesArray = new JSONArray();
 		javaNotesResult.forEach(javaNote -> {
 			JSONObject javaNoteJson = javaNote.toFastJson();
 			String imagekey = javaNoteJson.getString("imagekey");
-			
+
 			// 这里动个手脚, 封装个imageUrl进去; 主要是为了方便前端。
 			String imageUrl = "";
 			if (imagekey != null && !imagekey.equals("")) {
 				imageUrl = tencentOssOrigin + "javanotes/" + imagekey + ".jpg";
 			}
-			
+
 			javaNoteJson.put("imageUrl", imageUrl);
 			javaNotesArray.add(javaNoteJson);
 		});
-		
+
 		logger.info("UserRepository.findJavaNotesByPageNo(" + pageNo + "): " + JSONArray.toJSONString(javaNotesArray)); // 打印数据库获取的数据
 
 		// 返回结果
@@ -129,34 +129,34 @@ public class JavaNotesServerImpl implements JavaNotesServer {
 		data.put("javaNotes", javaNotesArray);
 		return consequent.setSuccess(data);
 	}
-	
+
 	/**
-	 * 随机获取N条 JAVA Notes 
+	 * 随机获取N条 JAVA Notes
 	 */
 	public Consequencer getNotesByRandom(int total) {
 		Consequencer consequent = new Consequencer();
-		
+
 		List<JavaNotes> javaNotesResult = javaNotesRepository.findJavaNotesByRandom(total);
 
 		logger.info("javaNotesRepository.findJavaNotesByRandom(" + total + ");" + javaNotesResult);
-		
+
 		// 判断是否查询到数据
 		if (javaNotesResult.size() <= 0) {
 			return consequent.setMessage("查询数据为空！");
 		}
-		
+
 		// 将 JavaBean 转为 标准JSON
 		JSONArray javaNotesArray = new JSONArray();
 		javaNotesResult.forEach(javaNote -> {
 			JSONObject javaNoteJson = javaNote.toFastJson();
 			String imagekey = javaNoteJson.getString("imagekey");
-			
+
 			// 这里动个手脚, 封装个imageUrl进去; 主要是为了方便前端。
 			String imageUrl = "";
 			if (imagekey != null && !imagekey.equals("")) {
 				imageUrl = tencentOssOrigin + "javanotes/" + imagekey + ".jpg";
 			}
-			
+
 			javaNoteJson.put("imageUrl", imageUrl);
 			javaNotesArray.add(javaNoteJson);
 		});
@@ -166,27 +166,27 @@ public class JavaNotesServerImpl implements JavaNotesServer {
 		data.put("javaNotes", javaNotesArray);
 		return consequent.setSuccess(data);
 	}
-	
+
 	/**
 	 * 获取 JAVA Notes 根据 id
 	 */
 	public Consequencer getNoteById(long id) {
 		Consequencer consequent = new Consequencer();
-		
+
 		Optional<JavaNotes> JavaNote = javaNotesRepository.findById(id);
-		
+
 		logger.info("javaNotesRepository.findById(" + id + "): " + JavaNote.toString()); // 打印数据库获取的数据
-		
+
 		JavaNotes oneJavaNote = null;
-		
+
 		try {
 			oneJavaNote = JavaNote.get();
 		} catch (Exception e) {
 			return consequent.setMessage("查询数据为空！");
 		}
-		
+
 		JSONObject data = JSONObject.parseObject(JSONObject.toJSONString(oneJavaNote));
-		
+
 		return consequent.setSuccess(data);
 	}
 
@@ -197,7 +197,7 @@ public class JavaNotesServerImpl implements JavaNotesServer {
 		Consequencer consequent = new Consequencer();
 
 		logger.info("删除 JAVA Notes 根据 id" + id); // 打印数据库获取的数据
-		
+
 		try {
 			javaNotesRepository.deleteById(id);
 		} catch (IllegalArgumentException e) {
@@ -205,5 +205,39 @@ public class JavaNotesServerImpl implements JavaNotesServer {
 		}
 
 		return consequent.setSuccess();
+	}
+
+	/**
+	 * 编辑 一条JAVA Notes
+	 */
+	public Consequencer editJavaNotes(long id, String title, String imageId, String htmlContent) {
+		Consequencer consequent = new Consequencer();
+
+		logger.debug("执行SQL编辑 JAVA Notes 根据 id" + id + ";title:" + title + ";htmlContent:" + htmlContent + ";imageId:"
+				+ imageId);
+		
+		int updateNoteResult = javaNotesRepository.updateNote(id, title, htmlContent, imageId);
+
+		if (updateNoteResult == 1) {
+			// 意思意思一下返回点数据
+			JSONObject data = new JSONObject();
+			data.put("id", id);
+			data.put("title", title);
+			data.put("htmlContent", htmlContent);
+			data.put("imageId", imageId);
+
+			/**
+			 * 返回 上传OSS的地址
+			 */
+			String imageUrl = null;
+			if (imageId != null && !imageId.equals("") && !imageId.equals("null")) { // 不为空的情况下
+				imageUrl = tencentOssOrigin + "javanotes/" + imageId + ".jpg";
+			}
+			data.put("imageUrl", imageUrl);
+
+			consequent.setSuccess().setData(data);
+		}
+		
+		return consequent;
 	}
 }

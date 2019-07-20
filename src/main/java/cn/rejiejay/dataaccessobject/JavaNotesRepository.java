@@ -37,4 +37,12 @@ public interface JavaNotesRepository extends CrudRepository<JavaNotes, Long> {
 	 */
 	@Query(value = "select * from java_notes order by rand() limit ?1", nativeQuery = true)
 	List<JavaNotes> findJavaNotesByRandom(int total);
+
+	/**
+	 * 根据id更新一条笔记
+	 */
+	@Modifying
+	@Transactional
+	@Query(value = "update java_notes set title=?2,content=?3,imagekey=?4 where note_id=?1", nativeQuery = true)
+	int updateNote(long id, String title, String content, String imagekey);
 }

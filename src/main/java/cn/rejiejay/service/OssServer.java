@@ -13,6 +13,11 @@ public interface OssServer {
 	 * 上传到JAVA笔记系统的图片
 	 */
 	public Consequencer uploadJavaNotesImage(String imageId);
+
+	/**
+	 * 判断是否存在此图片
+	 */
+	public Consequencer isExistsJavaNotesImage(String imageId);
 	
 	/**
 	 * 删除JAVA笔记系统的图片 根据 imageId

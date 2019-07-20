@@ -77,7 +77,7 @@ public class OssServerImpl implements OssServer {
 			e.printStackTrace();
 			return consequent.setMessage("读取本地图片流失败，原因：" + e.toString());
 		}
-		
+
 		// 线程池大小，建议在客户端与 COS 网络充足(如使用腾讯云的 CVM，同地域上传 COS)的情况下，设置成16或32即可, 可较充分的利用网络资源
 		// 对于使用公网传输且网络带宽质量不高的情况，建议减小该值，避免因网速过慢，造成请求超时。
 		ExecutorService threadPool = Executors.newFixedThreadPool(16); // 我一般都是网络充足的
@@ -123,24 +123,42 @@ public class OssServerImpl implements OssServer {
 	}
 
 	/**
+	 * 判断是否存在此图片
+	 */
+	public Consequencer isExistsJavaNotesImage(String imageId) {
+		Consequencer consequent = new Consequencer();
+
+		// 对象键（Key）是对象在存储桶中的唯一标识。
+		String key = "myserver/javanotes/" + imageId + ".jpg";
+
+		logger.info("查询存储桶中是否存在指定的对象tencentOSS.cosClient.getObjectMetadata(" + tencentOSS.bucket + ", " + key + ")"); // 打印数据库获取的数据
+
+		try {
+			tencentOSS.cosClient.getObjectMetadata(tencentOSS.bucket, key);
+		} catch (CosClientException e) {
+			return consequent.setMessage("查询不存在对象:" + e.toString());
+
+		}
+
+		return consequent.setSuccess();
+	}
+
+	/**
 	 * 删除JAVA笔记系统的图片 根据 imageId
 	 */
 	public Consequencer delJavaNotesImage(String imageId) {
 		Consequencer consequent = new Consequencer();
-		
+
 		/**
 		 * 查询存储桶中是否存在指定的对象
 		 */
-		// 对象键（Key）是对象在存储桶中的唯一标识。
 		String key = "myserver/javanotes/" + imageId + ".jpg";
+		Consequencer javaNotesImageExists = this.isExistsJavaNotesImage(imageId);
 		
-		ObjectMetadata objectMetadata = tencentOSS.cosClient.getObjectMetadata(tencentOSS.bucket, key);
-		logger.info("查询存储桶中是否存在指定的对象tencentOSS.cosClient.getObjectMetadata(" + tencentOSS.bucket + ", " + key + ")"); // 打印数据库获取的数据
-		
-		if (objectMetadata == null) {
+		if (javaNotesImageExists.getResult() != 1) {
 			return consequent.setMessage("删除图片" + key + "失败，不存在图片");
 		}
-		
+
 		/**
 		 * 开始删除（这里是存在图片的情况
 		 */
@@ -150,7 +168,7 @@ public class OssServerImpl implements OssServer {
 		} catch (CosClientException e) {
 			return consequent.setMessage("删除图片" + key + "失败，原因：" + e.toString());
 		}
-		
+
 		return consequent.setSuccess();
 	}
 }

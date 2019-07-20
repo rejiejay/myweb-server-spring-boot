@@ -38,4 +38,9 @@ public interface JavaNotesServer {
 	 * 删除 JAVA Notes 根据 id
 	 */
 	public Consequencer delNoteById(long id);
+	
+	/**
+	 * 编辑 一条JAVA Notes
+	 */
+	public Consequencer editJavaNotes(long id, String title, String imageId, String htmlContent);
 }
