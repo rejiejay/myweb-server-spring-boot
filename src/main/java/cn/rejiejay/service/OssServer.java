@@ -13,4 +13,9 @@ public interface OssServer {
 	 * 上传到JAVA笔记系统的图片
 	 */
 	public Consequencer uploadJavaNotesImage(String imageId);
+	
+	/**
+	 * 删除JAVA笔记系统的图片 根据 imageId
+	 */
+	public Consequencer delJavaNotesImage(String imageId);
 }

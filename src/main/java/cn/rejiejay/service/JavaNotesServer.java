@@ -28,4 +28,9 @@ public interface JavaNotesServer {
 	 * 随机获取10条 JAVA Notes 
 	 */
 	public Consequencer getNotesByRandom(int total);
+
+	/**
+	 * 获取 JAVA Notes 根据 id
+	 */
+	public Consequencer getNoteById(long id);
 }

@@ -2,6 +2,7 @@ package cn.rejiejay.service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -164,5 +165,26 @@ public class JavaNotesServerImpl implements JavaNotesServer {
 		JSONObject data = new JSONObject();
 		data.put("javaNotes", javaNotesArray);
 		return consequent.setSuccess(data);
+	}
+	
+	/**
+	 * 获取 JAVA Notes 根据 id
+	 */
+	public Consequencer getNoteById(long id) {
+		Consequencer consequent = new Consequencer();
+		
+		Optional<JavaNotes> JavaNote = javaNotesRepository.findById(id);
+		
+		JavaNotes oneJavaNote = null;
+		
+		try {
+			oneJavaNote = JavaNote.get();
+		} catch (Exception e) {
+			return consequent.setMessage("查询数据为空！");
+		}
+		
+		JSONObject data = JSONObject.parseObject(JSONObject.toJSONString(oneJavaNote));
+		
+		return consequent.setData(data);
 	}
 }

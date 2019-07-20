@@ -18,8 +18,6 @@ import cn.rejiejay.service.OssServerImpl;
 import cn.rejiejay.utils.Consequencer;
 import cn.rejiejay.viewobject.AddJavaNotesReque;
 
-import java.util.Date;
-
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
@@ -162,5 +160,48 @@ public class JavaNotesController extends BaseController {
 
 		// 封装一下
 		return consequent.setSuccess(data).getJsonObjMessage();
+	}
+
+	/**
+	 * 根据ID删除一条笔记
+	 */
+	@SecurityAnnotater(role = "admin")
+	@RequestMapping(value = "/del", method = RequestMethod.POST, consumes = "application/json", produces = "application/json;charset=UTF-8")
+	public JSONObject delNoteById(@RequestBody JSONObject req) {
+		Consequencer consequent = new Consequencer();
+		
+		Integer id = req.getInteger("id");
+		
+		/**
+		 * 手动参数校验
+		 */
+		if (id == null || id < 0) {
+			return errorJsonReply(2, "请求参数错误!");
+		}
+		
+		
+		/**
+		 * 根据id查询这条数据
+		 */
+		Consequencer getOneNoteResult = javaNotesServer.getNoteById(Long.valueOf(id.longValue()));
+		
+		if (getOneNoteResult.getResult() != 1) {
+			// 查询失败的情况下直接返回错误
+			return getOneNoteResult.getJsonObjMessage();
+		}
+		
+		/**
+		 * 先根据id删除图片
+		 */
+		String imagekey = getOneNoteResult.getData().getString("imagekey");
+		if (imagekey != null && imagekey.equals("")) {
+			
+		}
+		
+		/**
+		 * 再根据id删除数据
+		 */
+		
+		return consequent.getJsonObjMessage();
 	}
 }

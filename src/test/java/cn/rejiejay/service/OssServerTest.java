@@ -73,4 +73,12 @@ public class OssServerTest extends BaseServiceTests {
             e.printStackTrace();
         }
 	}
+	
+	// 测试删除图片 根据id
+	@Test
+	public void testDelImage() {
+		Consequencer consequent = ossService.delJavaNotesImage("111");
+		
+		System.out.println("ossService.delJavaNotesImage(\"111\");" + consequent.getJsonStringMessage());
+	}
 }

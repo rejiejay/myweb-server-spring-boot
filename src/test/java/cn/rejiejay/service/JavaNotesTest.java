@@ -40,4 +40,16 @@ public class JavaNotesTest extends BaseServiceTests {
 
 		System.out.println("\n javaNotesServer.getNotesByTime(1):" + consequent.getJsonStringMessage() + "\n");
 	}
+	
+	/**
+	 * 测试 获取1条随机排序的笔记
+	 */
+	@Test
+	public void testGetOneNoteById() throws Exception {
+		long id = 6;
+		
+		Consequencer consequent = javaNotesServer.getNoteById(id);
+
+		System.out.println("\n javaNotesServer.getNotesByTime(1):" + consequent.getJsonStringMessage() + "\n");
+	}
 }

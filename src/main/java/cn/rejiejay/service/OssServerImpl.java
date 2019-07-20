@@ -121,4 +121,34 @@ public class OssServerImpl implements OssServer {
 		transferManager.shutdownNow(); // 记得关闭 TransferManger
 		return consequent.setSuccess();
 	}
+
+	/**
+	 * 删除JAVA笔记系统的图片 根据 imageId
+	 */
+	public Consequencer delJavaNotesImage(String imageId) {
+		Consequencer consequent = new Consequencer();
+		
+		/**
+		 * 查询存储桶中是否存在指定的对象
+		 */
+		// 对象键（Key）是对象在存储桶中的唯一标识。
+		String key = "myserver/javanotes/" + imageId + ".jpg";
+		
+		ObjectMetadata objectMetadata = tencentOSS.cosClient.getObjectMetadata(tencentOSS.bucket, key);
+		
+		if (objectMetadata == null) {
+			return consequent.setMessage("删除图片" + key + "失败，不存在图片");
+		}
+		
+		/**
+		 * 开始删除（这里是存在图片的情况
+		 */
+		try {
+			tencentOSS.cosClient.deleteObject(tencentOSS.bucket, key);
+		} catch (CosClientException e) {
+			return consequent.setMessage("删除图片" + key + "失败，原因：" + e.toString());
+		}
+		
+		return consequent.setSuccess();
+	}
 }
