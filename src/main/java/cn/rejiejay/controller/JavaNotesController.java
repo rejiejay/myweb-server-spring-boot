@@ -168,9 +168,8 @@ public class JavaNotesController extends BaseController {
 	@SecurityAnnotater(role = "admin")
 	@RequestMapping(value = "/del", method = RequestMethod.POST, consumes = "application/json", produces = "application/json;charset=UTF-8")
 	public JSONObject delNoteById(@RequestBody JSONObject req) {
-		Consequencer consequent = new Consequencer();
-		
 		Integer id = req.getInteger("id");
+		logger.debug("/java/notes/del[req]: id:" + id);
 		
 		/**
 		 * 手动参数校验
@@ -178,7 +177,6 @@ public class JavaNotesController extends BaseController {
 		if (id == null || id < 0) {
 			return errorJsonReply(2, "请求参数错误!");
 		}
-		
 		
 		/**
 		 * 根据id查询这条数据
@@ -194,14 +192,20 @@ public class JavaNotesController extends BaseController {
 		 * 先根据id删除图片
 		 */
 		String imagekey = getOneNoteResult.getData().getString("imagekey");
-		if (imagekey != null && imagekey.equals("")) {
+		if (imagekey != null && !imagekey.equals("")) {
+			Consequencer delOneNotesImageResult = ossService.delJavaNotesImage(imagekey);
 			
+			if (delOneNotesImageResult.getResult() != 1) {
+				return delOneNotesImageResult.getJsonObjMessage();
+			}
 		}
 		
 		/**
 		 * 再根据id删除数据
 		 */
+		Consequencer delOneNoteResult = javaNotesServer.delNoteById(Long.valueOf(id.longValue()));
 		
-		return consequent.getJsonObjMessage();
+		logger.debug("/java/notes/del[reply]: " + delOneNoteResult.getJsonStringMessage());
+		return delOneNoteResult.getJsonObjMessage();
 	}
 }

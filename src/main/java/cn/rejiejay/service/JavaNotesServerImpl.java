@@ -175,6 +175,8 @@ public class JavaNotesServerImpl implements JavaNotesServer {
 		
 		Optional<JavaNotes> JavaNote = javaNotesRepository.findById(id);
 		
+		logger.info("javaNotesRepository.findById(" + id + "): " + JavaNote.toString()); // 打印数据库获取的数据
+		
 		JavaNotes oneJavaNote = null;
 		
 		try {
@@ -185,6 +187,23 @@ public class JavaNotesServerImpl implements JavaNotesServer {
 		
 		JSONObject data = JSONObject.parseObject(JSONObject.toJSONString(oneJavaNote));
 		
-		return consequent.setData(data);
+		return consequent.setSuccess(data);
+	}
+
+	/**
+	 * 删除 JAVA Notes 根据 id
+	 */
+	public Consequencer delNoteById(long id) {
+		Consequencer consequent = new Consequencer();
+
+		logger.info("删除 JAVA Notes 根据 id" + id); // 打印数据库获取的数据
+		
+		try {
+			javaNotesRepository.deleteById(id);
+		} catch (IllegalArgumentException e) {
+			return consequent.setMessage("删除JAVA Node id:“" + id + "”失败，原因：" + e.toString());
+		}
+
+		return consequent.setSuccess();
 	}
 }

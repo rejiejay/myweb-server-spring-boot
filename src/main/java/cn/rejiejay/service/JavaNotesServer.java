@@ -33,4 +33,9 @@ public interface JavaNotesServer {
 	 * 获取 JAVA Notes 根据 id
 	 */
 	public Consequencer getNoteById(long id);
+
+	/**
+	 * 删除 JAVA Notes 根据 id
+	 */
+	public Consequencer delNoteById(long id);
 }

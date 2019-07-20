@@ -135,6 +135,7 @@ public class OssServerImpl implements OssServer {
 		String key = "myserver/javanotes/" + imageId + ".jpg";
 		
 		ObjectMetadata objectMetadata = tencentOSS.cosClient.getObjectMetadata(tencentOSS.bucket, key);
+		logger.info("查询存储桶中是否存在指定的对象tencentOSS.cosClient.getObjectMetadata(" + tencentOSS.bucket + ", " + key + ")"); // 打印数据库获取的数据
 		
 		if (objectMetadata == null) {
 			return consequent.setMessage("删除图片" + key + "失败，不存在图片");
@@ -144,6 +145,7 @@ public class OssServerImpl implements OssServer {
 		 * 开始删除（这里是存在图片的情况
 		 */
 		try {
+			logger.info("始删除存储桶中指定的对象" + tencentOSS.bucket + key); // 打印数据库获取的数据
 			tencentOSS.cosClient.deleteObject(tencentOSS.bucket, key);
 		} catch (CosClientException e) {
 			return consequent.setMessage("删除图片" + key + "失败，原因：" + e.toString());

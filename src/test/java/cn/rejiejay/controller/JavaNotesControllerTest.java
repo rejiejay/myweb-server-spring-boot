@@ -79,4 +79,27 @@ public class JavaNotesControllerTest extends BaseControllerTests {
 		
 		System.out.println(result.getResponse().getContentAsString() + "\n");
 	}
+
+	// 测试删除 JAVA Notes 根据 id
+	@Test
+	public void testDelNoteById() throws Exception {
+		long id = 6;
+		
+		JSONObject jsonObjReq = new JSONObject();
+
+		jsonObjReq.put("id", id);
+		
+        String signature = this.createSignature(JSON.toJSONString(jsonObjReq));
+
+        if (signature == null) {
+        	System.out.println("\n 生成签名错误 \n");
+        	return;
+        }
+
+		MvcResult addJavaNoteResult = mockMvc.perform(MockMvcRequestBuilders.post("/java/notes/del")
+				.contentType(MediaType.APPLICATION_JSON_UTF8).header("x-rejiejay-authorization", signature)
+				.accept(MediaType.APPLICATION_JSON_UTF8).content(jsonObjReq.toJSONString().getBytes())).andReturn();
+
+		System.out.println("\n 删除笔记： " + addJavaNoteResult.getResponse().getContentAsString() + "\n");
+	}
 }

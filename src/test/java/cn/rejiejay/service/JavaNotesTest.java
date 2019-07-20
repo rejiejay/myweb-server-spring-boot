@@ -52,4 +52,20 @@ public class JavaNotesTest extends BaseServiceTests {
 
 		System.out.println("\n javaNotesServer.getNotesByTime(1):" + consequent.getJsonStringMessage() + "\n");
 	}
+	
+	// 测试获取 JAVA Notes 根据 id
+	@Test
+	public void testGetNoteById() {
+		Consequencer consequent = javaNotesServer.getNoteById(7);
+
+		System.out.println("javaNotesServer.delNoteById(\"\");" + consequent.getJsonStringMessage());
+	}
+
+	// 测试删除 JAVA Notes 根据 id
+	@Test
+	public void testDelNoteById() {
+		Consequencer consequent = javaNotesServer.delNoteById(15);
+
+		System.out.println("javaNotesServer.delNoteById(\"\");" + consequent.getJsonStringMessage());
+	}
 }
