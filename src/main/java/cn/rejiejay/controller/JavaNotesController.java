@@ -142,4 +142,25 @@ public class JavaNotesController extends BaseController {
 		// 封装一下
 		return consequent.setSuccess(data).getJsonObjMessage();
 	}
+
+	/**
+	 * 随机获取一条笔记
+	 */
+	@RequestMapping(value = "/get/random", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
+	public JSONObject getOneNotes() {
+		Consequencer consequent = new Consequencer();
+
+		Consequencer getNoteResult = javaNotesServer.getNotesByRandom(1);
+
+		// 执行失败的情况下直接返回失败即可
+		if (getNoteResult.getResult() != 1) {
+			return getNoteResult.getJsonObjMessage();
+		}
+
+		// 成功的情况下 返回 {javaNotes: [], total: ?}
+		JSONObject data = (JSONObject) getNoteResult.getData().getJSONArray("javaNotes").get(0);
+
+		// 封装一下
+		return consequent.setSuccess(data).getJsonObjMessage();
+	}
 }
