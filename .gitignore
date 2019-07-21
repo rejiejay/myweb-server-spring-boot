@@ -7,14 +7,7 @@ logs/
 uploads/
 
 # Ignore files built by java config
-src/main/resources
 src/main/resources/
-/src/main/resources/
-/src/main/resources
-*.yml
-application-dev.yml
-application-prod.yml
-application.yml
 
 # Log file
 *.log
