@@ -52,18 +52,18 @@ public class AndroidServerImpl implements AndroidServer {
 
 		int startNum = pageNo * 10;
 
-		List<AndroidRecordEvents> javaNotesResult = androidRecordEventRepository.findRecordEventByPageNo(startNum);
+		List<AndroidRecordEvents> recordEventResult = androidRecordEventRepository.findRecordEventByPageNo(startNum);
 
 		logger.debug(
-				"androidRecordEventRepository.findRecordEventByPageNo(" + pageNo + "):" + javaNotesResult.toString());
+				"androidRecordEventRepository.findRecordEventByPageNo(" + pageNo + "):" + recordEventResult.toString());
 
 		// 判断是否查询到数据
-		if (javaNotesResult.size() <= 0) {
+		if (recordEventResult.size() <= 0) {
 			return consequent.setMessage("查询数据为空！");
 		}
 
 		JSONObject data = new JSONObject();
-		data.put("list", JSONArray.parseArray(JSON.toJSONString(javaNotesResult)));
+		data.put("list", JSONArray.parseArray(JSON.toJSONString(recordEventResult)));
 
 		return consequent.setSuccess(data);
 	}

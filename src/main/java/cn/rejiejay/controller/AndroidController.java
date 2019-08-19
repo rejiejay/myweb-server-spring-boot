@@ -63,7 +63,7 @@ public class AndroidController extends BaseController {
 		data.put("list", recordEventListResult.getData().getJSONArray("list"));
 		data.put("total", allListCount);
 
-		return consequent.getJsonObjMessage();
+		return consequent.setSuccess(data).getJsonObjMessage();
 	}
 
 }
