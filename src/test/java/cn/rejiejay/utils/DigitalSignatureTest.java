@@ -43,8 +43,8 @@ public class DigitalSignatureTest extends BaseUtilsTests {
 	public void DecodeSignatureTest() {
 		String testResults = "ready";
 		try {
-			String reqParam = "{\"password\":\"1938167\"}";
-			String digitalSignatureEncodedString = "LnhTHa/HcfDL2MrxDDaxfVpU+YSD1y5kUAqQ+T5XTx3Ksg8oMiOb6pOeOd4LdT3OXsa4bm27Pk0lqlOqSKeS3nyliaK8bc11snz5mB88Mek=";
+			String reqParam = "{\"id\":4,\"title\":\"这是测试Edit标题\",\"imageId\":\"\",\"htmlContent\":\"这是测试Edit内容\"}";
+			String digitalSignatureEncodedString = "v5y40a5Pitu5nP2JqZwwYV4wJ0wbvCQEqrH09RIAxj1B0VZKxpiziBIaArgdb6MZ6p8XE8Gk4FSGo8x8Fq2EJB3etP7VqDQDEWeTe5BqJbc=";
 
 			testResults = DigitalSignature.DecodeSignature(reqParam, digitalSignatureEncodedString);
 

@@ -22,11 +22,11 @@ import javax.servlet.http.HttpServletResponse;
 //import org.slf4j.LoggerFactory;
 
 /**
- * 对请求标记了 SecurityAnnotater 注解的方法进行拦截 interceptor
+ * 对请求标记了 SecurityAnnotater 注解的方法进行拦截  _interceptor
  * 
  * 的执行顺序大致为：
  * 
- * 1. 请求到达 DispatcherServlet。 2. DispatcherServlet 发送至 Interceptor ，执行
+ * 1. 请求到达 DispatcherServlet。 2. DispatcherServlet 发送至  _Interceptor ，执行
  * preHandle。3. 请求达到 Controller 4. 请求结束后，postHandle 执行
  * 
  * @author _rejiejay Created on 2019年7月3日11:15:33
