@@ -1,5 +1,7 @@
 package cn.rejiejay.service;
 
+import cn.rejiejay.utils.Consequencer;
+
 /**
  * 安卓端支持（部分支持web端  模块
  * 
@@ -11,4 +13,9 @@ public interface AndroidServer {
 	 * 统计 所有 list 数据
 	 */
 	public long listRecordEventCount();
+	
+	/**
+	 * 获取 列表根据时间
+	 */
+	public Consequencer getRecordEventListByTime(int pageNo);
 }

@@ -7,8 +7,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
 
-import com.alibaba.fastjson.JSONObject;
-
 /**
  * 安卓端支持（部分支持web端 实体类
  * 
@@ -129,4 +127,134 @@ public class AndroidRecordEvents {
 	@Column(name = "week")
 	@NotNull
 	private int week;
+
+	public Long getAndroidid() {
+		return androidid;
+	}
+
+	public void setAndroidid(Long androidid) {
+		this.androidid = androidid;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public String getImageidentity() {
+		return imageidentity;
+	}
+
+	public void setImageidentity(String imageidentity) {
+		this.imageidentity = imageidentity;
+	}
+
+	public String getRecordtitle() {
+		return recordtitle;
+	}
+
+	public void setRecordtitle(String recordtitle) {
+		this.recordtitle = recordtitle;
+	}
+
+	public String getRecordmaterial() {
+		return recordmaterial;
+	}
+
+	public void setRecordmaterial(String recordmaterial) {
+		this.recordmaterial = recordmaterial;
+	}
+
+	public String getRecordcontent() {
+		return recordcontent;
+	}
+
+	public void setRecordcontent(String recordcontent) {
+		this.recordcontent = recordcontent;
+	}
+
+	public String getTag() {
+		return tag;
+	}
+
+	public void setTag(String tag) {
+		this.tag = tag;
+	}
+
+	public String getEventcause() {
+		return eventcause;
+	}
+
+	public void setEventcause(String eventcause) {
+		this.eventcause = eventcause;
+	}
+
+	public String getEventprocess() {
+		return eventprocess;
+	}
+
+	public void setEventprocess(String eventprocess) {
+		this.eventprocess = eventprocess;
+	}
+
+	public String getEventresult() {
+		return eventresult;
+	}
+
+	public void setEventresult(String eventresult) {
+		this.eventresult = eventresult;
+	}
+
+	public String getEventconclusion() {
+		return eventconclusion;
+	}
+
+	public void setEventconclusion(String eventconclusion) {
+		this.eventconclusion = eventconclusion;
+	}
+
+	public long getTimestamp() {
+		return timestamp;
+	}
+
+	public void setTimestamp(long timestamp) {
+		this.timestamp = timestamp;
+	}
+
+	public long getFullyear() {
+		return fullyear;
+	}
+
+	public void setFullyear(long fullyear) {
+		this.fullyear = fullyear;
+	}
+
+	public int getMonth() {
+		return month;
+	}
+
+	public void setMonth(int month) {
+		this.month = month;
+	}
+
+	public int getWeek() {
+		return week;
+	}
+
+	public void setWeek(int week) {
+		this.week = week;
+	}
+
+	@Override
+	public String toString() {
+		return "AndroidRecordEvents [androidid=" + androidid + ", type=" + type + ", imageidentity=" + imageidentity
+				+ ", recordtitle=" + recordtitle + ", recordmaterial=" + recordmaterial + ", recordcontent="
+				+ recordcontent + ", tag=" + tag + ", eventcause=" + eventcause + ", eventprocess=" + eventprocess
+				+ ", eventresult=" + eventresult + ", eventconclusion=" + eventconclusion + ", timestamp=" + timestamp
+				+ ", fullyear=" + fullyear + ", month=" + month + ", week=" + week + "]";
+	}
+	
 }
