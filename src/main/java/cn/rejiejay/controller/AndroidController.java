@@ -1,5 +1,6 @@
 package cn.rejiejay.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -7,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONObject;
 
+import cn.rejiejay.service.AndroidServer;
 import cn.rejiejay.utils.Consequencer;
 
 import org.slf4j.Logger;
@@ -22,6 +24,9 @@ import org.slf4j.LoggerFactory;
 @RequestMapping("/android")
 public class AndroidController extends BaseController {
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
+	
+	@Autowired
+	private AndroidServer androidServer;
 
 	/**
 	 * 获取安卓记录列表
@@ -41,7 +46,7 @@ public class AndroidController extends BaseController {
 		/**
 		 * 总记录 listTotal 是 必须 但是现阶段不用管
 		 */
-		// long allListCount = javaNotesServer.getAllNotesCount(); // 不存在失败的说法
+		 long allListCount = androidServer.listRecordEventCount(); // 不存在失败的说法
 		
 		
 		
