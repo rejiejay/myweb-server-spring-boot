@@ -91,7 +91,7 @@ public class SecurityAnnotaterInterceptor extends HandlerInterceptorAdapter {
 		String reqParamString = requestToDigitalSignature(request); // 用来生成密匙的请求参数
 		String digitalSignatureStr = "";
 		try {
-			digitalSignatureStr = DigitalSignature.DecodeSignature(reqParamString, digitalSignatureEncodedString);
+			digitalSignatureStr = DigitalSignature.DecodeSignature(reqParamString == null ?  "" : reqParamString, digitalSignatureEncodedString);
 		} catch (Exception e) {
 			return setErrorResponse(response, 40003, "不合法的凭证类型" + e.toString()); // 直接返回失败
 		}

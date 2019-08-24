@@ -1,15 +1,23 @@
 package cn.rejiejay.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
+import cn.rejiejay.security.SecurityAnnotater;
 import cn.rejiejay.service.AndroidServer;
 import cn.rejiejay.utils.Consequencer;
+import cn.rejiejay.viewobject.AddRecordReque;
+
+import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,7 +46,7 @@ public class AndroidController extends BaseController {
 	public JSONObject listRecordEvent(@RequestParam(value = "pageNo", required = false) Integer pageNo,
 			@RequestParam(value = "sort", required = false) String sort) {
 		Consequencer consequent = new Consequencer();
-		
+
 		logger.debug("@RequestMapping /recordevent/list?pageNo=" + pageNo + "&sort=" + sort);
 
 		int page = 1; // 默认返回第一页
@@ -52,7 +60,7 @@ public class AndroidController extends BaseController {
 		 * 先写 按照时间排序 其他的排序慢慢再加进去(乱序 限定时间 限定 记录 时间 时间范围 标签
 		 */
 		Consequencer recordEventListResult = androidServer.getRecordEventListByTime(page);
-		
+
 		// 执行失败的情况下直接返回失败即可
 		if (recordEventListResult.getResult() != 1) {
 			return recordEventListResult.getJsonObjMessage();
@@ -64,6 +72,40 @@ public class AndroidController extends BaseController {
 		data.put("total", allListCount);
 
 		return consequent.setSuccess(data).getJsonObjMessage();
+	}
+
+	/**
+	 * 新增记录
+	 */
+	@SecurityAnnotater(role = "admin")
+	@RequestMapping(value = "/record/add", method = RequestMethod.POST, consumes = "application/json", produces = "application/json;charset=UTF-8")
+	public JSONObject addNotes(@RequestBody @Valid AddRecordReque req, BindingResult result) {
+		logger.debug("/java/notes/add[req]: " + JSON.toJSONString(req)); // 打印 请求参数
+
+		if (result.hasErrors()) { // 判断参数是否合法
+			for (ObjectError error : result.getAllErrors()) {
+				String errorMsg = error.getDefaultMessage();
+				logger.warn("/android/record/add[req]: " + errorMsg);
+				return errorJsonReply(2, errorMsg);
+			}
+		}
+
+		/**
+		 * 处理图片
+		 */
+		String imageId = req.getImageidentity();
+		if (imageId != null && !imageId.equals("") && !imageId.equals("null")) { // 不为空的情况下
+			// 暂不实现
+			// Consequencer uploadResult =
+			// androidServer.uploadJavaNotesImage(imageId);
+
+			// 处理失败
+			// if (uploadResult.getResult() != 1) {
+			// return uploadResult.getJsonObjMessage();
+			// }
+		}
+		
+		return androidServer.addRecord(req).getJsonObjMessage();
 	}
 
 }
