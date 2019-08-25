@@ -16,6 +16,7 @@ import cn.rejiejay.dataaccessobject.AndroidRecordEventRepository;
 import cn.rejiejay.dataaccessobject.AndroidRecordEvents;
 import cn.rejiejay.utils.Consequencer;
 import cn.rejiejay.viewobject.AndroidAddRecordReque;
+import cn.rejiejay.viewobject.AndroidEditRecordReque;
 
 /**
  * 安卓端支持（部分支持web端 实现类
@@ -159,7 +160,6 @@ public class AndroidServerImpl implements AndroidServer {
 
 		return consequent.setSuccess(data);
 	}
-	
 
 	/**
 	 * 根据id删除数据
@@ -176,6 +176,28 @@ public class AndroidServerImpl implements AndroidServer {
 			return consequent.setMessage("删除 Android RecordEvent id:“" + id + "”失败，原因：" + e.toString());
 		}
 		
+		return consequent.setSuccess();
+	}
+
+	/**
+	 * 编辑一条记录
+	 */
+	public Consequencer editRecord(AndroidEditRecordReque editRecord) {
+		Consequencer consequent = new Consequencer();
+
+		int androidid = editRecord.getAndroidid();
+		String recordtitle = editRecord.getRecordtitle();
+		String recordmaterial = editRecord.getRecordmaterial();
+		String recordcontent = editRecord.getRecordcontent();
+		String imageidentity = editRecord.getImageidentity();
+		String tag = editRecord.getTag();
+
+		try {
+			androidRecordEventRepository.updateRecord(androidid, recordtitle, recordmaterial, recordcontent, imageidentity, tag);
+		} catch (IllegalArgumentException e) {
+			return consequent.setMessage("更新  Android Record id:“" + androidid + "”失败，原因：" + e.toString());
+		}
+
 		return consequent.setSuccess();
 	}
 }

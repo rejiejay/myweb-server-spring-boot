@@ -2,6 +2,7 @@ package cn.rejiejay.service;
 
 import cn.rejiejay.utils.Consequencer;
 import cn.rejiejay.viewobject.AndroidAddRecordReque;
+import cn.rejiejay.viewobject.AndroidEditRecordReque;
 
 /**
  * 安卓端支持（部分支持web端 模块
@@ -35,5 +36,9 @@ public interface AndroidServer {
 	 */
 	public Consequencer delRecordEventBy(int id);
 	
+	/**
+	 * 编辑一条记录
+	 */
+	public Consequencer editRecord(AndroidEditRecordReque editRecord);
 	
 }

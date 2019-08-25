@@ -105,4 +105,32 @@ public class AndroidControllerTest extends BaseControllerTests {
 		System.out.println("\n 删除记录： " + delAndroidItem.getResponse().getContentAsString() + "\n");
 		
 	}
+	
+	/**
+	 * 测试 编辑
+	 */
+	@Test
+	public void testEditAndroidRecord() throws Exception {
+		JSONObject jsonObjReq = new JSONObject();
+		jsonObjReq.put("androidid", 1);
+		jsonObjReq.put("tag", "tagtag");
+		jsonObjReq.put("imageidentity", "");
+		jsonObjReq.put("recordtitle", "recordtitlerecordtitle");
+		jsonObjReq.put("recordmaterial", "素材-思路-联想-aa-sss-vvv-fff-ddd");
+		jsonObjReq.put("recordcontent", "recordcontentrecordcontent");
+		
+		String signature = this.createSignature(jsonObjReq.toJSONString());
+
+		if (signature == null) {
+			System.out.println("\n 生成签名错误 \n");
+			return;
+		}
+
+		MvcResult delAndroidItem = mockMvc.perform(MockMvcRequestBuilders.post("/android/record/edit")
+				.contentType(MediaType.APPLICATION_JSON_UTF8).header("x-rejiejay-authorization", signature)
+				.accept(MediaType.APPLICATION_JSON_UTF8).content(jsonObjReq.toJSONString().getBytes())).andReturn();
+
+		System.out.println("\n 编辑记录： " + delAndroidItem.getResponse().getContentAsString() + "\n");
+		
+	}
 }
