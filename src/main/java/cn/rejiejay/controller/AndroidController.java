@@ -15,8 +15,8 @@ import com.alibaba.fastjson.JSONObject;
 import cn.rejiejay.security.SecurityAnnotater;
 import cn.rejiejay.service.AndroidServer;
 import cn.rejiejay.utils.Consequencer;
-import cn.rejiejay.viewobject.AddRecordReque;
-import cn.rejiejay.viewobject.DelRecordReque;
+import cn.rejiejay.viewobject.AndroidAddRecordReque;
+import cn.rejiejay.viewobject.AndroidDelRecordReque;
 
 import javax.validation.Valid;
 
@@ -80,7 +80,7 @@ public class AndroidController extends BaseController {
 	 */
 	@SecurityAnnotater(role = "admin")
 	@RequestMapping(value = "/record/add", method = RequestMethod.POST, consumes = "application/json", produces = "application/json;charset=UTF-8")
-	public JSONObject addRecord(@RequestBody @Valid AddRecordReque req, BindingResult result) {
+	public JSONObject addRecord(@RequestBody @Valid AndroidAddRecordReque req, BindingResult result) {
 		logger.debug("/java/notes/add[req]: " + JSON.toJSONString(req)); // 打印 请求参数
 
 		if (result.hasErrors()) { // 判断参数是否合法
@@ -114,7 +114,7 @@ public class AndroidController extends BaseController {
 	 */
 	@SecurityAnnotater(role = "admin")
 	@RequestMapping(value = "/recordevent/del", method = RequestMethod.POST, consumes = "application/json", produces = "application/json;charset=UTF-8")
-	public JSONObject DelRecordEvent(@RequestBody @Valid DelRecordReque req, BindingResult result) {
+	public JSONObject DelRecordEvent(@RequestBody @Valid AndroidDelRecordReque req, BindingResult result) {
 		logger.debug("/android/recordevent/del[req]: " + JSON.toJSONString(req)); // 打印 请求参数
 		int androidid = req.getAndroidid();
 		

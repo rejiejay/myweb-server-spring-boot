@@ -8,7 +8,7 @@ import javax.validation.constraints.NotNull;
  * @author _rejeijay
  * @Date 2019年7月16日11:59:09
  */
-public class AddJavaNotesReque {
+public class JavaNotesAddReque {
 	@NotNull(message = "title cannot be null!")
 	private String title;
 

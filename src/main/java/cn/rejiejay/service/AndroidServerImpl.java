@@ -15,7 +15,7 @@ import com.alibaba.fastjson.JSONObject;
 import cn.rejiejay.dataaccessobject.AndroidRecordEventRepository;
 import cn.rejiejay.dataaccessobject.AndroidRecordEvents;
 import cn.rejiejay.utils.Consequencer;
-import cn.rejiejay.viewobject.AddRecordReque;
+import cn.rejiejay.viewobject.AndroidAddRecordReque;
 
 /**
  * 安卓端支持（部分支持web端 实现类
@@ -114,7 +114,7 @@ public class AndroidServerImpl implements AndroidServer {
 	/**
 	 * 新增记录
 	 */
-	public Consequencer addRecord(AddRecordReque record) {
+	public Consequencer addRecord(AndroidAddRecordReque record) {
 		Consequencer consequent = new Consequencer();
 		
 		String recordtitle = record.getRecordtitle();

@@ -16,8 +16,8 @@ import cn.rejiejay.security.SecurityAnnotater;
 import cn.rejiejay.service.JavaNotesServer;
 import cn.rejiejay.service.OssServerImpl;
 import cn.rejiejay.utils.Consequencer;
-import cn.rejiejay.viewobject.AddJavaNotesReque;
-import cn.rejiejay.viewobject.EditJavaNotesReque;
+import cn.rejiejay.viewobject.JavaNotesAddReque;
+import cn.rejiejay.viewobject.JavaNotesEditReque;
 
 import javax.validation.Valid;
 
@@ -46,7 +46,7 @@ public class JavaNotesController extends BaseController {
 	 */
 	@SecurityAnnotater(role = "admin")
 	@RequestMapping(value = "/add", method = RequestMethod.POST, consumes = "application/json", produces = "application/json;charset=UTF-8")
-	public JSONObject addNotes(@RequestBody @Valid AddJavaNotesReque req, BindingResult result) {
+	public JSONObject addNotes(@RequestBody @Valid JavaNotesAddReque req, BindingResult result) {
 		logger.debug("/java/notes/add[req]: " + JSON.toJSONString(req)); // 打印 请求参数
 
 		if (result.hasErrors()) { // 判断参数是否合法
@@ -215,7 +215,7 @@ public class JavaNotesController extends BaseController {
 	 */
 	@SecurityAnnotater(role = "admin")
 	@RequestMapping(value = "/edit", method = RequestMethod.POST, consumes = "application/json", produces = "application/json;charset=UTF-8")
-	public JSONObject editNotes(@RequestBody @Valid EditJavaNotesReque req, BindingResult result) {
+	public JSONObject editNotes(@RequestBody @Valid JavaNotesEditReque req, BindingResult result) {
 		logger.debug("/java/notes/edit[req]: " + JSON.toJSONString(req)); // 打印 请求参数
 
 		if (result.hasErrors()) { // 判断参数是否合法

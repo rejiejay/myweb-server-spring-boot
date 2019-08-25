@@ -1,7 +1,7 @@
 package cn.rejiejay.service;
 
 import cn.rejiejay.utils.Consequencer;
-import cn.rejiejay.viewobject.AddRecordReque;
+import cn.rejiejay.viewobject.AndroidAddRecordReque;
 
 /**
  * 安卓端支持（部分支持web端 模块
@@ -23,7 +23,7 @@ public interface AndroidServer {
 	/**
 	 * 新增记录
 	 */
-	public Consequencer addRecord(AddRecordReque record);
+	public Consequencer addRecord(AndroidAddRecordReque record);
 	
 	/**
 	 * 根据id获取数据
