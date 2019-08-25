@@ -12,8 +12,7 @@ public class AddRecordReque {
 //	@NotNull(message = "androidid cannot be null!")
 //	private String androidid;
 
-	@NotNull(message = "tag cannot be null!")
-	private String tag;
+	private String tag = "";
 	
 	@NotNull(message = "timestamp cannot be null!")
 	private long timestamp;

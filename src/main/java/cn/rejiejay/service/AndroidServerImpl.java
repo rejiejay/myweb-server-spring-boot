@@ -1,6 +1,7 @@
 package cn.rejiejay.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -134,5 +135,47 @@ public class AndroidServerImpl implements AndroidServer {
 			return consequent.setMessage("创建一个记录SQL执行失败");
 		}
 		
+	}
+
+	/**
+	 * 根据id获取记录
+	 */
+	public Consequencer getRecordEventBy(int id) {
+		Consequencer consequent = new Consequencer();
+		
+		Optional<AndroidRecordEvents> recordEvent = androidRecordEventRepository.findById(Long.valueOf(id));
+
+		logger.info("javaNotesRepository.findById(" + id + "): " + recordEvent.toString()); // 打印数据库获取的数据
+
+		AndroidRecordEvents oneRecordEvent = null;
+
+		try {
+			oneRecordEvent = recordEvent.get();
+		} catch (Exception e) {
+			return consequent.setMessage("查询数据为空！");
+		}
+
+		JSONObject data = JSONObject.parseObject(JSONObject.toJSONString(oneRecordEvent));
+
+		return consequent.setSuccess(data);
+	}
+	
+
+	/**
+	 * 根据id删除数据
+	 */
+	public Consequencer delRecordEventBy(int id) {
+		Consequencer consequent = new Consequencer();
+
+
+		logger.info("删除 Android RecordEvent 根据 id" + id); // 打印数据库获取的数据
+
+		try {
+			androidRecordEventRepository.deleteById(Long.valueOf(id));
+		} catch (IllegalArgumentException e) {
+			return consequent.setMessage("删除 Android RecordEvent id:“" + id + "”失败，原因：" + e.toString());
+		}
+		
+		return consequent.setSuccess();
 	}
 }

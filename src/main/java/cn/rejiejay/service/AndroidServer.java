@@ -24,4 +24,16 @@ public interface AndroidServer {
 	 * 新增记录
 	 */
 	public Consequencer addRecord(AddRecordReque record);
+	
+	/**
+	 * 根据id获取数据
+	 */
+	public Consequencer getRecordEventBy(int id);
+	
+	/**
+	 * 根据id删除数据
+	 */
+	public Consequencer delRecordEventBy(int id);
+	
+	
 }
