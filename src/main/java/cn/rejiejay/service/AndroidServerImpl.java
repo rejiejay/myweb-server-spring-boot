@@ -31,14 +31,7 @@ public class AndroidServerImpl implements AndroidServer {
 	@Autowired
 	private AndroidRecordEventRepository androidRecordEventRepository;
 
-	/**
-	 * 统计 所有 list 数据
-	 */
-	public long listRecordEventCount() {
-		return androidRecordEventRepository.count();
-	}
-
-	// 转换 记录和事件的数据	
+	// 记录事件数据	转换 方法
 	public class ConversionRecordEvent {
 		ConversionRecordEvent(List<AndroidRecordEvents> recordEventResult, JSONArray recordEventArray) {
 			recordEventResult.forEach(recordEvent -> {
@@ -83,11 +76,15 @@ public class AndroidServerImpl implements AndroidServer {
 	}
 
 	/**
-	 * 获取 列表根据时间
-	 * 
-	 * @param pageNo
+	 * 统计 所有 list 数据
 	 */
-	public Consequencer getRecordEventListByTime(int pageNo) {
+	public long listRecordEventCount() {
+		return androidRecordEventRepository.count();
+	}
+	/**
+	 * 获取 列表根据时间
+	 */
+	public Consequencer getRecordEventListByTime(String dataType, int pageNo) {
 		Consequencer consequent = new Consequencer();
 
 		/**
@@ -99,7 +96,12 @@ public class AndroidServerImpl implements AndroidServer {
 
 		int startNum = pageNo * 10;
 
-		List<AndroidRecordEvents> recordEventResult = androidRecordEventRepository.findRecordEventByPageNo(startNum);
+		List<AndroidRecordEvents> recordEventResult;
+		if (dataType == "all") {
+			recordEventResult = androidRecordEventRepository.findRecordEventByPageNo(startNum);
+		} else {
+			recordEventResult = androidRecordEventRepository.findTypeRecordEventByPageNo(dataType, startNum);
+		}
 
 		logger.debug(
 				"androidRecordEventRepository.findRecordEventByPageNo(" + pageNo + "):" + recordEventResult.toString());
@@ -122,10 +124,16 @@ public class AndroidServerImpl implements AndroidServer {
 	/**
 	 * 获取 列表 随机
 	 */
-	public Consequencer getRecordEventListByRandom(int count) {
+	public Consequencer getRecordEventListByRandom(String dataType, int count) {
 		Consequencer consequent = new Consequencer();
+
+		List<AndroidRecordEvents> recordEventResult;
+		if (dataType == "all") {
+			recordEventResult = androidRecordEventRepository.findRecordEventByRandom(count);
+		} else {
+			recordEventResult = androidRecordEventRepository.findTypeRecordEventByRandom(dataType, count);
+		}
 		
-		List<AndroidRecordEvents> recordEventResult = androidRecordEventRepository.findRecordEventByRandom(count);
 		logger.debug(
 				"androidRecordEventRepository.findRecordEventByRandom(" + count + "):" + recordEventResult.toString());
 

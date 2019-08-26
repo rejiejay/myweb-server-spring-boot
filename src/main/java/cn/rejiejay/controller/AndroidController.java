@@ -46,29 +46,45 @@ public class AndroidController extends BaseController {
 	 */
 	@RequestMapping(value = "/recordevent/list", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
 	public JSONObject listRecordEvent(@RequestParam(value = "pageNo", required = false) Integer pageNo,
-			@RequestParam(value = "sort", required = false) String sort) {
+			@RequestParam(value = "sort", required = false) String sort,
+			@RequestParam(value = "type", required = false) String type) {
 		Consequencer consequent = new Consequencer();
 
-		logger.debug("@RequestMapping /recordevent/list?pageNo=" + pageNo + "&sort=" + sort);
+		logger.debug("@RequestMapping /recordevent/list?pageNo=" + pageNo + "&sort=" + sort+ "&type=" + type);
 
 		int page = 1; // 默认返回第一页
 
 		/**
-		 * 总记录 listTotal 是 必须 但是现阶段不用管
+		 *  总记录
 		 */
 		long allListCount = androidServer.listRecordEventCount(); // 不存在失败的说法
+		
+		/**
+		 * type类别
+		 */
+		String dataType; // 数据类别默认 all
+		if (type != null && type.equals("record")) {
+			dataType = "record";
+		} else if (type != null && type.equals("event")) {
+			dataType = "event";
+		} else {
+			dataType = "all";
+		}
 
 		/**
-		 * 先写 按照时间排序 其他的排序慢慢再加进去(乱序 限定时间 限定 记录 时间 时间范围 标签
+		 * 随机排序
 		 */
 		Consequencer recordEventListResult;
 		if (sort != null && sort.equals("random")) {
-			 recordEventListResult = androidServer.getRecordEventListByRandom(10);
+			recordEventListResult = androidServer.getRecordEventListByRandom(dataType, 10);
 		} else {
+			/**
+			 * 时间排序
+			 */
 			if (pageNo != null && pageNo > 0) {
 				page = pageNo.intValue();
 			}
-			recordEventListResult = androidServer.getRecordEventListByTime(page);
+			recordEventListResult = androidServer.getRecordEventListByTime(dataType, page);
 		}
 
 		// 执行失败的情况下直接返回失败即可
@@ -114,10 +130,10 @@ public class AndroidController extends BaseController {
 			// return uploadResult.getJsonObjMessage();
 			// }
 		}
-		
+
 		return androidServer.addRecord(req).getJsonObjMessage();
 	}
-	
+
 	/**
 	 * 删除一条记录
 	 */
@@ -126,14 +142,14 @@ public class AndroidController extends BaseController {
 	public JSONObject DelRecordEvent(@RequestBody @Valid AndroidDelRecordReque req, BindingResult result) {
 		logger.debug("/android/recordevent/del[req]: " + JSON.toJSONString(req)); // 打印 请求参数
 		int androidid = req.getAndroidid();
-		
+
 		/**
 		 * 手动参数校验
 		 */
 		if (androidid < 0) {
 			return errorJsonReply(2, "请求参数错误, 唯一标识不能为空!");
 		}
-		
+
 		// 获取一条id
 		Consequencer getOneRecordEventResult = androidServer.getRecordEventBy(androidid);
 
@@ -145,8 +161,9 @@ public class AndroidController extends BaseController {
 		/**
 		 * 处理图片(暂不实现
 		 */
-		// String imagekey = getOneRecordEventResult.getData().getString("imageidentity");
-		
+		// String imagekey =
+		// getOneRecordEventResult.getData().getString("imageidentity");
+
 		/**
 		 * 删除数据
 		 */
@@ -164,7 +181,7 @@ public class AndroidController extends BaseController {
 	public JSONObject editRecord(@RequestBody @Valid AndroidEditRecordReque req, BindingResult result) {
 		logger.debug("/android/recordevent/del[req]: " + JSON.toJSONString(req)); // 打印 请求参数
 		Consequencer consequent = new Consequencer();
-		
+
 		if (result.hasErrors()) { // 判断参数是否合法
 			for (ObjectError error : result.getAllErrors()) {
 				String errorMsg = error.getDefaultMessage();
@@ -172,7 +189,7 @@ public class AndroidController extends BaseController {
 				return errorJsonReply(2, errorMsg);
 			}
 		}
-		
+
 		/**
 		 * 先查询是否有这条数据
 		 */
@@ -186,17 +203,16 @@ public class AndroidController extends BaseController {
 		}
 
 		/**
-		 * 处理图片(暂不实现
-		 * 注意删除原来的图片
-		 * JAVAnotes 那边也忘记处理删除图片的了 这边测试完记得改一下JAVAnotes那边的
+		 * 处理图片(暂不实现 注意删除原来的图片 JAVAnotes 那边也忘记处理删除图片的了 这边测试完记得改一下JAVAnotes那边的
 		 */
-		// String imagekey = getOneRecordEventResult.getData().getString("imageidentity");
-		
+		// String imagekey =
+		// getOneRecordEventResult.getData().getString("imageidentity");
+
 		/**
 		 * 编辑到数据库
 		 */
 		Consequencer editRecordResult = androidServer.editRecord(req);
-		
+
 		return editRecordResult.getJsonObjMessage();
 	}
 }

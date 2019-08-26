@@ -30,6 +30,17 @@ public class AndroidControllerTest extends BaseControllerTests {
 
 		System.out.println(result.getResponse().getContentAsString() + "\n");
 	}
+	
+	/**
+	 * random record
+	 */
+	@Test
+	public void testGetAndroidRecordEventByRandomRecord() throws Exception {
+		MvcResult result = mockMvc.perform(get("/android/recordevent/list?sort=random&type=record")) // 简单的get 请求
+				.andReturn(); // 返回执行请求的结果
+
+		System.out.println(result.getResponse().getContentAsString() + "\n");
+	}
 
 	/**
 	 * 测试 新增

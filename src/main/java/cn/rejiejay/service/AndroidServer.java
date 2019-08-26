@@ -19,12 +19,12 @@ public interface AndroidServer {
 	/**
 	 * 获取 列表根据时间
 	 */
-	public Consequencer getRecordEventListByTime(int pageNo);
+	public Consequencer getRecordEventListByTime(String dataType, int pageNo);
 	
 	/**
 	 * 获取 列表 随机
 	 */
-	public Consequencer getRecordEventListByRandom(int count);
+	public Consequencer getRecordEventListByRandom(String dataType, int count);
 
 	/**
 	 * 新增记录
