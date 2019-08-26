@@ -1,5 +1,7 @@
 package cn.rejiejay.service;
 
+import java.util.List;
+
 import cn.rejiejay.utils.Consequencer;
 import cn.rejiejay.viewobject.AndroidAddRecordReque;
 import cn.rejiejay.viewobject.AndroidEditRecordReque;
@@ -47,17 +49,27 @@ public interface AndroidServer {
 	public Consequencer editRecord(AndroidEditRecordReque editRecord);
 	
 	/**
-	 * 获取 记录标签
+	 * 获取 持久化的 记录标签
 	 */
 	public Consequencer getRecordEventTag();
 	
 	/**
-	 * 新增 记录标签
+	 * 新增 持久化的 记录标签
 	 */
 	public Consequencer addRecordEventTag(String tag);
 	
 	/**
-	 * 删除 记录标签
+	 * 删除 持久化的 记录标签
 	 */
 	public Consequencer delRecordEventTag(int id);
+	
+	/**
+	 * 统计 记录标签
+	 */
+	public List<String> statisticRecordEventTag();
+	
+	/**
+	 * 持久化 生成 统计 记录标签
+	 */
+	public Consequencer rersisStatisRecordEventTag();
 }

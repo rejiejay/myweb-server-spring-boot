@@ -74,5 +74,10 @@ public interface AndroidRecordEventRepository extends CrudRepository<AndroidReco
 	@Transactional
 	@Query(value = "update android_record_events set recordtitle=?2,recordmaterial=?3,recordcontent=?4,imageidentity=?5,tag=?6 where android_id=?1", nativeQuery = true)
 	int updateRecord(int id, String recordtitle, String recordmaterial, String recordcontent, String imageidentity, String tag);
-	
+
+	/**
+	 * 统计 记录标签
+	 */
+	@Query(value = "select distinct tag from android_record_events;", nativeQuery = true)
+	List<String> statisticRecordEventTag();
 }

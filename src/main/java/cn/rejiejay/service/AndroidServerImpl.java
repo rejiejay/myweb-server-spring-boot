@@ -321,4 +321,52 @@ public class AndroidServerImpl implements AndroidServer {
 		
 		return consequent.setSuccess();
 	}
+
+	
+	/**
+	 * 统计 记录标签
+	 */
+	public List<String> statisticRecordEventTag() {
+		List<String> statisticTagResult = androidRecordEventRepository.statisticRecordEventTag();
+		
+		List<String> resultList = new ArrayList<String>();
+		statisticTagResult.forEach(item -> {
+			if (item != null && item.length() > 0) {
+				resultList.add(item);
+			}
+		});
+
+		return resultList;
+	}
+
+	/**
+	 * 持久化 生成 统计 记录标签
+	 */
+	public Consequencer rersisStatisRecordEventTag() {
+		Consequencer consequent = new Consequencer();
+
+		// 执行清空表操作
+		try {
+			androidRecordEventTagRepository.deleteAll();
+		} catch (IllegalArgumentException e) {
+			return consequent.setMessage("清空 Android RecordEvent Tag 失败，原因：" + e.toString());
+		}
+		
+		// 统计 记录标签
+		Boolean haveError = false;
+		List<String> resultList = statisticRecordEventTag();
+		for (int i = 0; i < resultList.size(); i++) {
+			Consequencer addTagResult = addRecordEventTag(resultList.get(i));
+			
+			if (addTagResult.getResult() != 1) {
+				haveError = true;
+			}
+		}
+		if (haveError) {
+			return consequent.setMessage("统计 Android RecordEvent Tag 失败，原因：添加失败！");
+		}
+		
+		
+		return consequent.setSuccess();
+	}
 }
