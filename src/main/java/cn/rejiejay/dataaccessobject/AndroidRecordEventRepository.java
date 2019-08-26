@@ -22,22 +22,41 @@ public interface AndroidRecordEventRepository extends CrudRepository<AndroidReco
 	@Query(value = "select * from android_record_events order by timestamp desc limit ?1, 10", nativeQuery = true)
 	List<AndroidRecordEvents> findRecordEventByPageNo(int pageNo);
 	/**
-	 * 根据数据类型 时间排序 查询第N页 每页10条
+	 * 根据 数据 类型（时间排序 查询第N页 每页10条
 	 */
 	@Query(value = "select * from android_record_events where type=?1 order by timestamp desc limit ?2, 10", nativeQuery = true)
 	List<AndroidRecordEvents> findTypeRecordEventByPageNo(String dataType, int pageNo);
+	/**
+	 * 根据 标签 类型（时间排序 查询第N页 每页10条
+	 */
+	@Query(value = "select * from android_record_events where tag=?1 order by timestamp desc limit ?2, 10", nativeQuery = true)
+	List<AndroidRecordEvents> findTagRecordEventByPageNo(String dataTag, int pageNo);
+	/**
+	 * 根据 数据标签 类型（时间排序 查询第N页 每页10条
+	 */
+	@Query(value = "select * from android_record_events where type=?1 and tag=?2 order by timestamp desc limit ?3, 10", nativeQuery = true)
+	List<AndroidRecordEvents> findTypeTagRecordEventByPageNo(String dataType, String dataTag, int pageNo);
 
 	/**
 	 * 随机查询 N 条记录
 	 */
 	@Query(value = "select * from android_record_events order by rand() limit ?1", nativeQuery = true)
 	List<AndroidRecordEvents> findRecordEventByRandom(int total);
-
 	/**
-	 * 根据数据类型随机查询 N 条记录
+	 * 根据 数据 类型（随机查询 N 条记录
 	 */
 	@Query(value = "select * from android_record_events where type=?1 order by rand() limit ?2", nativeQuery = true)
 	List<AndroidRecordEvents> findTypeRecordEventByRandom(String dataType, int total);
+	/**
+	 * 根据 标签 类型（随机查询 N 条记录
+	 */
+	@Query(value = "select * from android_record_events where tag=?1 order by rand() limit ?2", nativeQuery = true)
+	List<AndroidRecordEvents> findTagRecordEventByRandom(String dataTag, int total);
+	/**
+	 * 根据 数据和标签 类型（随机查询 N 条记录
+	 */
+	@Query(value = "select * from android_record_events where type=?1 and tag=?2 order by rand() limit ?3", nativeQuery = true)
+	List<AndroidRecordEvents> findTypeTagRecordEventByRandom(String dataType, String dataTag, int total);
 	
 	/**
 	 * 新增记录

@@ -31,7 +31,7 @@ public class AndroidServerImpl implements AndroidServer {
 	@Autowired
 	private AndroidRecordEventRepository androidRecordEventRepository;
 
-	// 记录事件数据	转换 方法
+	// 记录事件数据 转换 方法
 	public class ConversionRecordEvent {
 		ConversionRecordEvent(List<AndroidRecordEvents> recordEventResult, JSONArray recordEventArray) {
 			recordEventResult.forEach(recordEvent -> {
@@ -81,10 +81,11 @@ public class AndroidServerImpl implements AndroidServer {
 	public long listRecordEventCount() {
 		return androidRecordEventRepository.count();
 	}
+
 	/**
 	 * 获取 列表根据时间
 	 */
-	public Consequencer getRecordEventListByTime(String dataType, int pageNo) {
+	public Consequencer getRecordEventListByTime(String dataType, String dataTag, int pageNo) {
 		Consequencer consequent = new Consequencer();
 
 		/**
@@ -97,10 +98,18 @@ public class AndroidServerImpl implements AndroidServer {
 		int startNum = pageNo * 10;
 
 		List<AndroidRecordEvents> recordEventResult;
-		if (dataType == "all") {
+		if (dataType.equals("all") && dataTag.equals("all")) {
 			recordEventResult = androidRecordEventRepository.findRecordEventByPageNo(startNum);
-		} else {
+
+		} else if (!dataType.equals("all") && dataTag.equals("all")) {
 			recordEventResult = androidRecordEventRepository.findTypeRecordEventByPageNo(dataType, startNum);
+
+		} else if (dataType.equals("all") && !dataTag.equals("all")) {
+			recordEventResult = androidRecordEventRepository.findTagRecordEventByPageNo(dataTag, startNum);
+
+		} else {
+			recordEventResult = androidRecordEventRepository.findTypeTagRecordEventByPageNo(dataType, dataTag, startNum);
+
 		}
 
 		logger.debug(
@@ -114,26 +123,34 @@ public class AndroidServerImpl implements AndroidServer {
 		// 数据转换(不进行转换，有些数据会返回null
 		JSONArray recordEventArray = new JSONArray();
 		new ConversionRecordEvent(recordEventResult, recordEventArray);
-		
+
 		JSONObject data = new JSONObject();
 		data.put("list", JSONArray.parseArray(JSON.toJSONString(recordEventArray)));
 
 		return consequent.setSuccess(data);
 	}
-	
+
 	/**
 	 * 获取 列表 随机
 	 */
-	public Consequencer getRecordEventListByRandom(String dataType, int count) {
+	public Consequencer getRecordEventListByRandom(String dataType, String dataTag, int count) {
 		Consequencer consequent = new Consequencer();
 
 		List<AndroidRecordEvents> recordEventResult;
-		if (dataType == "all") {
+		if (dataType.equals("all") && dataTag.equals("all")) {
 			recordEventResult = androidRecordEventRepository.findRecordEventByRandom(count);
-		} else {
+
+		} else if (!dataType.equals("all") && dataTag.equals("all")) {
 			recordEventResult = androidRecordEventRepository.findTypeRecordEventByRandom(dataType, count);
+
+		} else if (dataType.equals("all") && !dataTag.equals("all")) {
+			recordEventResult = androidRecordEventRepository.findTagRecordEventByRandom(dataTag, count);
+
+		} else {
+			recordEventResult = androidRecordEventRepository.findTypeTagRecordEventByRandom(dataType, dataTag, count);
+
 		}
-		
+
 		logger.debug(
 				"androidRecordEventRepository.findRecordEventByRandom(" + count + "):" + recordEventResult.toString());
 
@@ -145,7 +162,7 @@ public class AndroidServerImpl implements AndroidServer {
 		// 数据转换(不进行转换，有些数据会返回null
 		JSONArray recordEventArray = new JSONArray();
 		new ConversionRecordEvent(recordEventResult, recordEventArray);
-		
+
 		JSONObject data = new JSONObject();
 		data.put("list", JSONArray.parseArray(JSON.toJSONString(recordEventArray)));
 
@@ -157,7 +174,7 @@ public class AndroidServerImpl implements AndroidServer {
 	 */
 	public Consequencer addRecord(AndroidAddRecordReque record) {
 		Consequencer consequent = new Consequencer();
-		
+
 		String recordtitle = record.getRecordtitle();
 		String recordmaterial = record.getRecordmaterial();
 		String recordcontent = record.getRecordcontent();
@@ -167,15 +184,16 @@ public class AndroidServerImpl implements AndroidServer {
 		int fullyear = record.getFullyear();
 		int month = record.getMonth();
 		int week = record.getWeek();
-		
-		int insertRecordResult = androidRecordEventRepository.insertRecord(recordtitle, recordmaterial, recordcontent, imageidentity, tag, timestamp, fullyear, month, week);
+
+		int insertRecordResult = androidRecordEventRepository.insertRecord(recordtitle, recordmaterial, recordcontent,
+				imageidentity, tag, timestamp, fullyear, month, week);
 
 		if (insertRecordResult == 1) {
 			return consequent.setSuccess();
 		} else {
 			return consequent.setMessage("创建一个记录SQL执行失败");
 		}
-		
+
 	}
 
 	/**
@@ -183,7 +201,7 @@ public class AndroidServerImpl implements AndroidServer {
 	 */
 	public Consequencer getRecordEventBy(int id) {
 		Consequencer consequent = new Consequencer();
-		
+
 		Optional<AndroidRecordEvents> recordEvent = androidRecordEventRepository.findById(Long.valueOf(id));
 
 		logger.info("javaNotesRepository.findById(" + id + "): " + recordEvent.toString()); // 打印数据库获取的数据
@@ -207,7 +225,6 @@ public class AndroidServerImpl implements AndroidServer {
 	public Consequencer delRecordEventBy(int id) {
 		Consequencer consequent = new Consequencer();
 
-
 		logger.info("删除 Android RecordEvent 根据 id" + id); // 打印数据库获取的数据
 
 		try {
@@ -215,7 +232,7 @@ public class AndroidServerImpl implements AndroidServer {
 		} catch (IllegalArgumentException e) {
 			return consequent.setMessage("删除 Android RecordEvent id:“" + id + "”失败，原因：" + e.toString());
 		}
-		
+
 		return consequent.setSuccess();
 	}
 
@@ -233,7 +250,8 @@ public class AndroidServerImpl implements AndroidServer {
 		String tag = editRecord.getTag();
 
 		try {
-			androidRecordEventRepository.updateRecord(androidid, recordtitle, recordmaterial, recordcontent, imageidentity, tag);
+			androidRecordEventRepository.updateRecord(androidid, recordtitle, recordmaterial, recordcontent,
+					imageidentity, tag);
 		} catch (IllegalArgumentException e) {
 			return consequent.setMessage("更新  Android Record id:“" + androidid + "”失败，原因：" + e.toString());
 		}

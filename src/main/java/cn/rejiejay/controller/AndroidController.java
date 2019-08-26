@@ -47,18 +47,27 @@ public class AndroidController extends BaseController {
 	@RequestMapping(value = "/recordevent/list", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
 	public JSONObject listRecordEvent(@RequestParam(value = "pageNo", required = false) Integer pageNo,
 			@RequestParam(value = "sort", required = false) String sort,
-			@RequestParam(value = "type", required = false) String type) {
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "tag", required = false) String tag) {
 		Consequencer consequent = new Consequencer();
 
-		logger.debug("@RequestMapping /recordevent/list?pageNo=" + pageNo + "&sort=" + sort+ "&type=" + type);
+		logger.debug("@RequestMapping /recordevent/list?pageNo=" + pageNo + "&sort=" + sort + "&type=" + type);
 
 		int page = 1; // 默认返回第一页
 
 		/**
-		 *  总记录
+		 * 总记录
 		 */
 		long allListCount = androidServer.listRecordEventCount(); // 不存在失败的说法
-		
+
+		/**
+		 * tag类别
+		 */
+		String dataTag = "all"; // 数据类别默认 all
+		if (tag != null && tag.length() > 0) {
+			dataTag = tag;
+		}
+
 		/**
 		 * type类别
 		 */
@@ -76,7 +85,7 @@ public class AndroidController extends BaseController {
 		 */
 		Consequencer recordEventListResult;
 		if (sort != null && sort.equals("random")) {
-			recordEventListResult = androidServer.getRecordEventListByRandom(dataType, 10);
+			recordEventListResult = androidServer.getRecordEventListByRandom(dataType, dataTag, 10);
 		} else {
 			/**
 			 * 时间排序
@@ -84,7 +93,7 @@ public class AndroidController extends BaseController {
 			if (pageNo != null && pageNo > 0) {
 				page = pageNo.intValue();
 			}
-			recordEventListResult = androidServer.getRecordEventListByTime(dataType, page);
+			recordEventListResult = androidServer.getRecordEventListByTime(dataType, dataTag, page);
 		}
 
 		// 执行失败的情况下直接返回失败即可
