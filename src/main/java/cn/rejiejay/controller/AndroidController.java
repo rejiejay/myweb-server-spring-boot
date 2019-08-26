@@ -224,4 +224,42 @@ public class AndroidController extends BaseController {
 
 		return editRecordResult.getJsonObjMessage();
 	}
+
+	/**
+	 * 获取 记录标签
+	 */
+	@RequestMapping(value = "/recordevent/tag/get", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
+	public JSONObject getRecordEventTag() {
+		return androidServer.getRecordEventTag().getJsonObjMessage();
+	}
+
+	/**
+	 * 新增 记录标签
+	 */
+	@SecurityAnnotater(role = "admin")
+	@RequestMapping(value = "/recordevent/tag/add", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
+	public JSONObject addRecordEventTag(@RequestParam(value = "tag", required = true) String tag) {
+		logger.debug("/recordevent/tag/add[req]: " + tag); // 打印 请求参数
+		
+		if (tag == null || tag.length() <= 0) {
+			return errorJsonReply(2, "参数不能为空");
+		}
+		
+		return androidServer.addRecordEventTag(tag).getJsonObjMessage();
+	}
+
+	/**
+	 * 删除 记录标签
+	 */
+	@SecurityAnnotater(role = "admin")
+	@RequestMapping(value = "/recordevent/tag/del", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
+	public JSONObject delRecordEventTag(@RequestParam(value = "id", required = true) int id) {
+		logger.debug("/recordevent/tag/add[req]: " + id); // 打印 请求参数
+		
+		if (id < 1) {
+			return errorJsonReply(2, "参数不能小于1");
+		}
+
+		return androidServer.delRecordEventTag(id).getJsonObjMessage();
+	}
 }

@@ -1,5 +1,6 @@
 package cn.rejiejay.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,6 +14,8 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
 import cn.rejiejay.dataaccessobject.AndroidRecordEventRepository;
+import cn.rejiejay.dataaccessobject.AndroidRecordEventTag;
+import cn.rejiejay.dataaccessobject.AndroidRecordEventTagRepository;
 import cn.rejiejay.dataaccessobject.AndroidRecordEvents;
 import cn.rejiejay.utils.Consequencer;
 import cn.rejiejay.viewobject.AndroidAddRecordReque;
@@ -30,6 +33,9 @@ public class AndroidServerImpl implements AndroidServer {
 
 	@Autowired
 	private AndroidRecordEventRepository androidRecordEventRepository;
+
+	@Autowired
+	private AndroidRecordEventTagRepository androidRecordEventTagRepository;
 
 	// 记录事件数据 转换 方法
 	public class ConversionRecordEvent {
@@ -256,6 +262,63 @@ public class AndroidServerImpl implements AndroidServer {
 			return consequent.setMessage("更新  Android Record id:“" + androidid + "”失败，原因：" + e.toString());
 		}
 
+		return consequent.setSuccess();
+	}
+	
+	/**
+	 * 获取 记录标签
+	 */
+	public Consequencer getRecordEventTag() {
+		Consequencer consequent = new Consequencer();
+		
+		Iterable<AndroidRecordEventTag> recordEventTagResult = androidRecordEventTagRepository.findAll();
+
+		if (recordEventTagResult == null) {
+			return consequent.setMessage("数据为空");
+		}
+		
+		List<AndroidRecordEventTag> recordEventTagList = new ArrayList<AndroidRecordEventTag>();
+		recordEventTagResult.forEach(recordEventTagItem -> {
+			recordEventTagList.add(recordEventTagItem);
+		});
+		
+		if (recordEventTagList.size() < 1) {
+			return consequent.setMessage("数据为空");
+		}
+		
+		JSONObject data = JSONObject.parseObject(JSONObject.toJSONString(recordEventTagList));
+		
+		return consequent.setSuccess(data);
+	}
+
+	
+	/**
+	 * 新增 记录标签
+	 */
+	public Consequencer addRecordEventTag(String tag) {
+		Consequencer consequent = new Consequencer();
+
+		try {
+			androidRecordEventTagRepository.insertRecordEventTag(tag);
+		} catch (IllegalArgumentException e) {
+			return consequent.setMessage("新增 Android RecordEvent tag:“" + tag + "”失败，原因：" + e.toString());
+		}
+		
+		return consequent.setSuccess();
+	}
+	
+	/**
+	 * 删除 记录标签
+	 */
+	public Consequencer delRecordEventTag(int id) {
+		Consequencer consequent = new Consequencer();
+
+		try {
+			androidRecordEventTagRepository.deleteById(Long.valueOf(id));
+		} catch (IllegalArgumentException e) {
+			return consequent.setMessage("删除 Android RecordEvent Tag id:“" + id + "”失败，原因：" + e.toString());
+		}
+		
 		return consequent.setSuccess();
 	}
 }

@@ -30,7 +30,7 @@ public class AndroidControllerTest extends BaseControllerTests {
 
 		System.out.println(result.getResponse().getContentAsString() + "\n");
 	}
-	
+
 	/**
 	 * random record
 	 */
@@ -93,7 +93,7 @@ public class AndroidControllerTest extends BaseControllerTests {
 		System.out.println(
 				"\n " + String.valueOf(year) + String.valueOf(month) + week_name + String.valueOf(day) + " \n");
 	}
-	
+
 	/**
 	 * 测试 删除
 	 */
@@ -101,7 +101,7 @@ public class AndroidControllerTest extends BaseControllerTests {
 	public void testDelAndroidItem() throws Exception {
 		JSONObject jsonObjReq = new JSONObject();
 		jsonObjReq.put("androidid", 8);
-		
+
 		String signature = this.createSignature(jsonObjReq.toJSONString());
 
 		if (signature == null) {
@@ -109,14 +109,16 @@ public class AndroidControllerTest extends BaseControllerTests {
 			return;
 		}
 
-		MvcResult delAndroidItem = mockMvc.perform(MockMvcRequestBuilders.post("/android/recordevent/del")
-				.contentType(MediaType.APPLICATION_JSON_UTF8).header("x-rejiejay-authorization", signature)
-				.accept(MediaType.APPLICATION_JSON_UTF8).content(jsonObjReq.toJSONString().getBytes())).andReturn();
+		MvcResult delAndroidItem = mockMvc
+				.perform(MockMvcRequestBuilders.post("/android/recordevent/del")
+						.contentType(MediaType.APPLICATION_JSON_UTF8).header("x-rejiejay-authorization", signature)
+						.accept(MediaType.APPLICATION_JSON_UTF8).content(jsonObjReq.toJSONString().getBytes()))
+				.andReturn();
 
 		System.out.println("\n 删除记录： " + delAndroidItem.getResponse().getContentAsString() + "\n");
-		
+
 	}
-	
+
 	/**
 	 * 测试 编辑
 	 */
@@ -129,7 +131,7 @@ public class AndroidControllerTest extends BaseControllerTests {
 		jsonObjReq.put("recordtitle", "recordtitlerecordtitle");
 		jsonObjReq.put("recordmaterial", "素材-思路-联想-aa-sss-vvv-fff-ddd");
 		jsonObjReq.put("recordcontent", "recordcontentrecordcontent");
-		
+
 		String signature = this.createSignature(jsonObjReq.toJSONString());
 
 		if (signature == null) {
@@ -137,11 +139,64 @@ public class AndroidControllerTest extends BaseControllerTests {
 			return;
 		}
 
-		MvcResult delAndroidItem = mockMvc.perform(MockMvcRequestBuilders.post("/android/record/edit")
-				.contentType(MediaType.APPLICATION_JSON_UTF8).header("x-rejiejay-authorization", signature)
-				.accept(MediaType.APPLICATION_JSON_UTF8).content(jsonObjReq.toJSONString().getBytes())).andReturn();
+		MvcResult delAndroidItem = mockMvc
+				.perform(MockMvcRequestBuilders.post("/android/record/edit")
+						.contentType(MediaType.APPLICATION_JSON_UTF8).header("x-rejiejay-authorization", signature)
+						.accept(MediaType.APPLICATION_JSON_UTF8).content(jsonObjReq.toJSONString().getBytes()))
+				.andReturn();
 
 		System.out.println("\n 编辑记录： " + delAndroidItem.getResponse().getContentAsString() + "\n");
-		
+
+	}
+
+	/**
+	 * 测试 Tag 获取
+	 */
+	@Test
+	public void testAndroidRecordEventTagGet() throws Exception {
+		MvcResult result = mockMvc.perform(get("/android/recordevent/tag/get/")) // 简单的get 请求
+				.andReturn(); // 返回执行请求的结果
+
+		System.out.println(result.getResponse().getContentAsString() + "\n");
+	}
+
+	/**
+	 * 测试 Tag 新增
+	 */
+	@Test
+	public void testAndroidRecordEventTagAdd() throws Exception {
+		String signature = this.createSignature("tag=rejiejay");
+
+		if (signature == null) {
+			System.out.println("\n 生成签名错误 \n");
+			return;
+		}
+
+		MvcResult result = mockMvc
+				.perform(get("/android/recordevent/tag/add?tag=rejiejay").header("x-rejiejay-authorization", signature)) // 简单的get
+																															// 请求
+				.andReturn(); // 返回执行请求的结果
+
+		System.out.println(result.getResponse().getContentAsString() + "\n");
+	}
+
+	/**
+	 * 测试 Tag 删除
+	 */
+	@Test
+	public void testAndroidRecordEventTagDel() throws Exception {
+		String signature = this.createSignature("id=1");
+
+		if (signature == null) {
+			System.out.println("\n 生成签名错误 \n");
+			return;
+		}
+
+		MvcResult result = mockMvc
+				.perform(get("/android/recordevent/tag/del?id=1").header("x-rejiejay-authorization", signature)) // 简单的get
+																															// 请求
+				.andReturn(); // 返回执行请求的结果
+
+		System.out.println(result.getResponse().getContentAsString() + "\n");
 	}
 }

@@ -46,4 +46,18 @@ public interface AndroidServer {
 	 */
 	public Consequencer editRecord(AndroidEditRecordReque editRecord);
 	
+	/**
+	 * 获取 记录标签
+	 */
+	public Consequencer getRecordEventTag();
+	
+	/**
+	 * 新增 记录标签
+	 */
+	public Consequencer addRecordEventTag(String tag);
+	
+	/**
+	 * 删除 记录标签
+	 */
+	public Consequencer delRecordEventTag(int id);
 }
