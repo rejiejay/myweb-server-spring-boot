@@ -65,6 +65,9 @@ public class AndroidController extends BaseController {
 		if (sort != null && sort.equals("random")) {
 			 recordEventListResult = androidServer.getRecordEventListByRandom(10);
 		} else {
+			if (pageNo != null && pageNo > 0) {
+				page = pageNo.intValue();
+			}
 			recordEventListResult = androidServer.getRecordEventListByTime(page);
 		}
 
