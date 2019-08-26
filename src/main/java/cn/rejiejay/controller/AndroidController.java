@@ -61,7 +61,12 @@ public class AndroidController extends BaseController {
 		/**
 		 * 先写 按照时间排序 其他的排序慢慢再加进去(乱序 限定时间 限定 记录 时间 时间范围 标签
 		 */
-		Consequencer recordEventListResult = androidServer.getRecordEventListByTime(page);
+		Consequencer recordEventListResult;
+		if (sort != null && sort.equals("random")) {
+			 recordEventListResult = androidServer.getRecordEventListByRandom(10);
+		} else {
+			recordEventListResult = androidServer.getRecordEventListByTime(page);
+		}
 
 		// 执行失败的情况下直接返回失败即可
 		if (recordEventListResult.getResult() != 1) {

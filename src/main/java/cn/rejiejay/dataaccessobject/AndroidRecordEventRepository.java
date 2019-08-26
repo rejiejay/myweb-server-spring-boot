@@ -23,6 +23,12 @@ public interface AndroidRecordEventRepository extends CrudRepository<AndroidReco
 	List<AndroidRecordEvents> findRecordEventByPageNo(int pageNo);
 
 	/**
+	 * 随机查询 N 条记录
+	 */
+	@Query(value = "select * from android_record_events order by rand() limit ?1", nativeQuery = true)
+	List<AndroidRecordEvents> findRecordEventByRandom(int total);
+	
+	/**
 	 * 新增记录
 	 */
 	@Modifying

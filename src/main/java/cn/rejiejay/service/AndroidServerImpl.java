@@ -38,6 +38,50 @@ public class AndroidServerImpl implements AndroidServer {
 		return androidRecordEventRepository.count();
 	}
 
+	// 转换 记录和事件的数据	
+	public class ConversionRecordEvent {
+		ConversionRecordEvent(List<AndroidRecordEvents> recordEventResult, JSONArray recordEventArray) {
+			recordEventResult.forEach(recordEvent -> {
+				JSONObject item = new JSONObject();
+				item.put("androidid", recordEvent.getAndroidid());
+				item.put("type", recordEvent.getType());
+				item.put("timestamp", recordEvent.getTimestamp());
+				item.put("fullyear", recordEvent.getFullyear());
+				item.put("month", recordEvent.getMonth());
+				item.put("week", recordEvent.getWeek());
+
+				String tag = recordEvent.getTag();
+				item.put("tag", tag != null ? tag : "");
+
+				/**
+				 * 这里图片需要转换， 但是图片的上传方法还没写暂时不写
+				 */
+				String imageidentity = recordEvent.getImageidentity();
+				item.put("imageidentity", imageidentity != null ? imageidentity : "");
+				item.put("imageurl", "");
+
+				// 判断空
+				String eventcause = recordEvent.getEventcause();
+				item.put("eventcause", eventcause != null ? eventcause : "");
+				String eventconclusion = recordEvent.getEventconclusion();
+				item.put("eventconclusion", eventconclusion != null ? eventconclusion : "");
+				String eventprocess = recordEvent.getEventprocess();
+				item.put("eventprocess", eventprocess != null ? eventprocess : "");
+				String eventresult = recordEvent.getEventresult();
+				item.put("eventresult", eventresult != null ? eventresult : "");
+
+				String recordtitle = recordEvent.getRecordtitle();
+				item.put("recordtitle", recordtitle != null ? recordtitle : "");
+				String recordmaterial = recordEvent.getRecordmaterial();
+				item.put("recordmaterial", recordmaterial != null ? recordmaterial : "");
+				String recordcontent = recordEvent.getRecordcontent();
+				item.put("recordcontent", recordcontent != null ? recordcontent : "");
+
+				recordEventArray.add(item);
+			});
+		}
+	}
+
 	/**
 	 * 获取 列表根据时间
 	 * 
@@ -67,45 +111,33 @@ public class AndroidServerImpl implements AndroidServer {
 
 		// 数据转换(不进行转换，有些数据会返回null
 		JSONArray recordEventArray = new JSONArray();
-		recordEventResult.forEach(recordEvent -> {
-			JSONObject item = new JSONObject();
-			item.put("androidid", recordEvent.getAndroidid());
-			item.put("type", recordEvent.getType());
-			item.put("timestamp", recordEvent.getTimestamp());
-			item.put("fullyear", recordEvent.getFullyear());
-			item.put("month", recordEvent.getMonth());
-			item.put("week", recordEvent.getWeek());
+		new ConversionRecordEvent(recordEventResult, recordEventArray);
+		
+		JSONObject data = new JSONObject();
+		data.put("list", JSONArray.parseArray(JSON.toJSONString(recordEventArray)));
 
-			String tag = recordEvent.getTag();
-			item.put("tag", tag != null ? tag : "");
+		return consequent.setSuccess(data);
+	}
+	
+	/**
+	 * 获取 列表 随机
+	 */
+	public Consequencer getRecordEventListByRandom(int count) {
+		Consequencer consequent = new Consequencer();
+		
+		List<AndroidRecordEvents> recordEventResult = androidRecordEventRepository.findRecordEventByRandom(count);
+		logger.debug(
+				"androidRecordEventRepository.findRecordEventByRandom(" + count + "):" + recordEventResult.toString());
 
-			/**
-			 * 这里图片需要转换， 但是图片的上传方法还没写暂时不写
-			 */
-			String imageidentity = recordEvent.getImageidentity();
-			item.put("imageidentity", imageidentity != null ? imageidentity : "");
-			item.put("imageurl", "");
+		// 判断是否查询到数据
+		if (recordEventResult.size() <= 0) {
+			return consequent.setMessage("查询数据为空！");
+		}
 
-			// 判断空
-			String eventcause = recordEvent.getEventcause();
-			item.put("eventcause", eventcause != null ? eventcause : "");
-			String eventconclusion = recordEvent.getEventconclusion();
-			item.put("eventconclusion", eventconclusion != null ? eventconclusion : "");
-			String eventprocess = recordEvent.getEventprocess();
-			item.put("eventprocess", eventprocess != null ? eventprocess : "");
-			String eventresult = recordEvent.getEventresult();
-			item.put("eventresult", eventresult != null ? eventresult : "");
-
-			String recordtitle = recordEvent.getRecordtitle();
-			item.put("recordtitle", recordtitle != null ? recordtitle : "");
-			String recordmaterial = recordEvent.getRecordmaterial();
-			item.put("recordmaterial", recordmaterial != null ? recordmaterial : "");
-			String recordcontent = recordEvent.getRecordcontent();
-			item.put("recordcontent", recordcontent != null ? recordcontent : "");
-
-			recordEventArray.add(item);
-		});
-
+		// 数据转换(不进行转换，有些数据会返回null
+		JSONArray recordEventArray = new JSONArray();
+		new ConversionRecordEvent(recordEventResult, recordEventArray);
+		
 		JSONObject data = new JSONObject();
 		data.put("list", JSONArray.parseArray(JSON.toJSONString(recordEventArray)));
 
