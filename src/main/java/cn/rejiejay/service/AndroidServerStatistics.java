@@ -1,8 +1,10 @@
 package cn.rejiejay.service;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
@@ -63,7 +66,7 @@ public class AndroidServerStatistics {
 			JSONObject yearResults = statisticFullyear(fullyear);
 			finalResults.add(yearResults);
 		}
-		
+
 		// 存储到本地
 		Consequencer uploadResult = uploadStatistic(finalResults.toJSONString());
 		if (uploadResult.getResult() != 1) {
@@ -100,22 +103,22 @@ public class AndroidServerStatistics {
 
 		return data;
 	}
-	
+
 	// 统计 季度
 	public JSONArray statisticSeason(int fullyear) {
 		JSONArray statisticSeasonArray = new JSONArray();
-		
-		List<String> season = new ArrayList<String>(); 
+
+		List<String> season = new ArrayList<String>();
 		season.add("春季");
 		season.add("夏季");
 		season.add("秋季");
 		season.add("冬季");
 		for (int i = 0; i < season.size(); i++) {
 			JSONObject item = new JSONObject();
-			
+
 			// 名称
 			item.put("name", season.get(i));
-			
+
 			// 时间戳
 			int minMonth = i * 3 + 1; // 1 4 7 10
 			int maxMonth = i * 3 + 4;
@@ -128,7 +131,7 @@ public class AndroidServerStatistics {
 			}
 			item.put("minTimestamp", minTimestamp);
 			item.put("maxTimestamp", maxTimestamp);
-			
+
 			// 统计 季度
 			int seasonCount = androidRecordEventRepository.countRecordEventTimestamp(minTimestamp, maxTimestamp);
 			item.put("count", seasonCount);
@@ -143,24 +146,24 @@ public class AndroidServerStatistics {
 			// }]
 			JSONArray monthStatistic = statisticMonth(fullyear, minMonth);
 			item.put("data", monthStatistic);
-			
+
 			statisticSeasonArray.add(item);
 		}
-		
+
 		return statisticSeasonArray;
 	}
-	
+
 	// 统计 月份
 	public JSONArray statisticMonth(int fullyear, int minMonth) {
 		JSONArray statisticMonthArray = new JSONArray();
-		
+
 		for (int i = 0; i < 3; i++) {
 			JSONObject item = new JSONObject();
 			int thisMonth = minMonth + i; // 1 4 7 10
-			
+
 			// 名称
 			item.put("name", String.valueOf(thisMonth) + "月");
-			
+
 			// 时间戳
 			long minTimestamp = DateFormat.getTimeByyyyyMMdd(fullyear, thisMonth, 1);
 			int nextMonth = thisMonth + 1;
@@ -170,9 +173,9 @@ public class AndroidServerStatistics {
 			} else {
 				maxTimestamp = DateFormat.getTimeByyyyyMMdd(fullyear, nextMonth, 1);
 			}
-			item.put("minTimestamp", minTimestamp); 
-			item.put("maxTimestamp", maxTimestamp); 
-			
+			item.put("minTimestamp", minTimestamp);
+			item.put("maxTimestamp", maxTimestamp);
+
 			// 统计 月份
 			int monthCount = androidRecordEventRepository.countRecordEventTimestamp(minTimestamp, maxTimestamp);
 			item.put("count", monthCount);
@@ -186,13 +189,13 @@ public class AndroidServerStatistics {
 			// }]
 			JSONArray weekStatistic = statisticWeek(fullyear, thisMonth);
 			item.put("data", weekStatistic);
-			
+
 			statisticMonthArray.add(item);
 		}
-		
+
 		return statisticMonthArray;
 	}
-	
+
 	// 统计 星期
 	public JSONArray statisticWeek(int fullyear, int thisMonth) {
 		JSONArray statisticWeekArray = new JSONArray();
@@ -200,49 +203,48 @@ public class AndroidServerStatistics {
 		// 第一周
 		JSONObject firsWeek = new JSONObject();
 		// 名称
-		firsWeek.put("name", "第一周"); 
+		firsWeek.put("name", "第一周");
 		// 时间戳
 		long firsMinTimestamp = DateFormat.getTimeByyyyyMMdd(fullyear, thisMonth, 1);
 		long firsMaxTimestamp = DateFormat.getTimeByyyyyMMdd(fullyear, thisMonth, 8);
-		firsWeek.put("minTimestamp", firsMinTimestamp); 
-		firsWeek.put("maxTimestamp", firsMaxTimestamp); 
+		firsWeek.put("minTimestamp", firsMinTimestamp);
+		firsWeek.put("maxTimestamp", firsMaxTimestamp);
 		// 周统计
 		int firsWeekCount = androidRecordEventRepository.countRecordEventTimestamp(firsMinTimestamp, firsMaxTimestamp);
 		firsWeek.put("count", firsWeekCount);
 
-		
 		// 第二周
 		JSONObject secondWeek = new JSONObject();
 		// 名称
-		secondWeek.put("name", "第二周"); 
+		secondWeek.put("name", "第二周");
 		// 时间戳
 		long secondMinTimestamp = DateFormat.getTimeByyyyyMMdd(fullyear, thisMonth, 8);
 		long secondMaxTimestamp = DateFormat.getTimeByyyyyMMdd(fullyear, thisMonth, 15);
-		secondWeek.put("minTimestamp", secondMinTimestamp); 
-		secondWeek.put("maxTimestamp", secondMaxTimestamp); 
+		secondWeek.put("minTimestamp", secondMinTimestamp);
+		secondWeek.put("maxTimestamp", secondMaxTimestamp);
 		// 周统计
-		int secondWeekCount = androidRecordEventRepository.countRecordEventTimestamp(secondMinTimestamp, secondMaxTimestamp);
+		int secondWeekCount = androidRecordEventRepository.countRecordEventTimestamp(secondMinTimestamp,
+				secondMaxTimestamp);
 		secondWeek.put("count", secondWeekCount);
 
-		
 		// 第三周
 		JSONObject thirdWeek = new JSONObject();
 		// 名称
-		thirdWeek.put("name", "第三周"); 
+		thirdWeek.put("name", "第三周");
 		// 时间戳
 		long thirdMinTimestamp = DateFormat.getTimeByyyyyMMdd(fullyear, thisMonth, 15);
 		long thirdMaxTimestamp = DateFormat.getTimeByyyyyMMdd(fullyear, thisMonth, 22);
-		thirdWeek.put("minTimestamp", thirdMinTimestamp); 
-		thirdWeek.put("maxTimestamp", thirdMaxTimestamp); 
+		thirdWeek.put("minTimestamp", thirdMinTimestamp);
+		thirdWeek.put("maxTimestamp", thirdMaxTimestamp);
 		// 周统计
-		int thirdWeekCount = androidRecordEventRepository.countRecordEventTimestamp(thirdMinTimestamp, thirdMaxTimestamp);
+		int thirdWeekCount = androidRecordEventRepository.countRecordEventTimestamp(thirdMinTimestamp,
+				thirdMaxTimestamp);
 		thirdWeek.put("count", thirdWeekCount);
 
-		
 		// 第四周
 		JSONObject fourthWeek = new JSONObject();
 		// 名称
-		fourthWeek.put("name", "第四周"); 
+		fourthWeek.put("name", "第四周");
 		// 时间戳
 		long fourthMinTimestamp = DateFormat.getTimeByyyyyMMdd(fullyear, thisMonth, 22);
 		long fourthMaxTimestamp;
@@ -251,10 +253,11 @@ public class AndroidServerStatistics {
 		} else {
 			fourthMaxTimestamp = DateFormat.getTimeByyyyyMMdd(fullyear, thisMonth + 1, 1);
 		}
-		fourthWeek.put("minTimestamp", fourthMinTimestamp); 
-		fourthWeek.put("maxTimestamp", fourthMaxTimestamp); 
+		fourthWeek.put("minTimestamp", fourthMinTimestamp);
+		fourthWeek.put("maxTimestamp", fourthMaxTimestamp);
 		// 周统计
-		int fourthWeekCount = androidRecordEventRepository.countRecordEventTimestamp(fourthMinTimestamp, fourthMaxTimestamp);
+		int fourthWeekCount = androidRecordEventRepository.countRecordEventTimestamp(fourthMinTimestamp,
+				fourthMaxTimestamp);
 		fourthWeek.put("count", fourthWeekCount);
 
 		statisticWeekArray.add(firsWeek);
@@ -264,11 +267,11 @@ public class AndroidServerStatistics {
 
 		return statisticWeekArray;
 	}
-	
+
 	// 上传统计数据
 	public Consequencer uploadStatistic(String json) {
 		Consequencer consequent = new Consequencer();
-		
+
 		File file = new File(filePath + "StatisticTime.json");
 		PrintStream myPrintStream = null;
 		try {
@@ -281,7 +284,42 @@ public class AndroidServerStatistics {
 
 		myPrintStream.println(json); // 往文件里写入字符串
 		myPrintStream.close(); // 记得关闭流
-		
+
 		return consequent.setSuccess();
+	}
+
+	// 读取本地统计文件
+	public Consequencer downloadStatistic() {
+		Consequencer consequent = new Consequencer();
+
+		File file = new File(filePath + "StatisticTime.json");
+		if (!file.exists()) {
+			// 文件不存在的情况下
+			return consequent.setMessage("文件StatisticTime.json 不存在， 请重新统计、");
+		}
+
+		String statisticJson = "";
+
+		try {
+			FileInputStream in = new FileInputStream(file);
+			// size 为字串的长度 ，这里一次性读完
+
+			int size = in.available();
+			byte[] buffer = new byte[size];
+			in.read(buffer);
+			in.close();
+			statisticJson = new String(buffer, "UTF-8");
+
+		} catch (IOException e) {
+			e.printStackTrace();
+			return consequent.setMessage("文件StatisticTime.json流失败，原因：" + e.toString());
+		}
+
+		JSONArray statisticArray = JSON.parseArray(statisticJson);
+
+		JSONObject data = new JSONObject();
+		data.put("statistic", statisticArray);
+
+		return consequent.setSuccess(data);
 	}
 }

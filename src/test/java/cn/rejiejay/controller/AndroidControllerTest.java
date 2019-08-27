@@ -8,6 +8,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
+import cn.rejiejay.utils.Consequencer;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 import java.sql.Date;

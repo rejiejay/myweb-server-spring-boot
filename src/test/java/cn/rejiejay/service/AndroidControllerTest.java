@@ -126,4 +126,12 @@ public class AndroidControllerTest extends BaseServiceTests {
 		}
 		
 	}
+	
+	// 测试读取本地统计文件
+	@Test
+	public void testDownloadStatistic() {
+		Consequencer StatisticResult = androidServerStatistics.downloadStatistic();
+		System.out.println("androidServerStatistics.downloadStatistic:" + StatisticResult.getJsonStringMessage());
+		
+	}
 }

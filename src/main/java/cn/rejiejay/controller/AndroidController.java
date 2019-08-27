@@ -14,6 +14,7 @@ import com.alibaba.fastjson.JSONObject;
 
 import cn.rejiejay.security.SecurityAnnotater;
 import cn.rejiejay.service.AndroidServer;
+import cn.rejiejay.service.AndroidServerStatistics;
 import cn.rejiejay.utils.Consequencer;
 import cn.rejiejay.viewobject.AndroidAddRecordReque;
 import cn.rejiejay.viewobject.AndroidDelRecordReque;
@@ -37,6 +38,9 @@ public class AndroidController extends BaseController {
 
 	@Autowired
 	private AndroidServer androidServer;
+
+	@Autowired
+	private AndroidServerStatistics androidServerStatistics;
 
 	/**
 	 * 获取安卓记录列表 排序分页暂时不做
@@ -261,5 +265,13 @@ public class AndroidController extends BaseController {
 		}
 
 		return androidServer.delRecordEventTag(id).getJsonObjMessage();
+	}
+
+	/**
+	 * 获取 日期统计数据
+	 */
+	@RequestMapping(value = "/recordevent/date/get", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
+	public JSONObject getRecordEventDate() {
+		return androidServerStatistics.downloadStatistic().getData();
 	}
 }
