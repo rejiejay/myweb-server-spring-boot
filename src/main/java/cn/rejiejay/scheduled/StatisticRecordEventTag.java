@@ -25,8 +25,8 @@ public class StatisticRecordEventTag {
 	/**
 	 * 每天凌晨1点30执行 持久化统计 Android 记录事件 标签
 	 */
-	@Scheduled(cron = "0 30 1 * * ? *")
-	public void cleanUploade() {
+	@Scheduled(cron = "0 30 1 * * ?")
+	public void StatisticTag() {
 		Consequencer consequent = androidServer.rersisStatisRecordEventTag();
 		if (consequent.getResult() != 1) {
 			logger.error(" 持久化统计 Android 记录事件 标签 失败");

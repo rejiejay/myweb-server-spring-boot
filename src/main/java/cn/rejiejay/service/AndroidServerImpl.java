@@ -114,7 +114,8 @@ public class AndroidServerImpl implements AndroidServer {
 			recordEventResult = androidRecordEventRepository.findTagRecordEventByPageNo(dataTag, startNum);
 
 		} else {
-			recordEventResult = androidRecordEventRepository.findTypeTagRecordEventByPageNo(dataType, dataTag, startNum);
+			recordEventResult = androidRecordEventRepository.findTypeTagRecordEventByPageNo(dataType, dataTag,
+					startNum);
 
 		}
 
@@ -264,34 +265,35 @@ public class AndroidServerImpl implements AndroidServer {
 
 		return consequent.setSuccess();
 	}
-	
+
 	/**
 	 * 获取 记录标签
 	 */
 	public Consequencer getRecordEventTag() {
 		Consequencer consequent = new Consequencer();
-		
+
 		Iterable<AndroidRecordEventTag> recordEventTagResult = androidRecordEventTagRepository.findAll();
 
 		if (recordEventTagResult == null) {
 			return consequent.setMessage("数据为空");
 		}
-		
+
 		List<AndroidRecordEventTag> recordEventTagList = new ArrayList<AndroidRecordEventTag>();
 		recordEventTagResult.forEach(recordEventTagItem -> {
 			recordEventTagList.add(recordEventTagItem);
 		});
-		
+
 		if (recordEventTagList.size() < 1) {
 			return consequent.setMessage("数据为空");
 		}
 		
-		JSONObject data = JSONObject.parseObject(JSONObject.toJSONString(recordEventTagList));
-		
+		JSONObject data = new JSONObject();
+		JSONArray list = JSONObject.parseArray(JSONObject.toJSONString(recordEventTagList));
+		data.put("list", list);
+
 		return consequent.setSuccess(data);
 	}
 
-	
 	/**
 	 * 新增 记录标签
 	 */
@@ -303,10 +305,10 @@ public class AndroidServerImpl implements AndroidServer {
 		} catch (IllegalArgumentException e) {
 			return consequent.setMessage("新增 Android RecordEvent tag:“" + tag + "”失败，原因：" + e.toString());
 		}
-		
+
 		return consequent.setSuccess();
 	}
-	
+
 	/**
 	 * 删除 记录标签
 	 */
@@ -318,17 +320,16 @@ public class AndroidServerImpl implements AndroidServer {
 		} catch (IllegalArgumentException e) {
 			return consequent.setMessage("删除 Android RecordEvent Tag id:“" + id + "”失败，原因：" + e.toString());
 		}
-		
+
 		return consequent.setSuccess();
 	}
 
-	
 	/**
 	 * 统计 记录标签
 	 */
 	public List<String> statisticRecordEventTag() {
 		List<String> statisticTagResult = androidRecordEventRepository.statisticRecordEventTag();
-		
+
 		List<String> resultList = new ArrayList<String>();
 		statisticTagResult.forEach(item -> {
 			if (item != null && item.length() > 0) {
@@ -351,13 +352,13 @@ public class AndroidServerImpl implements AndroidServer {
 		} catch (IllegalArgumentException e) {
 			return consequent.setMessage("清空 Android RecordEvent Tag 失败，原因：" + e.toString());
 		}
-		
+
 		// 统计 记录标签
 		Boolean haveError = false;
 		List<String> resultList = statisticRecordEventTag();
 		for (int i = 0; i < resultList.size(); i++) {
 			Consequencer addTagResult = addRecordEventTag(resultList.get(i));
-			
+
 			if (addTagResult.getResult() != 1) {
 				haveError = true;
 			}
@@ -365,8 +366,7 @@ public class AndroidServerImpl implements AndroidServer {
 		if (haveError) {
 			return consequent.setMessage("统计 Android RecordEvent Tag 失败，原因：添加失败！");
 		}
-		
-		
+
 		return consequent.setSuccess();
 	}
 }
