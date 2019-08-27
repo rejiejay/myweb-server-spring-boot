@@ -134,4 +134,13 @@ public class AndroidControllerTest extends BaseServiceTests {
 		System.out.println("androidServerStatistics.downloadStatistic:" + StatisticResult.getJsonStringMessage());
 		
 	}
+	
+	// 测试去重
+	@Test
+	public void testStatisticDeWeighting() {
+		Consequencer StatisticResult = androidServerStatistics.downloadStatistic();
+		JSONArray statisticArray = StatisticResult.getData().getJSONArray("statistic");
+		JSONArray statisticDeWeig = androidServerStatistics.statisticDeWeighting(statisticArray);
+		System.out.println("androidServerStatistics.statisticDeWeighting:" + statisticDeWeig.toString());
+	}
 }

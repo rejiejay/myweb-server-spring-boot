@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
 import cn.rejiejay.security.SecurityAnnotater;
@@ -272,6 +273,14 @@ public class AndroidController extends BaseController {
 	 */
 	@RequestMapping(value = "/recordevent/date/get", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
 	public JSONObject getRecordEventDate() {
-		return androidServerStatistics.downloadStatistic().getData();
+		JSONObject data = new JSONObject();
+		
+		Consequencer StatisticResult = androidServerStatistics.downloadStatistic();
+		JSONArray statisticArray = StatisticResult.getData().getJSONArray("statistic");
+		JSONArray statisticDeWeig = androidServerStatistics.statisticDeWeighting(statisticArray);
+		
+		data.put("statistic", statisticDeWeig);
+		
+		return data;
 	}
 }

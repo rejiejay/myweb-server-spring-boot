@@ -322,4 +322,111 @@ public class AndroidServerStatistics {
 
 		return consequent.setSuccess(data);
 	}
+
+	/**
+	 *  去掉count 为 0的数据（服务器实现是因为方便测试
+	 */
+	public JSONArray statisticDeWeighting(JSONArray yearStatistic) {
+		JSONArray statisticResult = new JSONArray();
+		
+		for (int i = 0; i < yearStatistic.size(); i++) {
+			JSONObject data = new JSONObject();
+			JSONObject item = yearStatistic.getJSONObject(i);
+
+			data.put("name", item.getString("name"));
+			data.put("count", item.getIntValue("count")); // 年份不需要去重，因为不可能为零
+			data.put("minTimestamp", item.getLong("minTimestamp"));
+			data.put("maxTimestamp", item.getLong("maxTimestamp"));
+
+			JSONArray season = seasonDeWeight(item.getJSONArray("data")); // 季节去重
+
+			data.put("data", season);
+			
+			statisticResult.add(data);
+		}
+		
+		return statisticResult;
+	}
+	
+	// 季节去重
+	public JSONArray seasonDeWeight(JSONArray seasonStatistic) {
+		JSONArray statisticResult = new JSONArray();
+		
+		for (int i = 0; i < seasonStatistic.size(); i++) {
+			JSONObject item = seasonStatistic.getJSONObject(i);
+			int count = item.getIntValue("count");
+			
+			// 统计小于0不需要统计push进去
+			if (count > 0) {
+				JSONObject data = new JSONObject();
+
+				data.put("name", item.getString("name"));
+				data.put("count", item.getIntValue("count"));
+				data.put("minTimestamp", item.getLong("minTimestamp"));
+				data.put("maxTimestamp", item.getLong("maxTimestamp"));
+
+				JSONArray season = monthDeWeight(item.getJSONArray("data")); // 月份去重
+
+				data.put("data", season);
+				
+				statisticResult.add(data);
+			}
+			
+		}
+		
+		return statisticResult;
+	}
+	
+	// 月份去重
+	public JSONArray monthDeWeight(JSONArray monthStatistic) {
+		JSONArray statisticResult = new JSONArray();
+		
+		for (int i = 0; i < monthStatistic.size(); i++) {
+			JSONObject item = monthStatistic.getJSONObject(i);
+			int count = item.getIntValue("count");
+			
+			// 统计小于0不需要统计push进去
+			if (count > 0) {
+				JSONObject data = new JSONObject();
+
+				data.put("name", item.getString("name"));
+				data.put("count", item.getIntValue("count"));
+				data.put("minTimestamp", item.getLong("minTimestamp"));
+				data.put("maxTimestamp", item.getLong("maxTimestamp"));
+
+				JSONArray season = weekDeWeight(item.getJSONArray("data")); // 星期去重
+
+				data.put("data", season);
+				
+				statisticResult.add(data);
+			}
+			
+		}
+		
+		return statisticResult;
+	}
+	
+	// 星期去重
+	public JSONArray weekDeWeight(JSONArray weekStatistic) {
+		JSONArray statisticResult = new JSONArray();
+		
+		for (int i = 0; i < weekStatistic.size(); i++) {
+			JSONObject item = weekStatistic.getJSONObject(i);
+			int count = item.getIntValue("count");
+
+			// 统计小于0不需要统计push进去
+			if (count > 0) {
+				JSONObject data = new JSONObject();
+
+				data.put("name", item.getString("name"));
+				data.put("count", item.getIntValue("count"));
+				data.put("minTimestamp", item.getLong("minTimestamp"));
+				data.put("maxTimestamp", item.getLong("maxTimestamp"));
+				
+				statisticResult.add(data);
+			}
+		}
+		
+		return statisticResult;
+	}
 }
