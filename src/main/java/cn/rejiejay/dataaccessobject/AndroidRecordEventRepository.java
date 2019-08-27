@@ -80,4 +80,28 @@ public interface AndroidRecordEventRepository extends CrudRepository<AndroidReco
 	 */
 	@Query(value = "select distinct tag from android_record_events;", nativeQuery = true)
 	List<String> statisticRecordEventTag();
+	
+	/**
+	 * 统计 多少种 年份标签
+	 */
+	@Query(value = "select distinct fullyear from android_record_events;", nativeQuery = true)
+	List<Integer> statisticRecordEventFullyear();
+
+	/**
+	 * 统计 多少种 年份标签
+	 */
+	@Query(value = "select distinct fullyear from android_record_events;", nativeQuery = true)
+	List<Integer> countRecordEventFullyear();
+
+	/**
+	 * 统计 年份 有多少条
+	 */
+	@Query(value = "select count(*) from android_record_events where fullyear=?1", nativeQuery = true)
+	int countRecordEventFullyear(Integer fullyear);
+
+	/**
+	 * 统计 时间段 有多少条数据
+	 */
+	@Query(value = "select count(*) from android_record_events where timestamp>=?1 and timestamp<=?2", nativeQuery = true)
+	int countRecordEventTimestamp(long minTimestamp, long maxTimestamp);
 }
