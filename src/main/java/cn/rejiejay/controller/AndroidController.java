@@ -44,7 +44,7 @@ public class AndroidController extends BaseController {
 	private AndroidServerStatistics androidServerStatistics;
 
 	/**
-	 * 获取安卓记录列表 排序分页暂时不做
+	 * 获取安卓记录列表
 	 * 
 	 * @param {pageNo} 分页
 	 * @param {sort}   排序方式 time random 返回total 和 list
@@ -100,6 +100,45 @@ public class AndroidController extends BaseController {
 			}
 			recordEventListResult = androidServer.getRecordEventListByTime(dataType, dataTag, page);
 		}
+
+		// 执行失败的情况下直接返回失败即可
+		if (recordEventListResult.getResult() != 1) {
+			return recordEventListResult.getJsonObjMessage();
+		}
+
+		// 成功的情况下 返回 {list: [], total: ?}
+		JSONObject data = new JSONObject();
+		data.put("list", recordEventListResult.getData().getJSONArray("list"));
+		data.put("total", allListCount);
+
+		return consequent.setSuccess(data).getJsonObjMessage();
+	}
+
+	/**
+	 * 根据时间范围 获取安卓记录列表
+	 * 
+	 * @param {pageNo}       分页
+	 * @param {minTimestamp}
+	 * @param {maxTimestamp}
+	 */
+	@RequestMapping(value = "/recordevent/getbytime", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
+	public JSONObject listRecordEventByTime(@RequestParam(value = "pageNo", required = true) Integer pageNo,
+			@RequestParam(value = "minTimestamp", required = true) long minTimestamp,
+			@RequestParam(value = "maxTimestamp", required = true) long maxTimestamp) {
+		logger.debug(
+				"根据时间范围 获取安卓记录列表 pageNo:" + pageNo + "、minTimestamp:" + minTimestamp + "、maxTimestamp:" + maxTimestamp);
+		Consequencer consequent = new Consequencer();
+		int pageInt = pageNo.intValue();
+
+		/**
+		 * 统计时间段的总记录
+		 */
+		long allListCount = androidServer.countRecordEventTimestamp(minTimestamp, maxTimestamp);
+
+		/**
+		 * 获取 列表 根据时间戳范围
+		 */
+		Consequencer recordEventListResult = androidServer.listRecordEventByTime(minTimestamp, maxTimestamp, pageInt);
 
 		// 执行失败的情况下直接返回失败即可
 		if (recordEventListResult.getResult() != 1) {
@@ -245,11 +284,11 @@ public class AndroidController extends BaseController {
 	@RequestMapping(value = "/recordevent/tag/add", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
 	public JSONObject addRecordEventTag(@RequestParam(value = "tag", required = true) String tag) {
 		logger.debug("/recordevent/tag/add[req]: " + tag); // 打印 请求参数
-		
+
 		if (tag == null || tag.length() <= 0) {
 			return errorJsonReply(2, "参数不能为空");
 		}
-		
+
 		return androidServer.addRecordEventTag(tag).getJsonObjMessage();
 	}
 
@@ -260,7 +299,7 @@ public class AndroidController extends BaseController {
 	@RequestMapping(value = "/recordevent/tag/del", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
 	public JSONObject delRecordEventTag(@RequestParam(value = "id", required = true) int id) {
 		logger.debug("/recordevent/tag/add[req]: " + id); // 打印 请求参数
-		
+
 		if (id < 1) {
 			return errorJsonReply(2, "参数不能小于1");
 		}
@@ -274,13 +313,13 @@ public class AndroidController extends BaseController {
 	@RequestMapping(value = "/recordevent/date/get", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
 	public JSONObject getRecordEventDate() {
 		JSONObject data = new JSONObject();
-		
+
 		Consequencer StatisticResult = androidServerStatistics.downloadStatistic();
 		JSONArray statisticArray = StatisticResult.getData().getJSONArray("statistic");
 		JSONArray statisticDeWeig = androidServerStatistics.statisticDeWeighting(statisticArray);
-		
+
 		data.put("statistic", statisticDeWeig);
-		
-		return data;
+
+		return new Consequencer().setSuccess(data).getJsonObjMessage();
 	}
 }

@@ -22,6 +22,16 @@ public interface AndroidServer {
 	 * 获取 列表根据时间
 	 */
 	public Consequencer getRecordEventListByTime(String dataType, String dataTag, int pageNo);
+
+	/**
+	 * 获取 列表 根据时间戳范围
+	 */
+	public Consequencer listRecordEventByTime(long minTimestamp, long maxTimestamp, int pageNo);
+
+	/**
+	 * 统计 时间段 有多少条数据
+	 */
+	public int countRecordEventTimestamp(long minTimestamp, long maxTimestamp);
 	
 	/**
 	 * 获取 列表 随机

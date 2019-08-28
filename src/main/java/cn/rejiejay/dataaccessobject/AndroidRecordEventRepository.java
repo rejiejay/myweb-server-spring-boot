@@ -59,6 +59,12 @@ public interface AndroidRecordEventRepository extends CrudRepository<AndroidReco
 	List<AndroidRecordEvents> findTypeTagRecordEventByRandom(String dataType, String dataTag, int total);
 	
 	/**
+	 * 根据 时间范围（查询第N页 每页10条
+	 */
+	@Query(value = "select * from android_record_events where timestamp>=?1 and timestamp<=?2 order by timestamp desc limit ?3, 10", nativeQuery = true)
+	List<AndroidRecordEvents> listRecordEventByTime(long minTimestamp, long maxTimestamp, int pageNo);
+	
+	/**
 	 * 新增记录
 	 */
 	@Modifying

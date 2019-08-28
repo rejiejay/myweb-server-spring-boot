@@ -199,4 +199,13 @@ public class AndroidControllerTest extends BaseControllerTests {
 
 		System.out.println(result.getResponse().getContentAsString() + "\n");
 	}
+	
+	// 根据时间范围 获取安卓记录列表
+	@Test
+	public void listRecordEventByTime() throws Exception {
+		MvcResult result = mockMvc.perform(get("/android/recordevent/getbytime?pageNo=1&minTimestamp=1541001600000&maxTimestamp=1546358400000"))
+				.andReturn(); // 返回执行请求的结果
+
+		System.out.println(result.getResponse().getContentAsString() + "\n");
+	}
 }

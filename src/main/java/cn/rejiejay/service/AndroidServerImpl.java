@@ -138,6 +138,43 @@ public class AndroidServerImpl implements AndroidServer {
 	}
 
 	/**
+	 * 获取 列表 根据时间戳范围
+	 */
+	public Consequencer listRecordEventByTime(long minTimestamp, long maxTimestamp, int pageNo) {
+		Consequencer consequent = new Consequencer();
+
+		/**
+		 * 因为是从零开始的
+		 */
+		if (pageNo >= 1) {
+			pageNo = pageNo - 1;
+		}
+		
+		List<AndroidRecordEvents> recordEventResult = androidRecordEventRepository.listRecordEventByTime(minTimestamp, maxTimestamp, pageNo);
+
+		// 判断是否查询到数据
+		if (recordEventResult.size() <= 0) {
+			return consequent.setMessage("查询数据为空！");
+		}
+
+		// 数据转换(不进行转换，有些数据会返回null
+		JSONArray recordEventArray = new JSONArray();
+		new ConversionRecordEvent(recordEventResult, recordEventArray);
+
+		JSONObject data = new JSONObject();
+		data.put("list", JSONArray.parseArray(JSON.toJSONString(recordEventArray)));
+
+		return consequent.setSuccess(data);
+	}
+	
+	/**
+	 * 统计 时间段 有多少条数据
+	 */
+	public int countRecordEventTimestamp(long minTimestamp, long maxTimestamp) {
+		return androidRecordEventRepository.countRecordEventTimestamp(minTimestamp, maxTimestamp);
+	}
+
+	/**
 	 * 获取 列表 随机
 	 */
 	public Consequencer getRecordEventListByRandom(String dataType, String dataTag, int count) {
