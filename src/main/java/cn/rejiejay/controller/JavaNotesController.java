@@ -34,7 +34,7 @@ import org.slf4j.LoggerFactory;
 @RequestMapping("/java/notes")
 public class JavaNotesController extends BaseController {
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
-	
+
 	@Autowired
 	private JavaNotesServer javaNotesServer;
 
@@ -61,7 +61,7 @@ public class JavaNotesController extends BaseController {
 		 * 处理图片
 		 */
 		String imageId = req.getImageId();
-		if (imageId != null && !imageId.equals("") && !imageId.equals("null")) { // 不为空的情况下
+		if (imageId != null && imageId.length() > 0) { // 不为空的情况下
 			Consequencer uploadResult = ossService.uploadJavaNotesImage(imageId);
 
 			// 处理失败
@@ -103,7 +103,7 @@ public class JavaNotesController extends BaseController {
 		 */
 		if (sort != null && sort.equals("random")) {
 			Consequencer getNoteResult = javaNotesServer.getNotesByRandom(10);
-			
+
 			// 执行失败的情况下直接返回失败即可
 			if (getNoteResult.getResult() != 1) {
 				return getNoteResult.getJsonObjMessage();
@@ -171,41 +171,41 @@ public class JavaNotesController extends BaseController {
 	public JSONObject delNoteById(@RequestBody JSONObject req) {
 		Integer id = req.getInteger("id");
 		logger.debug("/java/notes/del[req]: id:" + id);
-		
+
 		/**
 		 * 手动参数校验
 		 */
 		if (id == null || id < 0) {
 			return errorJsonReply(2, "请求参数错误!");
 		}
-		
+
 		/**
 		 * 根据id查询这条数据
 		 */
 		Consequencer getOneNoteResult = javaNotesServer.getNoteById(Long.valueOf(id.longValue()));
-		
+
 		if (getOneNoteResult.getResult() != 1) {
 			// 查询失败的情况下直接返回错误
 			return getOneNoteResult.getJsonObjMessage();
 		}
-		
+
 		/**
 		 * 先根据id删除图片
 		 */
 		String imagekey = getOneNoteResult.getData().getString("imagekey");
-		if (imagekey != null && !imagekey.equals("")) {
+		if (imagekey != null && imagekey.length() > 0) {
 			Consequencer delOneNotesImageResult = ossService.delJavaNotesImage(imagekey);
-			
+
 			if (delOneNotesImageResult.getResult() != 1) {
 				return delOneNotesImageResult.getJsonObjMessage();
 			}
 		}
-		
+
 		/**
 		 * 再根据id删除数据
 		 */
 		Consequencer delOneNoteResult = javaNotesServer.delNoteById(Long.valueOf(id.longValue()));
-		
+
 		logger.debug("/java/notes/del[reply]: " + delOneNoteResult.getJsonStringMessage());
 		return delOneNoteResult.getJsonObjMessage();
 	}
@@ -231,31 +231,30 @@ public class JavaNotesController extends BaseController {
 		 */
 		long id = req.getId();
 		Consequencer getNoteResult = javaNotesServer.getNoteById(id);
-		
+
 		// 处理失败
 		if (getNoteResult.getResult() != 1) {
 			return getNoteResult.getJsonObjMessage();
 		}
 
 		/**
-		 * 处理图片(需要判断进行对比图片，避免重复上传
+		 * 處理圖片
 		 */
+		String imagekey = getNoteResult.getData().getString("imagekey");
+		// 先判断原来是否有图片
+		if (imagekey != null && imagekey.length() > 0) {
+			// 如果有图片，则先删除
+			Consequencer delImageResult = ossService.delJavaNotesImage(imagekey);
+			if (delImageResult.getResult() != 1) {
+				return delImageResult.getJsonObjMessage();
+			}
+		}
+		// 再判断有没有上传新的图片
 		String imageId = req.getImageId();
-		if (imageId != null && !imageId.equals("") && !imageId.equals("null")) { // 不为空的情况下
-			/**
-			 * 判断OSS是否存在图片
-			 */
-			Consequencer javaNotesImageExists = ossService.isExistsJavaNotesImage(imageId);
-
-			// 不存在这张图片
-			if (javaNotesImageExists.getResult() != 1) {
-				// 说明需要上传
-				Consequencer uploadResult = ossService.uploadJavaNotesImage(imageId);
-
-				// 处理失败
-				if (uploadResult.getResult() != 1) {
-					return uploadResult.getJsonObjMessage();
-				}
+		if (imageId != null && imageId.length() > 0) {
+			Consequencer uploadResult = ossService.uploadJavaNotesImage(imageId);
+			if (uploadResult.getResult() != 1) {
+				return uploadResult.getJsonObjMessage();
 			}
 		}
 		
@@ -264,7 +263,7 @@ public class JavaNotesController extends BaseController {
 		 */
 		String title = req.getTitle();
 		String htmlContent = req.getHtmlContent();
-		
+
 		Consequencer delOneNoteResult = javaNotesServer.editJavaNotes(id, title, imageId, htmlContent);
 
 		return delOneNoteResult.getJsonObjMessage();

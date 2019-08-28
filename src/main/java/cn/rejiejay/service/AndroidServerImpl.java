@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
@@ -37,6 +38,9 @@ public class AndroidServerImpl implements AndroidServer {
 	@Autowired
 	private AndroidRecordEventTagRepository androidRecordEventTagRepository;
 
+	@Value("${rejiejay.tencentoss.origin}")
+	private String tencentOssOrigin;
+
 	// 记录事件数据 转换 方法
 	public class ConversionRecordEvent {
 		ConversionRecordEvent(List<AndroidRecordEvents> recordEventResult, JSONArray recordEventArray) {
@@ -57,7 +61,7 @@ public class AndroidServerImpl implements AndroidServer {
 				 */
 				String imageidentity = recordEvent.getImageidentity();
 				item.put("imageidentity", imageidentity != null ? imageidentity : "");
-				item.put("imageurl", "");
+				item.put("imageurl", tencentOssOrigin + "android/" + imageidentity + ".png");
 
 				// 判断空
 				String eventcause = recordEvent.getEventcause();

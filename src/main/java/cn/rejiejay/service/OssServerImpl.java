@@ -45,10 +45,43 @@ public class OssServerImpl implements OssServer {
 
 	/**
 	 * 上传到JAVA笔记系统的图片
-	 * 
-	 * 以后这里可以抽出封装一下
 	 */
 	public Consequencer uploadJavaNotesImage(String imageId) {
+		return uploadGeneralImage("javanotes", imageId, true);
+	}
+
+	/**
+	 * 判断是否存在此图片
+	 */
+	public Consequencer isExistsJavaNotesImage(String imageId) {
+		return isExistsImage("javanotes", imageId, true);
+	}
+
+	/**
+	 * 删除JAVA笔记系统的图片 根据 imageId
+	 */
+	public Consequencer delJavaNotesImage(String imageId) {
+		return delGeneralImage("javanotes", imageId, true);
+	}
+
+	/**
+	 * 上传到Android的图片
+	 */
+	public Consequencer uploadAndroidImage(String imageId) {
+		return uploadGeneralImage("android", imageId, false);
+	}
+
+	/**
+	 * 删除Android的图片 根据 imageId
+	 */
+	public Consequencer delAndroidImage(String imageId) {
+		return delGeneralImage("android", imageId, false);
+	}
+
+	/**
+	 * 通用上传方法
+	 */
+	public Consequencer uploadGeneralImage(String position, String imageId, Boolean isJPG) {
 		Consequencer consequent = new Consequencer();
 
 		/**
@@ -84,7 +117,9 @@ public class OssServerImpl implements OssServer {
 		TransferManager transferManager = new TransferManager(tencentOSS.cosClient, threadPool);
 
 		// 对象键（Key）是对象在存储桶中的唯一标识。这里使用时间戳即可
-		String key = "myserver/javanotes/" + imageId + ".jpg";
+
+		String suffix = isJPG ? ".jpg" : ".png";
+		String key = "myserver/" + position + "/" + imageId + suffix;
 
 		/**
 		 * 解码
@@ -124,11 +159,12 @@ public class OssServerImpl implements OssServer {
 	/**
 	 * 判断是否存在此图片
 	 */
-	public Consequencer isExistsJavaNotesImage(String imageId) {
+	public Consequencer isExistsImage(String position, String imageId, Boolean isJPG) {
 		Consequencer consequent = new Consequencer();
 
 		// 对象键（Key）是对象在存储桶中的唯一标识。
-		String key = "myserver/javanotes/" + imageId + ".jpg";
+		String suffix = isJPG ? ".jpg" : ".png";
+		String key = "myserver/" + position + "/" + imageId + suffix;
 
 		logger.info("查询存储桶中是否存在指定的对象tencentOSS.cosClient.getObjectMetadata(" + tencentOSS.bucket + ", " + key + ")"); // 打印数据库获取的数据
 
@@ -136,26 +172,26 @@ public class OssServerImpl implements OssServer {
 			tencentOSS.cosClient.getObjectMetadata(tencentOSS.bucket, key);
 		} catch (CosClientException e) {
 			return consequent.setMessage("查询不存在对象:" + e.toString());
-
 		}
 
 		return consequent.setSuccess();
 	}
 
 	/**
-	 * 删除JAVA笔记系统的图片 根据 imageId
+	 * 通用删除方法
 	 */
-	public Consequencer delJavaNotesImage(String imageId) {
+	public Consequencer delGeneralImage(String position, String imageId, Boolean isJPG) {
 		Consequencer consequent = new Consequencer();
 
 		/**
 		 * 查询存储桶中是否存在指定的对象
 		 */
-		String key = "myserver/javanotes/" + imageId + ".jpg";
-		Consequencer javaNotesImageExists = this.isExistsJavaNotesImage(imageId);
-		
-		if (javaNotesImageExists.getResult() != 1) {
-			return consequent.setMessage("删除图片" + key + "失败，不存在图片");
+		String suffix = isJPG ? ".jpg" : ".png";
+		String key = "myserver/" + position + "/" + imageId + suffix;
+		Consequencer imageExists = isExistsImage(position, imageId, isJPG);
+
+		if (imageExists.getResult() != 1) {
+			return consequent.setSuccess(); // 不存在这张图片 表示删除成功？
 		}
 
 		/**
@@ -169,5 +205,6 @@ public class OssServerImpl implements OssServer {
 		}
 
 		return consequent.setSuccess();
+
 	}
 }

@@ -16,6 +16,7 @@ import com.alibaba.fastjson.JSONObject;
 import cn.rejiejay.security.SecurityAnnotater;
 import cn.rejiejay.service.AndroidServer;
 import cn.rejiejay.service.AndroidServerStatistics;
+import cn.rejiejay.service.OssServerImpl;
 import cn.rejiejay.utils.Consequencer;
 import cn.rejiejay.viewobject.AndroidAddRecordReque;
 import cn.rejiejay.viewobject.AndroidDelRecordReque;
@@ -42,6 +43,9 @@ public class AndroidController extends BaseController {
 
 	@Autowired
 	private AndroidServerStatistics androidServerStatistics;
+
+	@Autowired
+	private OssServerImpl ossService;
 
 	/**
 	 * 获取安卓记录列表
@@ -173,15 +177,13 @@ public class AndroidController extends BaseController {
 		 * 处理图片
 		 */
 		String imageId = req.getImageidentity();
-		if (imageId != null && !imageId.equals("") && !imageId.equals("null")) { // 不为空的情况下
-			// 暂不实现
-			// Consequencer uploadResult =
-			// androidServer.uploadJavaNotesImage(imageId);
+		if (imageId != null && imageId.length() > 0) { // 不为空的情况下
+			Consequencer uploadResult = ossService.uploadAndroidImage(imageId);
 
 			// 处理失败
-			// if (uploadResult.getResult() != 1) {
-			// return uploadResult.getJsonObjMessage();
-			// }
+			if (uploadResult.getResult() != 1) {
+				return uploadResult.getJsonObjMessage();
+			}
 		}
 
 		return androidServer.addRecord(req).getJsonObjMessage();
@@ -212,10 +214,15 @@ public class AndroidController extends BaseController {
 		}
 
 		/**
-		 * 处理图片(暂不实现
+		 * 处理图片
 		 */
-		// String imagekey =
-		// getOneRecordEventResult.getData().getString("imageidentity");
+		String imagekey = getOneRecordEventResult.getData().getString("imageidentity");
+		if (imagekey != null && imagekey.length() > 0) {
+			Consequencer delImageResult = ossService.delAndroidImage(imagekey);
+			if (delImageResult.getResult() != 1) {
+				return delImageResult.getJsonObjMessage();
+			}
+		}
 
 		/**
 		 * 删除数据
@@ -256,10 +263,25 @@ public class AndroidController extends BaseController {
 		}
 
 		/**
-		 * 处理图片(暂不实现 注意删除原来的图片 JAVAnotes 那边也忘记处理删除图片的了 这边测试完记得改一下JAVAnotes那边的
+		 * 处理图片
 		 */
-		// String imagekey =
-		// getOneRecordEventResult.getData().getString("imageidentity");
+		String imageId = getOneRecordEventResult.getData().getString("imageidentity");
+		// 先判断原来是否有图片
+		if (imageId != null && imageId.length() > 0) {
+			// 如果有图片，则先删除
+			Consequencer delImageResult = ossService.delAndroidImage(imageId);
+			if (delImageResult.getResult() != 1) {
+				return delImageResult.getJsonObjMessage();
+			}
+		}
+		// 再判断有没有上传新的图片
+		String imagekey = req.getImageidentity();
+		if (imageId != null && imageId.length() > 0) {
+			Consequencer uploadResult = ossService.uploadAndroidImage(imagekey);
+			if (uploadResult.getResult() != 1) {
+				return uploadResult.getJsonObjMessage();
+			}
+		}
 
 		/**
 		 * 编辑到数据库
@@ -270,7 +292,7 @@ public class AndroidController extends BaseController {
 	}
 
 	/**
-	 * 获取 记录标签
+	 * 获取 标签
 	 */
 	@RequestMapping(value = "/recordevent/tag/get", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
 	public JSONObject getRecordEventTag() {
@@ -278,7 +300,7 @@ public class AndroidController extends BaseController {
 	}
 
 	/**
-	 * 新增 记录标签
+	 * 新增 标签
 	 */
 	@SecurityAnnotater(role = "admin")
 	@RequestMapping(value = "/recordevent/tag/add", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
@@ -293,7 +315,7 @@ public class AndroidController extends BaseController {
 	}
 
 	/**
-	 * 删除 记录标签
+	 * 删除 标签
 	 */
 	@SecurityAnnotater(role = "admin")
 	@RequestMapping(value = "/recordevent/tag/del", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
