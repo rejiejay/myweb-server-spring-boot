@@ -266,17 +266,20 @@ public class AndroidController extends BaseController {
 		 * 处理图片
 		 */
 		String imageId = getOneRecordEventResult.getData().getString("imageidentity");
-		// 先判断原来是否有图片
-		if (imageId != null && imageId.length() > 0) {
-			// 如果有图片，则先删除
+		String imagekey = req.getImageidentity();
+		/**
+		 * 先判断原来是否有图片
+		 * 有图片的情况下，判断是不是和原先的图片是同一个ID
+		 */
+		if (imageId != null && imageId.length() > 0 && !imageId.equals(imagekey)) {
+			// 原来有图片，并且和新上传的图片Id不一样！（包括不上传新图片也是不一样）执行删除
 			Consequencer delImageResult = ossService.delAndroidImage(imageId);
 			if (delImageResult.getResult() != 1) {
 				return delImageResult.getJsonObjMessage();
 			}
 		}
 		// 再判断有没有上传新的图片
-		String imagekey = req.getImageidentity();
-		if (imageId != null && imageId.length() > 0) {
+		if (imagekey != null && imagekey.length() > 0) {
 			Consequencer uploadResult = ossService.uploadAndroidImage(imagekey);
 			if (uploadResult.getResult() != 1) {
 				return uploadResult.getJsonObjMessage();

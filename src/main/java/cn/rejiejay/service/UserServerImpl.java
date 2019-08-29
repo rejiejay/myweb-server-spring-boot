@@ -124,15 +124,15 @@ public class UserServerImpl implements UserServer {
 			return consequencer.getJsonObjMessage();
 		}
 
-		// 优先判断 前端携带的凭证 是否正确
-		if (!accessToken.equals(dbUserResult.getToken())) {
-			consequencer.setResult(40003).setMessage("无效的凭证类型");
-			return consequencer.getJsonObjMessage();
-		}
-
 		// 前端携带的凭证 是正确的情况下判断是否过期
 		if (new Date().getTime() >= dbUserResult.getTokenexpired()) {
 			consequencer.setResult(40004).setMessage("您的凭证已过期");
+			return consequencer.getJsonObjMessage();
+		}
+
+		// 优先判断 前端携带的凭证 是否正确
+		if (!accessToken.equals(dbUserResult.getToken())) {
+			consequencer.setResult(40003).setMessage("无效的凭证类型");
 			return consequencer.getJsonObjMessage();
 		}
 

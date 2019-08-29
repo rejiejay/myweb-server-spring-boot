@@ -60,8 +60,13 @@ public class AndroidServerImpl implements AndroidServer {
 				 * 这里图片需要转换， 但是图片的上传方法还没写暂时不写
 				 */
 				String imageidentity = recordEvent.getImageidentity();
-				item.put("imageidentity", imageidentity != null ? imageidentity : "");
-				item.put("imageurl", tencentOssOrigin + "android/" + imageidentity + ".png");
+				if (imageidentity != null && imageidentity.length() > 0) {
+					item.put("imageidentity", imageidentity);
+					item.put("imageurl", tencentOssOrigin + "android/" + imageidentity + ".png");
+				} else {
+					item.put("imageidentity", "");
+					item.put("imageurl", "");
+				}
 
 				// 判断空
 				String eventcause = recordEvent.getEventcause();

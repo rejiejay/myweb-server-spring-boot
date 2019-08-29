@@ -241,16 +241,19 @@ public class JavaNotesController extends BaseController {
 		 * 處理圖片
 		 */
 		String imagekey = getNoteResult.getData().getString("imagekey");
-		// 先判断原来是否有图片
-		if (imagekey != null && imagekey.length() > 0) {
-			// 如果有图片，则先删除
+		String imageId = req.getImageId();
+		/**
+		 * 先判断原来是否有图片
+		 * 有图片的情况下，判断是不是和原先的图片是同一个ID
+		 */
+		if (imagekey != null && imagekey.length() > 0 && !imageId.equals(imagekey)) {
+			// 原来有图片，并且和新上传的图片Id不一样！（包括不上传新图片也是不一样）执行删除
 			Consequencer delImageResult = ossService.delJavaNotesImage(imagekey);
 			if (delImageResult.getResult() != 1) {
 				return delImageResult.getJsonObjMessage();
 			}
 		}
 		// 再判断有没有上传新的图片
-		String imageId = req.getImageId();
 		if (imageId != null && imageId.length() > 0) {
 			Consequencer uploadResult = ossService.uploadJavaNotesImage(imageId);
 			if (uploadResult.getResult() != 1) {
