@@ -321,7 +321,6 @@ public class AndroidServerImpl implements AndroidServer {
 	public Consequencer addEvent(AndroidAddEventReque event) {
 		Consequencer consequent = new Consequencer();
 
-		String tag = event.getTag();
 		long timestamp = event.getTimestamp();
 		int fullyear = event.getFullyear();
 		int month = event.getMonth();
@@ -332,7 +331,7 @@ public class AndroidServerImpl implements AndroidServer {
 		String eventresult = event.getEventresult();
 		String eventconclusion = event.getEventconclusion();
 		
-		int insertEventResult = androidRecordEventRepository.insertEvent(eventcause, eventprocess, eventresult, eventconclusion, imageidentity, tag, timestamp, fullyear, month, week);
+		int insertEventResult = androidRecordEventRepository.insertEvent(eventcause, eventprocess, eventresult, eventconclusion, imageidentity, timestamp, fullyear, month, week);
 
 		if (insertEventResult == 1) {
 			return consequent.setSuccess();
@@ -346,7 +345,11 @@ public class AndroidServerImpl implements AndroidServer {
 	 */
 	public Consequencer editEvent(AndroidEditEventReque event) {
 		Consequencer consequent = new Consequencer();
-		
+
+		long timestamp = event.getTimestamp();
+		int fullyear = event.getFullyear();
+		int month = event.getMonth();
+		int week = event.getWeek();
 		int androidid = event.getAndroidid();
 		String imageidentity = event.getImageidentity();
 		String eventcause = event.getEventcause();
@@ -356,7 +359,7 @@ public class AndroidServerImpl implements AndroidServer {
 
 
 		try {
-			androidRecordEventRepository.updateEvent(androidid, eventcause, eventprocess, eventresult, eventconclusion, imageidentity);
+			androidRecordEventRepository.updateEvent(androidid, eventcause, eventprocess, eventresult, eventconclusion, imageidentity, timestamp, fullyear, month, week);
 		} catch (IllegalArgumentException e) {
 			return consequent.setMessage("更新  Android Event id:“" + androidid + "”失败，原因：" + e.toString());
 		}

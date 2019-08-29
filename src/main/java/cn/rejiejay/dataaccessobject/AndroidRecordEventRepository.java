@@ -86,8 +86,8 @@ public interface AndroidRecordEventRepository extends CrudRepository<AndroidReco
 	 */
 	@Modifying
 	@Transactional
-	@Query(value = "insert into android_record_events (type, eventcause, eventprocess, eventresult, eventconclusion, imageidentity, tag, timestamp, fullyear, month, week) values (\"event\", ?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10)", nativeQuery = true)
-	int insertEvent(String eventcause, String eventprocess, String eventresult, String eventconclusion, String imageidentity, String tag,
+	@Query(value = "insert into android_record_events (type, eventcause, eventprocess, eventresult, eventconclusion, imageidentity, timestamp, fullyear, month, week) values (\"event\", ?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9)", nativeQuery = true)
+	int insertEvent(String eventcause, String eventprocess, String eventresult, String eventconclusion, String imageidentity,
 			long timestamp, int fullyear, int month, int week);
 
 	/**
@@ -95,8 +95,8 @@ public interface AndroidRecordEventRepository extends CrudRepository<AndroidReco
 	 */
 	@Modifying
 	@Transactional
-	@Query(value = "update android_record_events set eventcause=?2,eventprocess=?3,eventresult=?4,eventconclusion=?5,imageidentity=?6 where android_id=?1", nativeQuery = true)
-	int updateEvent(int androidid, String eventcause, String eventprocess, String eventresult, String eventconclusion, String imageidentity);
+	@Query(value = "update android_record_events set eventcause=?2,eventprocess=?3,eventresult=?4,eventconclusion=?5,imageidentity=?6,timestamp=?7,fullyear=?8,month=?9,week=?10 where android_id=?1", nativeQuery = true)
+	int updateEvent(int androidid, String eventcause, String eventprocess, String eventresult, String eventconclusion, String imageidentity, long timestamp, int fullyear,int month, int week);
 
 	/**
 	 * 统计 记录标签
