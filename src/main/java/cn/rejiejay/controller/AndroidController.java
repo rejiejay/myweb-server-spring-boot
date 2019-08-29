@@ -18,8 +18,10 @@ import cn.rejiejay.service.AndroidServer;
 import cn.rejiejay.service.AndroidServerStatistics;
 import cn.rejiejay.service.OssServerImpl;
 import cn.rejiejay.utils.Consequencer;
+import cn.rejiejay.viewobject.AndroidAddEventReque;
 import cn.rejiejay.viewobject.AndroidAddRecordReque;
-import cn.rejiejay.viewobject.AndroidDelRecordReque;
+import cn.rejiejay.viewobject.AndroidDelRecordEventReque;
+import cn.rejiejay.viewobject.AndroidEditEventReque;
 import cn.rejiejay.viewobject.AndroidEditRecordReque;
 
 import javax.validation.Valid;
@@ -194,7 +196,7 @@ public class AndroidController extends BaseController {
 	 */
 	@SecurityAnnotater(role = "admin")
 	@RequestMapping(value = "/recordevent/del", method = RequestMethod.POST, consumes = "application/json", produces = "application/json;charset=UTF-8")
-	public JSONObject DelRecordEvent(@RequestBody @Valid AndroidDelRecordReque req, BindingResult result) {
+	public JSONObject DelRecordEvent(@RequestBody @Valid AndroidDelRecordEventReque req, BindingResult result) {
 		logger.debug("/android/recordevent/del[req]: " + JSON.toJSONString(req)); // 打印 请求参数
 		int androidid = req.getAndroidid();
 
@@ -293,6 +295,100 @@ public class AndroidController extends BaseController {
 
 		return editRecordResult.getJsonObjMessage();
 	}
+	
+	/**
+	 * 新增事件
+	 */
+	@SecurityAnnotater(role = "admin")
+	@RequestMapping(value = "/event/add", method = RequestMethod.POST, consumes = "application/json", produces = "application/json;charset=UTF-8")
+	public JSONObject addEvent(@RequestBody @Valid AndroidAddEventReque req, BindingResult result) {
+		logger.debug("/java/notes/add[req]: " + JSON.toJSONString(req)); // 打印 请求参数
+
+		if (result.hasErrors()) { // 判断参数是否合法
+			for (ObjectError error : result.getAllErrors()) {
+				String errorMsg = error.getDefaultMessage();
+				logger.warn("/android/record/add[req]: " + errorMsg);
+				return errorJsonReply(2, errorMsg);
+			}
+		}
+
+		/**
+		 * 处理图片
+		 */
+		String imageId = req.getImageidentity();
+		if (imageId != null && imageId.length() > 0) { // 不为空的情况下
+			Consequencer uploadResult = ossService.uploadAndroidImage(imageId);
+
+			// 处理失败
+			if (uploadResult.getResult() != 1) {
+				return uploadResult.getJsonObjMessage();
+			}
+		}
+
+		return androidServer.addEvent(req).getJsonObjMessage();
+	}
+
+	/**
+	 * 编辑 事件
+	 */
+	@SecurityAnnotater(role = "admin")
+	@RequestMapping(value = "/event/edit", method = RequestMethod.POST, consumes = "application/json", produces = "application/json;charset=UTF-8")
+	public JSONObject editEvent(@RequestBody @Valid AndroidEditEventReque req, BindingResult result) {
+		logger.debug("/android/recordevent/del[req]: " + JSON.toJSONString(req)); // 打印 请求参数
+		Consequencer consequent = new Consequencer();
+
+		if (result.hasErrors()) { // 判断参数是否合法
+			for (ObjectError error : result.getAllErrors()) {
+				String errorMsg = error.getDefaultMessage();
+				logger.warn("/java/notes/add[req]: " + errorMsg);
+				return errorJsonReply(2, errorMsg);
+			}
+		}
+
+		/**
+		 * 先查询是否有这条数据
+		 */
+		int androidid = req.getAndroidid();
+		// 获取一条id
+		Consequencer getOneRecordEventResult = androidServer.getRecordEventBy(androidid);
+
+		if (getOneRecordEventResult.getResult() != 1) {
+			// 查询失败的情况下直接返回错误
+			return consequent.setMessage("没有这条数据").getJsonObjMessage();
+		}
+
+		/**
+		 * 处理图片
+		 */
+		String imageId = getOneRecordEventResult.getData().getString("imageidentity");
+		String imagekey = req.getImageidentity();
+		/**
+		 * 先判断原来是否有图片
+		 * 有图片的情况下，判断是不是和原先的图片是同一个ID
+		 */
+		if (imageId != null && imageId.length() > 0 && !imageId.equals(imagekey)) {
+			// 原来有图片，并且和新上传的图片Id不一样！（包括不上传新图片也是不一样）执行删除
+			Consequencer delImageResult = ossService.delAndroidImage(imageId);
+			if (delImageResult.getResult() != 1) {
+				return delImageResult.getJsonObjMessage();
+			}
+		}
+		// 再判断有没有上传新的图片
+		if (imagekey != null && imagekey.length() > 0) {
+			Consequencer uploadResult = ossService.uploadAndroidImage(imagekey);
+			if (uploadResult.getResult() != 1) {
+				return uploadResult.getJsonObjMessage();
+			}
+		}
+
+		/**
+		 * 编辑到数据库
+		 */
+		Consequencer editRecordResult = androidServer.editEvent(req);
+
+		return editRecordResult.getJsonObjMessage();
+	}
+	
 
 	/**
 	 * 获取 标签

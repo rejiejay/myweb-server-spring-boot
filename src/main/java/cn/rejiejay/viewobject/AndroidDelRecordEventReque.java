@@ -8,7 +8,7 @@ import javax.validation.constraints.NotNull;
  * @author _rejeijay
  * @Date 2019年8月24日18:43:58
  */
-public class AndroidDelRecordReque {
+public class AndroidDelRecordEventReque {
 	@NotNull(message = "androidid cannot be null!")
 	private int androidid;
 

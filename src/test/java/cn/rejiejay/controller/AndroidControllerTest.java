@@ -208,4 +208,67 @@ public class AndroidControllerTest extends BaseControllerTests {
 
 		System.out.println(result.getResponse().getContentAsString() + "\n");
 	}
+	
+	/**
+	 * 测试 新增
+	 */
+	@Test
+	public void testAddEvent() throws Exception {
+		JSONObject jsonObjReq = new JSONObject();
+		jsonObjReq.put("tag", "tag");
+		jsonObjReq.put("timestamp", 1566658090235L);
+		jsonObjReq.put("fullyear", 2018);
+		jsonObjReq.put("month", 8);
+		jsonObjReq.put("week", 2);
+		jsonObjReq.put("imageidentity", "");
+		
+		jsonObjReq.put("eventcause", "eventcauseeventcauseeventcause");
+		jsonObjReq.put("eventprocess", "eventprocesseventprocesseventprocess");
+		jsonObjReq.put("eventresult", "eventresulteventresulteventresult");
+		jsonObjReq.put("eventconclusion", "eventconclusioneventconclusioneventconclusion");
+
+		String signature = this.createSignature(JSON.toJSONString(jsonObjReq));
+
+		if (signature == null) {
+			System.out.println("\n 生成签名错误 \n");
+			return;
+		}
+
+		MvcResult addAndroidItem = mockMvc.perform(MockMvcRequestBuilders.post("/android/event/add")
+				.contentType(MediaType.APPLICATION_JSON_UTF8).header("x-rejiejay-authorization", signature)
+				.accept(MediaType.APPLICATION_JSON_UTF8).content(jsonObjReq.toJSONString().getBytes())).andReturn();
+
+		System.out.println("\n 新增记录： " + addAndroidItem.getResponse().getContentAsString() + "\n");
+	}
+
+	/**
+	 * 测试 编辑
+	 */
+	@Test
+	public void testEditAndroidEvent() throws Exception {
+		JSONObject jsonObjReq = new JSONObject();
+		jsonObjReq.put("androidid", 54);
+		jsonObjReq.put("imageidentity", "");
+		
+		jsonObjReq.put("eventcause", "eventcauseeventcauseeventcauseeventcauseeventcauseeventcause");
+		jsonObjReq.put("eventprocess", "eventprocesseventprocesseventprocesseventprocesseventprocesseventprocess");
+		jsonObjReq.put("eventresult", "eventresulteventresulteventresulteventresulteventresulteventresult");
+		jsonObjReq.put("eventconclusion", "eventconclusioneventconclusioneventconclusioneventconclusioneventconclusioneventconclusion");
+
+		String signature = this.createSignature(jsonObjReq.toJSONString());
+
+		if (signature == null) {
+			System.out.println("\n 生成签名错误 \n");
+			return;
+		}
+
+		MvcResult delAndroidItem = mockMvc
+				.perform(MockMvcRequestBuilders.post("/android/event/edit")
+						.contentType(MediaType.APPLICATION_JSON_UTF8).header("x-rejiejay-authorization", signature)
+						.accept(MediaType.APPLICATION_JSON_UTF8).content(jsonObjReq.toJSONString().getBytes()))
+				.andReturn();
+
+		System.out.println("\n 编辑记录： " + delAndroidItem.getResponse().getContentAsString() + "\n");
+
+	}
 }

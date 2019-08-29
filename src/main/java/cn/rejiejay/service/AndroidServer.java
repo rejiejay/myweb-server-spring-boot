@@ -3,7 +3,9 @@ package cn.rejiejay.service;
 import java.util.List;
 
 import cn.rejiejay.utils.Consequencer;
+import cn.rejiejay.viewobject.AndroidAddEventReque;
 import cn.rejiejay.viewobject.AndroidAddRecordReque;
+import cn.rejiejay.viewobject.AndroidEditEventReque;
 import cn.rejiejay.viewobject.AndroidEditRecordReque;
 
 /**
@@ -37,11 +39,6 @@ public interface AndroidServer {
 	 * 获取 列表 随机
 	 */
 	public Consequencer getRecordEventListByRandom(String dataType, String dataTag, int count);
-
-	/**
-	 * 新增记录
-	 */
-	public Consequencer addRecord(AndroidAddRecordReque record);
 	
 	/**
 	 * 根据id获取数据
@@ -52,11 +49,26 @@ public interface AndroidServer {
 	 * 根据id删除数据
 	 */
 	public Consequencer delRecordEventBy(int id);
+
+	/**
+	 * 新增 记录
+	 */
+	public Consequencer addRecord(AndroidAddRecordReque record);
 	
 	/**
-	 * 编辑一条记录
+	 * 编辑 记录
 	 */
 	public Consequencer editRecord(AndroidEditRecordReque editRecord);
+	
+	/**
+	 * 新增 事件
+	 */
+	public Consequencer addEvent(AndroidAddEventReque event);
+
+	/**
+	 * 编辑 事件
+	 */
+	public Consequencer editEvent(AndroidEditEventReque event);
 	
 	/**
 	 * 获取 持久化的 记录标签

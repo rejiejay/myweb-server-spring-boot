@@ -19,7 +19,9 @@ import cn.rejiejay.dataaccessobject.AndroidRecordEventTag;
 import cn.rejiejay.dataaccessobject.AndroidRecordEventTagRepository;
 import cn.rejiejay.dataaccessobject.AndroidRecordEvents;
 import cn.rejiejay.utils.Consequencer;
+import cn.rejiejay.viewobject.AndroidAddEventReque;
 import cn.rejiejay.viewobject.AndroidAddRecordReque;
+import cn.rejiejay.viewobject.AndroidEditEventReque;
 import cn.rejiejay.viewobject.AndroidEditRecordReque;
 
 /**
@@ -158,8 +160,9 @@ public class AndroidServerImpl implements AndroidServer {
 		if (pageNo >= 1) {
 			pageNo = pageNo - 1;
 		}
-		
-		List<AndroidRecordEvents> recordEventResult = androidRecordEventRepository.listRecordEventByTime(minTimestamp, maxTimestamp, pageNo);
+
+		List<AndroidRecordEvents> recordEventResult = androidRecordEventRepository.listRecordEventByTime(minTimestamp,
+				maxTimestamp, pageNo);
 
 		// 判断是否查询到数据
 		if (recordEventResult.size() <= 0) {
@@ -175,7 +178,7 @@ public class AndroidServerImpl implements AndroidServer {
 
 		return consequent.setSuccess(data);
 	}
-	
+
 	/**
 	 * 统计 时间段 有多少条数据
 	 */
@@ -223,33 +226,6 @@ public class AndroidServerImpl implements AndroidServer {
 	}
 
 	/**
-	 * 新增记录
-	 */
-	public Consequencer addRecord(AndroidAddRecordReque record) {
-		Consequencer consequent = new Consequencer();
-
-		String recordtitle = record.getRecordtitle();
-		String recordmaterial = record.getRecordmaterial();
-		String recordcontent = record.getRecordcontent();
-		String imageidentity = record.getImageidentity();
-		String tag = record.getTag();
-		long timestamp = record.getTimestamp();
-		int fullyear = record.getFullyear();
-		int month = record.getMonth();
-		int week = record.getWeek();
-
-		int insertRecordResult = androidRecordEventRepository.insertRecord(recordtitle, recordmaterial, recordcontent,
-				imageidentity, tag, timestamp, fullyear, month, week);
-
-		if (insertRecordResult == 1) {
-			return consequent.setSuccess();
-		} else {
-			return consequent.setMessage("创建一个记录SQL执行失败");
-		}
-
-	}
-
-	/**
 	 * 根据id获取记录
 	 */
 	public Consequencer getRecordEventBy(int id) {
@@ -290,7 +266,34 @@ public class AndroidServerImpl implements AndroidServer {
 	}
 
 	/**
-	 * 编辑一条记录
+	 * 新增 记录
+	 */
+	public Consequencer addRecord(AndroidAddRecordReque record) {
+		Consequencer consequent = new Consequencer();
+
+		String recordtitle = record.getRecordtitle();
+		String recordmaterial = record.getRecordmaterial();
+		String recordcontent = record.getRecordcontent();
+		String imageidentity = record.getImageidentity();
+		String tag = record.getTag();
+		long timestamp = record.getTimestamp();
+		int fullyear = record.getFullyear();
+		int month = record.getMonth();
+		int week = record.getWeek();
+
+		int insertRecordResult = androidRecordEventRepository.insertRecord(recordtitle, recordmaterial, recordcontent,
+				imageidentity, tag, timestamp, fullyear, month, week);
+
+		if (insertRecordResult == 1) {
+			return consequent.setSuccess();
+		} else {
+			return consequent.setMessage("创建一个记录SQL执行失败");
+		}
+
+	}
+
+	/**
+	 * 编辑 记录
 	 */
 	public Consequencer editRecord(AndroidEditRecordReque editRecord) {
 		Consequencer consequent = new Consequencer();
@@ -307,6 +310,55 @@ public class AndroidServerImpl implements AndroidServer {
 					imageidentity, tag);
 		} catch (IllegalArgumentException e) {
 			return consequent.setMessage("更新  Android Record id:“" + androidid + "”失败，原因：" + e.toString());
+		}
+
+		return consequent.setSuccess();
+	}
+
+	/**
+	 * 新增 事件
+	 */
+	public Consequencer addEvent(AndroidAddEventReque event) {
+		Consequencer consequent = new Consequencer();
+
+		String tag = event.getTag();
+		long timestamp = event.getTimestamp();
+		int fullyear = event.getFullyear();
+		int month = event.getMonth();
+		int week = event.getWeek();
+		String imageidentity = event.getImageidentity();
+		String eventcause = event.getEventcause();
+		String eventprocess = event.getEventprocess();
+		String eventresult = event.getEventresult();
+		String eventconclusion = event.getEventconclusion();
+		
+		int insertEventResult = androidRecordEventRepository.insertEvent(eventcause, eventprocess, eventresult, eventconclusion, imageidentity, tag, timestamp, fullyear, month, week);
+
+		if (insertEventResult == 1) {
+			return consequent.setSuccess();
+		} else {
+			return consequent.setMessage("创建一个事件SQL执行失败");
+		}
+	}
+
+	/**
+	 * 编辑 事件
+	 */
+	public Consequencer editEvent(AndroidEditEventReque event) {
+		Consequencer consequent = new Consequencer();
+		
+		int androidid = event.getAndroidid();
+		String imageidentity = event.getImageidentity();
+		String eventcause = event.getEventcause();
+		String eventprocess = event.getEventprocess();
+		String eventresult = event.getEventresult();
+		String eventconclusion = event.getEventconclusion();
+
+
+		try {
+			androidRecordEventRepository.updateEvent(androidid, eventcause, eventprocess, eventresult, eventconclusion, imageidentity);
+		} catch (IllegalArgumentException e) {
+			return consequent.setMessage("更新  Android Event id:“" + androidid + "”失败，原因：" + e.toString());
 		}
 
 		return consequent.setSuccess();
@@ -332,7 +384,7 @@ public class AndroidServerImpl implements AndroidServer {
 		if (recordEventTagList.size() < 1) {
 			return consequent.setMessage("数据为空");
 		}
-		
+
 		JSONObject data = new JSONObject();
 		JSONArray list = JSONObject.parseArray(JSONObject.toJSONString(recordEventTagList));
 		data.put("list", list);

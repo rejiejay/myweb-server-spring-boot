@@ -82,6 +82,23 @@ public interface AndroidRecordEventRepository extends CrudRepository<AndroidReco
 	int updateRecord(int id, String recordtitle, String recordmaterial, String recordcontent, String imageidentity, String tag);
 
 	/**
+	 * 新增事件
+	 */
+	@Modifying
+	@Transactional
+	@Query(value = "insert into android_record_events (type, eventcause, eventprocess, eventresult, eventconclusion, imageidentity, tag, timestamp, fullyear, month, week) values (\"event\", ?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10)", nativeQuery = true)
+	int insertEvent(String eventcause, String eventprocess, String eventresult, String eventconclusion, String imageidentity, String tag,
+			long timestamp, int fullyear, int month, int week);
+
+	/**
+	 * 编辑事件
+	 */
+	@Modifying
+	@Transactional
+	@Query(value = "update android_record_events set eventcause=?2,eventprocess=?3,eventresult=?4,eventconclusion=?5,imageidentity=?6 where android_id=?1", nativeQuery = true)
+	int updateEvent(int androidid, String eventcause, String eventprocess, String eventresult, String eventconclusion, String imageidentity);
+
+	/**
 	 * 统计 记录标签
 	 */
 	@Query(value = "select distinct tag from android_record_events;", nativeQuery = true)
