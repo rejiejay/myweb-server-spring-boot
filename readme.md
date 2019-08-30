@@ -10,3 +10,6 @@
     	- spring boot 用的就是这个命令，好像是会顺便下载倚赖包
 
 - 关于 .classpath 是 eclipse 自动生成的，不用管它    
+
+# 发布
+    - mvn package -Dmaven.test.skip=true

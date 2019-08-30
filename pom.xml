@@ -16,7 +16,7 @@
 	<!-- 下面这三个东东是用来确定_maven唯一性的 -->
 	<groupId>cn.rejiejay</groupId>
 	<artifactId>rejiejaywebapi</artifactId>
-	<version>1.0.0</version>
+	<version>2.0.0</version>
 	<name>rejiejaywebapi</name>
 	<description>rejiejay web api project for Spring Boot</description>
 
