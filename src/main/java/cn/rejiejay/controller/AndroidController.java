@@ -443,4 +443,18 @@ public class AndroidController extends BaseController {
 
 		return new Consequencer().setSuccess(data).getJsonObjMessage();
 	}
+
+	/**
+	 * 获取 日期统计数据
+	 */
+	@RequestMapping(value = "/recordevent/statistics/time", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
+	public JSONObject StatisticsTime() {
+
+		Consequencer consequent = androidServerStatistics.StatisticsTimeToJSON();
+		if (consequent.getResult() != 1) {
+			logger.error("持久化统计 Android 日期 标签 失败");
+		}
+
+		return consequent.getJsonObjMessage();
+	}
 }

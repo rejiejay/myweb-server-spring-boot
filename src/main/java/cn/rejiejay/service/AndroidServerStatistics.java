@@ -329,20 +329,23 @@ public class AndroidServerStatistics {
 	public JSONArray statisticDeWeighting(JSONArray yearStatistic) {
 		JSONArray statisticResult = new JSONArray();
 		
-		for (int i = 0; i < yearStatistic.size(); i++) {
-			JSONObject data = new JSONObject();
-			JSONObject item = yearStatistic.getJSONObject(i);
+		int yearCount = yearStatistic.size();
+		if (yearCount > 0) {
+			for (int i = 0; i < yearCount; i++) {
+				JSONObject data = new JSONObject();
+				JSONObject item = yearStatistic.getJSONObject(i);
 
-			data.put("name", item.getString("name"));
-			data.put("count", item.getIntValue("count")); // 年份不需要去重，因为不可能为零
-			data.put("minTimestamp", item.getLong("minTimestamp"));
-			data.put("maxTimestamp", item.getLong("maxTimestamp"));
+				data.put("name", item.getString("name"));
+				data.put("count", item.getIntValue("count")); // 年份不需要去重，因为不可能为零
+				data.put("minTimestamp", item.getLong("minTimestamp"));
+				data.put("maxTimestamp", item.getLong("maxTimestamp"));
 
-			JSONArray season = seasonDeWeight(item.getJSONArray("data")); // 季节去重
+				JSONArray season = seasonDeWeight(item.getJSONArray("data")); // 季节去重
 
-			data.put("data", season);
-			
-			statisticResult.add(data);
+				data.put("data", season);
+				
+				statisticResult.add(data);
+			}
 		}
 		
 		return statisticResult;
