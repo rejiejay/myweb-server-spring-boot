@@ -81,6 +81,34 @@ public class AndroidRecordEvents {
 	private String eventprocess;
 	
 	/**
+	 * 事件标题
+	 * event 类型独有
+	 */
+	@Column(name = "eventtitle")
+	private String eventtitle;
+	
+	/**
+	 * 事件情况
+	 * event 类型独有
+	 */
+	@Column(name = "eventsituation")
+	private String eventsituation;
+	
+	/**
+	 * 事件目标
+	 * event 类型独有
+	 */
+	@Column(name = "eventtarget")
+	private String eventtarget;
+	
+	/**
+	 * 事件动作
+	 * event 类型独有
+	 */
+	@Column(name = "eventaction")
+	private String eventaction;
+	
+	/**
 	 * 事件结果
 	 * event 类型独有
 	 */
@@ -200,6 +228,38 @@ public class AndroidRecordEvents {
 		this.eventprocess = eventprocess;
 	}
 
+	public String getEventtitle() {
+		return eventtitle;
+	}
+
+	public void setEventtitle(String eventtitle) {
+		this.eventtitle = eventtitle;
+	}
+
+	public String getEventsituation() {
+		return eventsituation;
+	}
+
+	public void setEventsituation(String eventsituation) {
+		this.eventsituation = eventsituation;
+	}
+
+	public String getEventtarget() {
+		return eventtarget;
+	}
+
+	public void setEventtarget(String eventtarget) {
+		this.eventtarget = eventtarget;
+	}
+
+	public String getEventaction() {
+		return eventaction;
+	}
+
+	public void setEventaction(String eventaction) {
+		this.eventaction = eventaction;
+	}
+
 	public String getEventresult() {
 		return eventresult;
 	}
@@ -253,8 +313,9 @@ public class AndroidRecordEvents {
 		return "AndroidRecordEvents [androidid=" + androidid + ", type=" + type + ", imageidentity=" + imageidentity
 				+ ", recordtitle=" + recordtitle + ", recordmaterial=" + recordmaterial + ", recordcontent="
 				+ recordcontent + ", tag=" + tag + ", eventcause=" + eventcause + ", eventprocess=" + eventprocess
-				+ ", eventresult=" + eventresult + ", eventconclusion=" + eventconclusion + ", timestamp=" + timestamp
-				+ ", fullyear=" + fullyear + ", month=" + month + ", week=" + week + "]";
+				+ ", eventtitle=" + eventtitle + ", eventsituation=" + eventsituation + ", eventtarget=" + eventtarget
+				+ ", eventaction=" + eventaction + ", eventresult=" + eventresult + ", eventconclusion="
+				+ eventconclusion + ", timestamp=" + timestamp + ", fullyear=" + fullyear + ", month=" + month
+				+ ", week=" + week + "]";
 	}
-	
 }

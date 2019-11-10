@@ -86,8 +86,8 @@ public interface AndroidRecordEventRepository extends CrudRepository<AndroidReco
 	 */
 	@Modifying
 	@Transactional
-	@Query(value = "insert into android_record_events (type, eventcause, eventprocess, eventresult, eventconclusion, imageidentity, timestamp, fullyear, month, week) values (\"event\", ?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9)", nativeQuery = true)
-	int insertEvent(String eventcause, String eventprocess, String eventresult, String eventconclusion, String imageidentity,
+	@Query(value = "insert into android_record_events (type, eventtitle, eventsituation, eventtarget, eventaction, eventresult, eventconclusion, imageidentity, timestamp, fullyear, month, week) values (\"event\", ?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11)", nativeQuery = true)
+	int insertEvent(String eventtitle, String eventsituation, String eventtarget, String eventaction, String eventresult, String eventconclusion, String imageidentity,
 			long timestamp, int fullyear, int month, int week);
 
 	/**
@@ -95,8 +95,8 @@ public interface AndroidRecordEventRepository extends CrudRepository<AndroidReco
 	 */
 	@Modifying
 	@Transactional
-	@Query(value = "update android_record_events set eventcause=?2,eventprocess=?3,eventresult=?4,eventconclusion=?5,imageidentity=?6,timestamp=?7,fullyear=?8,month=?9,week=?10 where android_id=?1", nativeQuery = true)
-	int updateEvent(int androidid, String eventcause, String eventprocess, String eventresult, String eventconclusion, String imageidentity, long timestamp, int fullyear,int month, int week);
+	@Query(value = "update android_record_events set eventtitle=?2,eventsituation=?3,eventtarget=?4,eventaction=?5,eventresult=?6,eventconclusion=?7,imageidentity=?8,timestamp=?9,fullyear=?10,month=?11,week=?12 where android_id=?1", nativeQuery = true)
+	int updateEvent(int androidid, String eventtitle, String eventsituation, String eventtarget, String eventaction,  String eventresult, String eventconclusion, String imageidentity, long timestamp, int fullyear,int month, int week);
 
 	/**
 	 * 统计 记录标签

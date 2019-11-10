@@ -25,11 +25,17 @@ public class AndroidAddEventReque {
 
 	private String imageidentity = "";
 
-	@NotNull(message = "eventcause cannot be null!")
-	private String eventcause;
+	@NotNull(message = "eventtitle cannot be null!")
+	private String eventtitle;
 	
-	@NotNull(message = "eventprocess cannot be null!")
-	private String eventprocess;
+	@NotNull(message = "eventsituation cannot be null!")
+	private String eventsituation;
+	
+	@NotNull(message = "eventtarget cannot be null!")
+	private String eventtarget;
+	
+	@NotNull(message = "eventaction cannot be null!")
+	private String eventaction;
 	
 	@NotNull(message = "eventresult cannot be null!")
 	private String eventresult;
@@ -84,20 +90,36 @@ public class AndroidAddEventReque {
 		this.imageidentity = imageidentity;
 	}
 
-	public String getEventcause() {
-		return eventcause;
+	public String getEventtitle() {
+		return eventtitle;
 	}
 
-	public void setEventcause(String eventcause) {
-		this.eventcause = eventcause;
+	public void setEventtitle(String eventtitle) {
+		this.eventtitle = eventtitle;
 	}
 
-	public String getEventprocess() {
-		return eventprocess;
+	public String getEventsituation() {
+		return eventsituation;
 	}
 
-	public void setEventprocess(String eventprocess) {
-		this.eventprocess = eventprocess;
+	public void setEventsituation(String eventsituation) {
+		this.eventsituation = eventsituation;
+	}
+
+	public String getEventtarget() {
+		return eventtarget;
+	}
+
+	public void setEventtarget(String eventtarget) {
+		this.eventtarget = eventtarget;
+	}
+
+	public String getEventaction() {
+		return eventaction;
+	}
+
+	public void setEventaction(String eventaction) {
+		this.eventaction = eventaction;
 	}
 
 	public String getEventresult() {
@@ -119,9 +141,9 @@ public class AndroidAddEventReque {
 	@Override
 	public String toString() {
 		return "AndroidAddEventReque [tag=" + tag + ", timestamp=" + timestamp + ", fullyear=" + fullyear + ", month="
-				+ month + ", week=" + week + ", imageidentity=" + imageidentity + ", eventcause=" + eventcause
-				+ ", eventprocess=" + eventprocess + ", eventresult=" + eventresult + ", eventconclusion="
-				+ eventconclusion + "]";
+				+ month + ", week=" + week + ", imageidentity=" + imageidentity + ", eventtitle=" + eventtitle
+				+ ", eventsituation=" + eventsituation + ", eventtarget=" + eventtarget + ", eventaction=" + eventaction
+				+ ", eventresult=" + eventresult + ", eventconclusion=" + eventconclusion + "]";
 	}
 
 }

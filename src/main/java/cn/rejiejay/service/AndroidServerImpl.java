@@ -73,12 +73,20 @@ public class AndroidServerImpl implements AndroidServer {
 				// 判断空
 				String eventcause = recordEvent.getEventcause();
 				item.put("eventcause", eventcause != null ? eventcause : "");
-				String eventconclusion = recordEvent.getEventconclusion();
-				item.put("eventconclusion", eventconclusion != null ? eventconclusion : "");
 				String eventprocess = recordEvent.getEventprocess();
 				item.put("eventprocess", eventprocess != null ? eventprocess : "");
+				String eventtitle = recordEvent.getEventtitle();
+				item.put("eventtitle", eventtitle != null ? eventtitle : "");
+				String eventsituation = recordEvent.getEventsituation();
+				item.put("eventsituation", eventsituation != null ? eventsituation : "");
+				String eventtarget = recordEvent.getEventtarget();
+				item.put("eventtarget", eventtarget != null ? eventtarget : "");
+				String eventaction = recordEvent.getEventaction();
+				item.put("eventaction", eventaction != null ? eventaction : "");
 				String eventresult = recordEvent.getEventresult();
 				item.put("eventresult", eventresult != null ? eventresult : "");
+				String eventconclusion = recordEvent.getEventconclusion();
+				item.put("eventconclusion", eventconclusion != null ? eventconclusion : "");
 
 				String recordtitle = recordEvent.getRecordtitle();
 				item.put("recordtitle", recordtitle != null ? recordtitle : "");
@@ -326,12 +334,14 @@ public class AndroidServerImpl implements AndroidServer {
 		int month = event.getMonth();
 		int week = event.getWeek();
 		String imageidentity = event.getImageidentity();
-		String eventcause = event.getEventcause();
-		String eventprocess = event.getEventprocess();
+		String eventtitle = event.getEventtitle();
+		String eventsituation = event.getEventsituation();
+		String eventtarget = event.getEventtarget();
+		String eventaction = event.getEventtarget();
 		String eventresult = event.getEventresult();
 		String eventconclusion = event.getEventconclusion();
 		
-		int insertEventResult = androidRecordEventRepository.insertEvent(eventcause, eventprocess, eventresult, eventconclusion, imageidentity, timestamp, fullyear, month, week);
+		int insertEventResult = androidRecordEventRepository.insertEvent(eventtitle, eventsituation, eventtarget, eventaction, eventresult, eventconclusion, imageidentity, timestamp, fullyear, month, week);
 
 		if (insertEventResult == 1) {
 			return consequent.setSuccess();
@@ -352,14 +362,16 @@ public class AndroidServerImpl implements AndroidServer {
 		int week = event.getWeek();
 		int androidid = event.getAndroidid();
 		String imageidentity = event.getImageidentity();
-		String eventcause = event.getEventcause();
-		String eventprocess = event.getEventprocess();
+		String eventtitle = event.getEventtitle();
+		String eventsituation = event.getEventsituation();
+		String eventtarget = event.getEventtarget();
+		String eventaction = event.getEventtarget();
 		String eventresult = event.getEventresult();
 		String eventconclusion = event.getEventconclusion();
 
 
 		try {
-			androidRecordEventRepository.updateEvent(androidid, eventcause, eventprocess, eventresult, eventconclusion, imageidentity, timestamp, fullyear, month, week);
+			androidRecordEventRepository.updateEvent(androidid, eventtitle, eventsituation, eventtarget, eventaction, eventresult, eventconclusion, imageidentity, timestamp, fullyear, month, week);
 		} catch (IllegalArgumentException e) {
 			return consequent.setMessage("更新  Android Event id:“" + androidid + "”失败，原因：" + e.toString());
 		}

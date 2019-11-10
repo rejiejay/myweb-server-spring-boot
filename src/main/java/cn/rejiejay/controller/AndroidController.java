@@ -334,7 +334,7 @@ public class AndroidController extends BaseController {
 	@SecurityAnnotater(role = "admin")
 	@RequestMapping(value = "/event/edit", method = RequestMethod.POST, consumes = "application/json", produces = "application/json;charset=UTF-8")
 	public JSONObject editEvent(@RequestBody @Valid AndroidEditEventReque req, BindingResult result) {
-		logger.debug("/android/recordevent/del[req]: " + JSON.toJSONString(req)); // 打印 请求参数
+		logger.debug("/android/recordevent/edit[req]: " + JSON.toJSONString(req)); // 打印 请求参数
 		Consequencer consequent = new Consequencer();
 
 		if (result.hasErrors()) { // 判断参数是否合法

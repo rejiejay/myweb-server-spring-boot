@@ -13,3 +13,4 @@
 
 # 发布
     - mvn package -Dmaven.test.skip=true
+    - 参考网易云笔记文档即可
