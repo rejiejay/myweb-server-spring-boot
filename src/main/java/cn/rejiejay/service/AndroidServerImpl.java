@@ -337,7 +337,7 @@ public class AndroidServerImpl implements AndroidServer {
 		String eventtitle = event.getEventtitle();
 		String eventsituation = event.getEventsituation();
 		String eventtarget = event.getEventtarget();
-		String eventaction = event.getEventtarget();
+		String eventaction = event.getEventaction();
 		String eventresult = event.getEventresult();
 		String eventconclusion = event.getEventconclusion();
 		
