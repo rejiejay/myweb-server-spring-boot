@@ -11,6 +11,10 @@
 
 - 关于 .classpath 是 eclipse 自动生成的，不用管它    
 
+# 准备
+删掉跨域 
+src\main\java\cn\rejiejay\security\WebMvcConfiguration.java -> allowedOrigins   
+
 # 发布
     - mvn package -Dmaven.test.skip=true
     - 参考网易云笔记文档即可
